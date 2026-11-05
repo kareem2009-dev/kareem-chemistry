@@ -47,6 +47,21 @@ export async function onRequest({request,env}){
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
    return json({user:userShape(session.user)},200,extra);
   }
+  if(path==="student/data"&&(request.method==="GET"||request.method==="PUT")){
+   const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول أولًا."},401);
+   const token=session.rotated?.access_token||readCookie(request,"kc_access");
+   if(request.method==="GET"){
+    const rows=await sb(c.url+"/rest/v1/student_data?select=progress&user_id=eq."+encodeURIComponent(session.user.id)+"&limit=1",c.anon,{token});
+    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
+    return json({progress:rows[0]?.progress||null},200,extra);
+   }
+   const b=await body(request),allowed=["kareemStudentStats","kareemStudentName","kareemStudentTasks","kareemStudentNotes","kareemFocusCompleted","kq"],progress={};
+   for(const k of allowed)if(typeof b.progress?.[k]==="string")progress[k]=b.progress[k];
+   if(JSON.stringify(progress).length>100000)return json({error:"حجم بيانات المذاكرة أكبر من المسموح."},413);
+   await sb(c.url+"/rest/v1/student_data?on_conflict=user_id",c.anon,{token,method:"POST",headers:{"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({user_id:session.user.id,progress,updated_at:new Date().toISOString()})});
+   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
+   return json({ok:true},200,extra);
+  }
   if(path==="admin/students"&&request.method==="GET"){
    const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول أولًا."},401);
    if(session.user.app_metadata?.role!=="admin")return json({error:"ليس لديك صلاحية الوصول إلى هذه الصفحة."},403);
