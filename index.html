@@ -1496,6 +1496,15 @@ const generated=CH.map((chapter,ci)=>{
  return out;
 });
 CH.forEach((chapter,i)=>{chapter.q=chapter.q.concat(generated[i]);});
+async function loadAdminQuestions(){
+ try{
+  const response=await fetch('/api/questions/active',{credentials:'same-origin'});
+  if(!response.ok)return;
+  const data=await response.json();
+  const questions=(data.questions||[]).map(q=>['M',q.question,(q.options||[]).map(x=>String(x)),Number(q.correct_answer),q.explanation||'']);
+  if(questions.length)CH.push({id:99,ic:'✦',t:'أسئلة إضافية من المدرّس',q:questions});
+ }catch(_){}
+}
 
 const BK='kareemBank',SK='kareemStudentStats';
 const rd=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(_){return d}};
@@ -1547,7 +1556,7 @@ function finish(timeUp=false){
 }
 $('bqPrev').onclick=()=>{if(S.i>0){S.i--;draw()}};
 $('bqNext').onclick=()=>{if(S.i<S.qs.length-1){S.i++;draw()}else finish()};
-$('bqBack').onclick=home;home();
+$('bqBack').onclick=home;loadAdminQuestions().finally(home);
 })();
 </script>
 <script>
