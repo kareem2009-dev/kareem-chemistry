@@ -1622,7 +1622,7 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  async function api(path,body){
   const res=await fetch('/api/'+path,{method:body?'POST':'GET',credentials:'same-origin',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
   let data={};try{data=await res.json()}catch(_){}
-  if(!res.ok)throw new Error(data.error||'حدث خطأ في الاتصال. حاول مرة أخرى.');
+  if(!res.ok){const error=new Error(data.error||'حدث خطأ في الاتصال. حاول مرة أخرى.');error.status=res.status;throw error;}
   return data;
  }
  function signedOut(){
@@ -1638,17 +1638,28 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   state(user.role==='admin'?'مسجل الدخول · مسؤول':'مسجل الدخول · طالب');
  }
  async function refreshSession(){
-  try{const data=await api('auth/me');signedIn(data.user);return data.user}
-  catch(_){signedOut();return null}
+  try{
+   const data=await api('auth/me');
+   signedIn(data.user);
+   return data.user;
+  }catch(error){
+   signedOut();
+   if(error.status>=500)msg('تعذر الاتصال بخدمة الحسابات حاليًا. يمكنك المحاولة مرة أخرى.',true);
+   return null;
+  }
  }
  $id('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();const form=e.currentTarget;busy(form,true);msg('');
-  try{const user=await api('auth/login',{username:$id('loginUsername').value.trim(),password:$id('loginPassword').value,remember:$id('rememberMe').checked});signedIn(user.user);msg('تم تسجيل الدخول بنجاح.')}
-  catch(err){msg(err.message,true)}finally{busy(form,false)}
+  try{
+   await startupSession;
+   const result=await api('auth/login',{username:$id('loginUsername').value.trim(),password:$id('loginPassword').value,remember:$id('rememberMe').checked});
+   signedIn(result.user);msg('تم تسجيل الدخول بنجاح.');
+  }catch(err){msg(err.message,true)}finally{busy(form,false)}
  });
  $id('registerForm').addEventListener('submit',async e=>{
   e.preventDefault();const form=e.currentTarget;busy(form,true);msg('');
   try{
+   await startupSession;
    const data=await api('auth/register',{display_name:$id('registerName').value.trim(),username:$id('registerUsername').value.trim(),password:$id('registerPassword').value});
    signedIn(data.user);form.reset();msg('تم إنشاء الحساب وتسجيل الدخول. احتفظ باسم المستخدم وكلمة المرور في مكان آمن.');
   }catch(err){msg(err.message,true)}finally{busy(form,false)}
@@ -1730,8 +1741,11 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  };
  gate.hidden=false;
  const initialPath=location.pathname.replace(/\/$/,'');
- refreshSession().then(user=>{
+ // Finish the first session check before allowing login/register requests.
+ // This prevents an older unauthenticated check from racing a fresh login.
+ const startupSession=refreshSession().then(user=>{
   if(!user&&initialPath==='/admin'){$id('gateTitle').textContent='دخول مسؤول النظام';}
+  return user;
  });
 
 })();
