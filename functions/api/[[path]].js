@@ -1,4 +1,4 @@
-const headers={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"};
+const headers={"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY","Referrer-Policy":"strict-origin-when-cross-origin","Permissions-Policy":"camera=(), microphone=(), geolocation=()"};
 const cookieBase="Path=/; HttpOnly; Secure; SameSite=Lax";
 const clearCookies=["kc_access=; "+cookieBase+"; Max-Age=0","kc_refresh=; "+cookieBase+"; Max-Age=0"];
 const json=(data,status=200,extra={})=>{const h=new Headers(headers);for(const [k,v] of Object.entries(extra)){if(k.toLowerCase()==="set-cookie"&&Array.isArray(v))v.forEach(x=>h.append(k,x));else h.set(k,v)}return new Response(JSON.stringify(data),{status,headers:h})};
