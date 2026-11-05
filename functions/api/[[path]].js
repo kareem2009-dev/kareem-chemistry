@@ -74,6 +74,64 @@ export async function onRequest({request,env}){
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({students:rows},200,extra);
   }
+  if(path.startsWith("admin/")){
+   const session=await currentUser(request,c);
+   if(!session)return json({error:"سجّل الدخول بحساب الأدمن أولًا."},401);
+   if(session.user.app_metadata?.role!=="admin")return json({error:"غير مصرح. هذه الصفحة للأدمن فقط."},403);
+   const rotated=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
+   if(path==="admin/overview"&&request.method==="GET"){
+    const [students,data,questions]=await Promise.all([
+     sb(c.url+"/rest/v1/student_profiles?select=id,username,display_name,created_at&order=created_at.desc&limit=1000",c.service),
+     sb(c.url+"/rest/v1/student_data?select=user_id,updated_at,progress&limit=1000",c.service),
+     sb(c.url+"/rest/v1/admin_questions?select=id&limit=1000",c.service)
+    ]);
+    const week=Date.now()-7*24*60*60*1000;
+    return json({stats:{students:students.length,questions:questions.length,activeStudents:data.filter(x=>x.updated_at&&Date.parse(x.updated_at)>=week).length,trackedStudents:data.length},recentStudents:students.slice(0,5)},200,rotated);
+   }
+   if(path==="admin/students"&&request.method==="GET"){
+    const [students,data]=await Promise.all([
+     sb(c.url+"/rest/v1/student_profiles?select=id,username,display_name,created_at&order=created_at.desc&limit=1000",c.service),
+     sb(c.url+"/rest/v1/student_data?select=user_id,updated_at,progress&limit=1000",c.service)
+    ]);
+    const byId=new Map(data.map(x=>[x.user_id,x]));
+    return json({students:students.map(s=>{const d=byId.get(s.id);return {...s,last_activity:d?.updated_at||null,progress_saved:!!d?.progress&&Object.keys(d.progress).length>0}})},200,rotated);
+   }
+   if(path==="admin/students/update"&&request.method==="POST"){
+    const b=await body(request),id=String(b.id||""),display_name=String(b.display_name||"").trim();
+    if(!/^[0-9a-f-]{36}$/i.test(id)||display_name.length<2||display_name.length>50)return json({error:"راجع الاسم والبيانات."},400);
+    await sb(c.url+"/rest/v1/student_profiles?id=eq."+encodeURIComponent(id),c.service,{method:"PATCH",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({display_name,updated_at:new Date().toISOString()})});
+    await sb(c.url+"/auth/v1/admin/users/"+id,c.service,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_metadata:{display_name}})});
+    return json({ok:true},200,rotated);
+   }
+   if(path==="admin/students/delete"&&request.method==="POST"){
+    const b=await body(request),id=String(b.id||"");
+    if(!/^[0-9a-f-]{36}$/i.test(id))return json({error:"معرّف الحساب غير صالح."},400);
+    if(id===session.user.id)return json({error:"لا يمكن حذف حساب الأدمن المستخدم حاليًا."},400);
+    await sb(c.url+"/auth/v1/admin/users/"+id,c.service,{method:"DELETE"});
+    return json({ok:true},200,rotated);
+   }
+   if(path==="admin/questions"&&request.method==="GET"){
+    const rows=await sb(c.url+"/rest/v1/admin_questions?select=id,title,chapter,difficulty,question,options,correct_answer,explanation,enabled,created_at,updated_at&order=created_at.desc&limit=1000",c.service);
+    return json({questions:rows},200,rotated);
+   }
+   if(path==="admin/questions"&&(request.method==="POST"||request.method==="PUT")){
+    const b=await body(request),title=String(b.title||"").trim(),chapter=String(b.chapter||"").trim(),question=String(b.question||"").trim(),explanation=String(b.explanation||"").trim(),options=Array.isArray(b.options)?b.options.map(x=>String(x).trim()).filter(Boolean):[],correct_answer=Number(b.correct_answer);
+    if(title.length<3||title.length>160||chapter.length>80||question.length<5||question.length>3000||options.length<2||options.length>6||options.some(x=>x.length>500)||!Number.isInteger(correct_answer)||correct_answer<0||correct_answer>=options.length||explanation.length>2000)return json({error:"راجع السؤال والاختيارات وحدد إجابة صحيحة."},400);
+    const record={title,chapter,difficulty:["سهل","متوسط","صعب"].includes(b.difficulty)?b.difficulty:"متوسط",question,options,correct_answer,explanation,enabled:b.enabled!==false,updated_at:new Date().toISOString()};
+    if(request.method==="POST"){
+     const rows=await sb(c.url+"/rest/v1/admin_questions",c.service,{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify(record)});
+     return json({question:rows[0]},201,rotated);
+    }
+    const id=String(b.id||"");if(!/^[0-9a-f-]{36}$/i.test(id))return json({error:"معرّف السؤال غير صالح."},400);
+    const rows=await sb(c.url+"/rest/v1/admin_questions?id=eq."+encodeURIComponent(id),c.service,{method:"PATCH",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify(record)});
+    return json({question:rows[0]||null},200,rotated);
+   }
+   if(path==="admin/questions/delete"&&request.method==="POST"){
+    const b=await body(request),id=String(b.id||"");if(!/^[0-9a-f-]{36}$/i.test(id))return json({error:"معرّف السؤال غير صالح."},400);
+    await sb(c.url+"/rest/v1/admin_questions?id=eq."+encodeURIComponent(id),c.service,{method:"DELETE"});
+    return json({ok:true},200,rotated);
+   }
+  }
   return json({error:"المسار غير موجود."},404);
  }catch(e){
   const m=String(e.message||"");
