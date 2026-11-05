@@ -82,7 +82,7 @@ export async function onRequest({request,env}){
    if(path==="admin/overview"&&request.method==="GET"){
     const [students,data,questions]=await Promise.all([
      sb(c.url+"/rest/v1/student_profiles?select=id,username,display_name,created_at&order=created_at.desc&limit=1000",c.service),
-     sb(c.url+"/rest/v1/student_data?select=user_id,updated_at,progress&limit=1000",c.service),
+     sb(c.url+"/rest/v1/student_data?select=user_id,updated_at&limit=1000",c.service),
      sb(c.url+"/rest/v1/admin_questions?select=id&limit=1000",c.service)
     ]);
     const week=Date.now()-7*24*60*60*1000;
@@ -91,10 +91,10 @@ export async function onRequest({request,env}){
    if(path==="admin/students"&&request.method==="GET"){
     const [students,data]=await Promise.all([
      sb(c.url+"/rest/v1/student_profiles?select=id,username,display_name,created_at&order=created_at.desc&limit=1000",c.service),
-     sb(c.url+"/rest/v1/student_data?select=user_id,updated_at,progress&limit=1000",c.service)
+     sb(c.url+"/rest/v1/student_data?select=user_id,updated_at&limit=1000",c.service)
     ]);
     const byId=new Map(data.map(x=>[x.user_id,x]));
-    return json({students:students.map(s=>{const d=byId.get(s.id);return {...s,last_activity:d?.updated_at||null,progress_saved:!!d?.progress&&Object.keys(d.progress).length>0}})},200,rotated);
+    return json({students:students.map(s=>{const d=byId.get(s.id);return {...s,last_activity:d?.updated_at||null}})},200,rotated);
    }
    if(path==="admin/students/update"&&request.method==="POST"){
     const b=await body(request),id=String(b.id||""),display_name=String(b.display_name||"").trim();
