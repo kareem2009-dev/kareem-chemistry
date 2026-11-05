@@ -251,6 +251,75 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 #loginGate #authMessage{max-width:440px;margin:12px auto 0!important}
 #loginGate .remember-row{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:.95rem}
 #loginGate .remember-row input{width:18px;min-height:18px;margin:0;accent-color:var(--tq)}
+/* Premium authentication experience */
+#loginGate{
+ direction:rtl;padding:clamp(12px,3vw,34px);
+ background:
+  radial-gradient(ellipse at 12% 12%,rgba(39,211,188,.16),transparent 32%),
+  radial-gradient(ellipse at 90% 88%,rgba(214,173,85,.13),transparent 30%),
+  #080e19;
+}
+#loginGate .gate-card{
+ width:min(1080px,100%);max-height:min(820px,calc(100vh - 32px));overflow:auto;
+ display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);
+ gap:clamp(22px,4vw,48px);align-items:center;padding:clamp(22px,4vw,48px);
+ border:1px solid rgba(255,255,255,.12);border-radius:30px;
+ background:linear-gradient(145deg,rgba(19,31,49,.98),rgba(10,17,29,.98));
+ box-shadow:0 35px 100px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.07);
+ color:#edf4ff;
+}
+#loginGate .gate-brand{
+ position:relative;isolation:isolate;overflow:hidden;min-height:440px;margin:0;padding:clamp(24px,3vw,38px);
+ display:flex;flex-direction:column;justify-content:center;text-align:right;
+ border:1px solid rgba(73,224,201,.18);border-radius:24px;
+ background:radial-gradient(circle at 80% 15%,rgba(43,209,184,.18),transparent 38%),linear-gradient(150deg,#122d3b,#101a2c 65%,#192236);
+}
+#loginGate .gate-brand:before,#loginGate .gate-brand:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(68,220,197,.22);border-radius:50%;width:270px;height:270px;left:-105px;bottom:-130px;box-shadow:0 0 0 24px rgba(68,220,197,.025),0 0 0 48px rgba(68,220,197,.02)}
+#loginGate .gate-brand:after{width:175px;height:175px;left:-58px;bottom:-80px;border-color:rgba(220,181,99,.25)}
+#loginGate .brand-kicker{display:inline-flex;align-items:center;gap:8px;width:max-content;margin-bottom:24px;padding:8px 12px;border:1px solid rgba(72,221,198,.25);border-radius:999px;background:rgba(54,211,190,.09);color:#75ead8;font-size:.78rem;font-weight:800;letter-spacing:.12em}
+#loginGate .brand-mark{display:grid;place-items:center;width:62px;height:62px;margin-bottom:22px;border:1px solid rgba(220,181,99,.45);border-radius:19px;background:linear-gradient(145deg,rgba(220,181,99,.2),rgba(220,181,99,.04));font-size:30px;box-shadow:0 12px 35px rgba(0,0,0,.2)}
+#loginGate .gate-brand h1{max-width:430px;margin:0 0 14px;color:#f4f7ff;font-size:clamp(1.8rem,3vw,2.65rem);line-height:1.25;font-weight:900}
+#loginGate .gate-brand p{max-width:400px;color:#b6c5d8;line-height:1.9;font-size:1rem}
+#loginGate .brand-points{display:grid;gap:12px;margin-top:28px;color:#dce8f4;font-size:.9rem}
+#loginGate .brand-points span{display:flex;align-items:center;gap:10px}
+#loginGate .brand-points i{display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:rgba(52,213,190,.12);color:#67e4d1;font-style:normal}
+#loginGate #gateForms{min-width:0}
+#loginGate #authForms{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:16px!important;max-width:470px;margin:0 auto!important}
+#loginGate #loginForm,#loginGate #registerForm{
+ padding:clamp(18px,2.5vw,28px)!important;border:1px solid rgba(255,255,255,.11)!important;border-radius:20px!important;
+ background:rgba(255,255,255,.045)!important;box-shadow:0 12px 35px rgba(0,0,0,.12);
+}
+#loginGate #loginForm h3,#loginGate #registerForm h3{margin:0 0 17px;color:#f5f8ff;font-size:1.25rem}
+#loginGate #loginForm label,#loginGate #registerForm label{display:block;margin-top:12px;color:#c8d5e5;font-size:.88rem;font-weight:700}
+#loginGate #loginForm input:not([type=checkbox]),#loginGate #registerForm input:not([type=checkbox]){
+ width:100%;min-height:49px;margin-top:7px;padding:12px 14px;border:1px solid rgba(181,202,224,.2);border-radius:12px;
+ outline:none;background:rgba(4,10,20,.48);color:#f4f7ff;font:inherit;transition:border-color .2s,box-shadow .2s;
+}
+#loginGate #loginForm input:focus,#loginGate #registerForm input:focus{border-color:#42d7c1;box-shadow:0 0 0 3px rgba(66,215,193,.13)}
+#loginGate #loginForm input::placeholder,#loginGate #registerForm input::placeholder{color:#73849a}
+#loginGate .remember-row{display:flex!important;align-items:center;gap:9px;margin:14px 0 2px!important;color:#c8d5e5!important;font-weight:500!important}
+#loginGate #loginForm button,#loginGate #registerForm button{
+ min-height:49px;border:0;border-radius:12px;background:linear-gradient(105deg,#36d6bd,#23bda9);color:#06231f;
+ font-weight:900;box-shadow:0 9px 24px rgba(38,204,180,.18);transition:transform .2s,filter .2s;
+}
+#loginGate #loginForm button:hover,#loginGate #registerForm button:hover{transform:translateY(-2px);filter:brightness(1.06)}
+#loginGate #registerForm{background:rgba(255,255,255,.025)!important}
+#loginGate #registerForm h3{font-size:1.02rem;color:#d8e3f1}
+#loginGate #authMessage{max-width:470px;margin:14px auto 0!important;color:#b9d8d3}
+#loginGate #accountSignedIn{max-width:470px;margin:0 auto!important;padding:24px;border:1px solid rgba(72,221,198,.2);border-radius:18px;background:rgba(54,211,190,.07)}
+#loginGate #accountSignedIn p{color:#e9f4f4}
+#loginGate .gate-foot{margin-top:16px;color:#8295aa;font-size:.78rem;text-align:center}
+@media(max-width:760px){
+ #loginGate{align-items:flex-start}
+ #loginGate .gate-card{grid-template-columns:1fr;gap:20px;padding:14px;border-radius:22px;max-height:none}
+ #loginGate .gate-brand{min-height:auto;padding:22px;border-radius:17px}
+ #loginGate .brand-mark{width:48px;height:48px;margin-bottom:14px;font-size:24px}
+ #loginGate .brand-kicker{margin-bottom:14px}
+ #loginGate .gate-brand h1{font-size:1.65rem}
+ #loginGate .brand-points{grid-template-columns:1fr 1fr;gap:9px;margin-top:17px;font-size:.78rem}
+ #loginGate #authForms{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){#loginGate *{transition:none!important}}
 /* Account UI */
 #accountPanel [hidden]{display:none!important}
 #accountPanel input{box-sizing:border-box;width:100%;min-height:42px;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
@@ -265,8 +334,16 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 <body>
 <div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
  <div class="gate-card">
-  <div class="gate-brand"><h1 id="gateTitle">أهلًا بيك في معمل كيمياء كريم</h1><p>سجّل الدخول علشان تفتح الموقع وتكمل من حيث توقفت.</p></div>
-  <div id="gateForms"></div>
+  <section class="gate-brand" aria-label="عن المنصة">
+   <span class="brand-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
+   <div class="brand-mark" aria-hidden="true">⚗</div>
+   <h1 id="gateTitle">الكيمياء…<br>بقت أسهل وأقرب ليك.</h1>
+   <p>مساحتك الذكية لفهم كيمياء الثانوية العامة، وتجربة المعادلات، ومتابعة تقدمك الدراسي في مكان واحد.</p>
+   <div class="brand-points"><span><i>✓</i> معمل تفاعلي وتجارب تعليمية</span><span><i>✓</i> بنك أسئلة ومراجعات</span><span><i>✓</i> احفظ تقدمك الدراسي</span></div>
+  </section>
+  <div id="gateForms">
+   <div class="gate-foot">مساحة تعليمية للتميز والفهم — KAREEM IBRAHIM</div>
+  </div>
  </div>
 </div>
 <header>
