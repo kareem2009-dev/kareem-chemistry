@@ -19,7 +19,7 @@ async function body(req){
  if(length>131072)throw new Error("حجم الطلب أكبر من المسموح.");
  try{const raw=await req.text();if(new TextEncoder().encode(raw).length>131072)throw new Error("حجم الطلب أكبر من المسموح.");return JSON.parse(raw)}catch(e){if(e.message==="حجم الطلب أكبر من المسموح.")throw e;throw new Error("بيانات الطلب غير صالحة.")}
 }
-function sameOrigin(req){const origin=req.headers.get("Origin");if(!origin)return true;try{return new URL(origin).origin===new URL(req.url).origin}catch(_){return false}}
+function sameOrigin(req){const origin=req.headers.get("Origin");if(!origin)return false;try{return new URL(origin).origin===new URL(req.url).origin}catch(_){return false}}
 async function rateLimit(req,c,scope,limit,windowSeconds){
  const ip=req.headers.get("CF-Connecting-IP")||"unknown";
  const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(scope+"|"+ip));
@@ -72,7 +72,7 @@ export async function onRequest({request,env}){
    return json({ok:true},200,{"Set-Cookie":[...clearCookies,rememberCookie(false)]});
   }
   if(path==="auth/me"&&request.method==="GET"){
-   const session=await currentUser(request,c);if(!session)return json({error:"غير مسجل الدخول."},401);
+   const session=await currentUser(request,c);if(!session)return json({error:"غير مسجل الدخول."},401,{"Set-Cookie":[...clearCookies,rememberCookie(false)]});
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({user:userShape(session.user)},200,extra);
   }
@@ -150,6 +150,7 @@ export async function onRequest({request,env}){
    }
   }
   if(path==="ai/chat"&&request.method==="POST"){
+   if(!env.GEMINI_API_KEY&&!env.OPENAI_API_KEY)return json({error:"المساعد الذكي غير مفعّل بعد؛ تعمل الردود المدمجة حاليًا."},503);
    const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول لاستخدام المساعد الذكي."},401);
    const blocked=await limited(request,c,"ai-chat:"+session.user.id,20,600);if(blocked)return blocked;
    const b=await body(request),message=String(b.message||"").trim();
@@ -159,7 +160,7 @@ export async function onRequest({request,env}){
    if(env.GEMINI_API_KEY){
     const contents=history.map(x=>({role:x.role==="assistant"?"model":"user",parts:[{text:x.content}]}));
     contents.push({role:"user",parts:[{text:message}]});
-    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="+encodeURIComponent(env.GEMINI_API_KEY),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
+    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
     const data=await response.json();if(!response.ok)throw new Error("فشل مزود Gemini.");
     const reply=(data.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("").trim();
     if(!reply)return json({error:"لم يصل رد من المساعد."},502);
