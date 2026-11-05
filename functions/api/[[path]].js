@@ -14,7 +14,22 @@ function readCookie(req,name){const raw=req.headers.get("Cookie")||"";const m=ra
 function config(env){if(!env.SUPABASE_URL||!env.SUPABASE_ANON_KEY||!env.SUPABASE_SERVICE_ROLE_KEY)throw new Error("إعدادات Supabase غير مكتملة في Cloudflare.");return {url:env.SUPABASE_URL.replace(/\/+$/,""),anon:env.SUPABASE_ANON_KEY,service:env.SUPABASE_SERVICE_ROLE_KEY}}
 async function sb(url,key,options={}){const {token,...init}=options;const r=await fetch(url,{...init,headers:{"apikey":key,"Authorization":"Bearer "+(token||key),...(init.headers||{})}});const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch(_){d={message:t}}if(!r.ok)throw new Error(d.msg||d.message||d.error_description||d.error||"فشل طلب Supabase");return d}
 function usernameEmail(u){return u.toLowerCase()+"@accounts.kareem-chemistry.invalid"}
-async function body(req){try{return await req.json()}catch(_){throw new Error("بيانات الطلب غير صالحة.")}}
+async function body(req){
+ const length=Number(req.headers.get("Content-Length")||0);
+ if(length>131072)throw new Error("حجم الطلب أكبر من المسموح.");
+ try{const raw=await req.text();if(new TextEncoder().encode(raw).length>131072)throw new Error("حجم الطلب أكبر من المسموح.");return JSON.parse(raw)}catch(e){if(e.message==="حجم الطلب أكبر من المسموح.")throw e;throw new Error("بيانات الطلب غير صالحة.")}
+}
+function sameOrigin(req){const origin=req.headers.get("Origin");if(!origin)return true;try{return new URL(origin).origin===new URL(req.url).origin}catch(_){return false}}
+async function rateLimit(req,c,scope,limit,windowSeconds){
+ const ip=req.headers.get("CF-Connecting-IP")||"unknown";
+ const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(scope+"|"+ip));
+ const key=Array.from(new Uint8Array(digest),x=>x.toString(16).padStart(2,"0")).join("");
+ return await sb(c.url+"/rest/v1/rpc/consume_rate_limit",c.service,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({p_key:key,p_limit:limit,p_window_seconds:windowSeconds})})===true;
+}
+async function limited(req,c,scope,limit,windowSeconds){
+ try{if(await rateLimit(req,c,scope,limit,windowSeconds))return null;return json({error:"تم تجاوز عدد المحاولات المسموح به. حاول مرة أخرى لاحقًا."},429)}
+ catch(_){return json({error:"حماية الطلبات تحتاج إلى تفعيل ترقية قاعدة البيانات قبل استخدام هذه العملية."},503)}
+}
 async function currentUser(req,c){const access=readCookie(req,"kc_access"),refresh=readCookie(req,"kc_refresh");if(!access&&!refresh)return null;
  try{return {user:await sb(c.url+"/auth/v1/user",c.anon,{token:access}),rotated:null}}
  catch(_){if(!refresh)return null;
@@ -27,7 +42,9 @@ export async function onRequest({request,env}){
  let c;try{c=config(env)}catch(e){return json({error:e.message},503)}
  const url=new URL(request.url),path=url.pathname.replace(/^\/api\/?/,"").replace(/\/+$/,"");
  try{
+  if(request.method==="POST"&&!sameOrigin(request))return json({error:"مصدر الطلب غير موثوق."},403);
   if(path==="auth/register"&&request.method==="POST"){
+   const blocked=await limited(request,c,"register",5,3600);if(blocked)return blocked;
    const b=await body(request),username=String(b.username||"").trim(),display_name=String(b.display_name||"").trim(),password=String(b.password||"");
    if(!/^[A-Za-z0-9_]{3,24}$/.test(username))return json({error:"اسم المستخدم يجب أن يكون 3–24 حرفًا إنجليزيًا أو رقمًا أو _."},400);
    if(display_name.length<2||display_name.length>50)return json({error:"اكتب اسمًا من حرفين إلى 50 حرفًا."},400);
@@ -40,13 +57,20 @@ export async function onRequest({request,env}){
    return json({user:userShape(login.user||created)},200,{"Set-Cookie":[...cookies(login.access_token,login.refresh_token,3600,false),rememberCookie(false)]});
   }
   if(path==="auth/login"&&request.method==="POST"){
+   const blocked=await limited(request,c,"login",10,900);if(blocked)return blocked;
    const b=await body(request),username=String(b.username||"").trim(),password=String(b.password||"");
    if(!/^[A-Za-z0-9_]{3,24}$/.test(username)||!password)return json({error:"اسم المستخدم أو كلمة المرور غير صحيحة."},401);
    const d=await sb(c.url+"/auth/v1/token?grant_type=password",c.anon,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:usernameEmail(username),password})});
    const remember=b.remember===true;
    return json({user:userShape(d.user)},200,{"Set-Cookie":[...cookies(d.access_token,d.refresh_token,3600,remember),rememberCookie(remember)]});
   }
-  if(path==="auth/logout"&&request.method==="POST")return json({ok:true},200,{"Set-Cookie":[...clearCookies,rememberCookie(false)]});
+  if(path==="auth/logout"&&request.method==="POST"){
+   try{
+    const session=await currentUser(request,c);
+    if(session){const token=session.rotated?.access_token||readCookie(request,"kc_access");if(token)await sb(c.url+"/auth/v1/logout",c.anon,{token,method:"POST"})}
+   }catch(_){}
+   return json({ok:true},200,{"Set-Cookie":[...clearCookies,rememberCookie(false)]});
+  }
   if(path==="auth/me"&&request.method==="GET"){
    const session=await currentUser(request,c);if(!session)return json({error:"غير مسجل الدخول."},401);
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
@@ -66,13 +90,6 @@ export async function onRequest({request,env}){
    await sb(c.url+"/rest/v1/student_data?on_conflict=user_id",c.anon,{token,method:"POST",headers:{"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({user_id:session.user.id,progress,updated_at:new Date().toISOString()})});
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({ok:true},200,extra);
-  }
-  if(path==="admin/students"&&request.method==="GET"){
-   const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول أولًا."},401);
-   if(session.user.app_metadata?.role!=="admin")return json({error:"ليس لديك صلاحية الوصول إلى هذه الصفحة."},403);
-   const rows=await sb(c.url+"/rest/v1/student_profiles?select=username,display_name,created_at&order=created_at.desc&limit=500",c.anon,{token:session.rotated?.access_token||readCookie(request,"kc_access")});
-   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
-   return json({students:rows},200,extra);
   }
   if(path.startsWith("admin/")){
    const session=await currentUser(request,c);
@@ -132,9 +149,34 @@ export async function onRequest({request,env}){
     return json({ok:true},200,rotated);
    }
   }
+  if(path==="questions/start"&&request.method==="POST"){
+   const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول لبدء الاختبار."},401);
+   const blocked=await limited(request,c,"question-start:"+session.user.id,20,3600);if(blocked)return blocked;
+   const b=await body(request),ids=Array.isArray(b.question_ids)?[...new Set(b.question_ids.map(String))]:[];
+   if(!ids.length||ids.length>100||ids.some(id=>!/^[0-9a-f-]{36}$/i.test(id)))return json({error:"قائمة الأسئلة غير صالحة."},400);
+   const rows=await sb(c.url+"/rest/v1/admin_questions?select=id&enabled=eq.true&id=in.("+ids.map(encodeURIComponent).join(",")+")&limit=100",c.service);
+   if(rows.length!==ids.length)return json({error:"بعض الأسئلة لم تعد متاحة. حدّث الصفحة وحاول مجددًا."},409);
+   const created=await sb(c.url+"/rest/v1/question_attempts",c.service,{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({user_id:session.user.id,question_ids:ids})});
+   return json({attempt_id:created[0].id},201);
+  }
+  if(path==="questions/answer"&&request.method==="POST"){
+   const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول أولًا."},401);
+   const blocked=await limited(request,c,"question-answer:"+session.user.id,120,600);if(blocked)return blocked;
+   const b=await body(request),attemptId=String(b.attempt_id||""),questionId=String(b.question_id||""),answer=Number(b.answer_index);
+   if(!/^[0-9a-f-]{36}$/i.test(attemptId)||!/^[0-9a-f-]{36}$/i.test(questionId)||!Number.isInteger(answer)||answer<0||answer>5)return json({error:"بيانات الإجابة غير صالحة."},400);
+   const attempts=await sb(c.url+"/rest/v1/question_attempts?select=id,question_ids&user_id=eq."+encodeURIComponent(session.user.id)+"&id=eq."+encodeURIComponent(attemptId)+"&expires_at=gt."+encodeURIComponent(new Date().toISOString())+"&limit=1",c.service);
+   if(!attempts.length||!attempts[0].question_ids.includes(questionId))return json({error:"جلسة الاختبار غير صالحة أو انتهت."},403);
+   const existing=await sb(c.url+"/rest/v1/question_attempt_answers?select=selected_answer,correct_answer,is_correct,explanation&attempt_id=eq."+encodeURIComponent(attemptId)+"&question_id=eq."+encodeURIComponent(questionId)+"&limit=1",c.service);
+   if(existing.length)return json({correct:existing[0].is_correct,correct_answer:existing[0].correct_answer,explanation:existing[0].explanation,already_answered:true});
+   const questions=await sb(c.url+"/rest/v1/admin_questions?select=options,correct_answer,explanation&enabled=eq.true&id=eq."+encodeURIComponent(questionId)+"&limit=1",c.service);
+   if(!questions.length||answer>=questions[0].options.length)return json({error:"السؤال أو الاختيار غير متاح."},404);
+   const q=questions[0],correct=answer===q.correct_answer;
+   const saved=await sb(c.url+"/rest/v1/question_attempt_answers",c.service,{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({attempt_id:attemptId,question_id:questionId,selected_answer:answer,correct_answer:q.correct_answer,is_correct:correct,explanation:q.explanation})});
+   return json({correct,correct_answer:q.correct_answer,explanation:q.explanation});
+  }
   if(path==="questions/active"&&request.method==="GET"){
    const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول لعرض الأسئلة."},401);
-   const rows=await sb(c.url+"/rest/v1/admin_questions?select=id,title,chapter,difficulty,question,options,correct_answer,explanation&enabled=eq.true&order=created_at.desc&limit=500",c.service);
+   const rows=await sb(c.url+"/rest/v1/admin_questions?select=id,title,chapter,difficulty,question,options&enabled=eq.true&order=created_at.desc&limit=500",c.service);
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({questions:rows},200,extra);
   }
@@ -143,6 +185,6 @@ export async function onRequest({request,env}){
   const m=String(e.message||"");
   if(/already registered|already been registered|already exists|duplicate key|unique constraint/i.test(m))return json({error:"اسم المستخدم مستخدم بالفعل. اختر اسمًا آخر."},409);
   if(/Invalid login credentials/i.test(m))return json({error:"اسم المستخدم أو كلمة المرور غير صحيحة."},401);
-  return json({error:"تعذر إكمال الطلب. راجع إعدادات Supabase أو حاول لاحقًا."},400);
+  return json({error:"تعذر إكمال الطلب بسبب خطأ داخلي. حاول لاحقًا."},500);
  }
 }
