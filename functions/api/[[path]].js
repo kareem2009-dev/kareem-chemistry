@@ -183,7 +183,8 @@ export async function onRequest({request,env}){
   return json({error:"المسار غير موجود."},404);
  }catch(e){
   const m=String(e.message||"");
-  if(/already registered|already been registered|already exists|duplicate key|unique constraint/i.test(m))return json({error:"اسم المستخدم مستخدم بالفعل. اختر اسمًا آخر."},409);
+  if(path==="auth/register"&&/already registered|already been registered|already exists|duplicate key|unique constraint/i.test(m))return json({error:"اسم المستخدم مستخدم بالفعل. اختر اسمًا آخر."},409);
+  if(/duplicate key|unique constraint/i.test(m))return json({error:"تم تسجيل هذه الإجابة بالفعل."},409);
   if(/Invalid login credentials/i.test(m))return json({error:"اسم المستخدم أو كلمة المرور غير صحيحة."},401);
   return json({error:"تعذر إكمال الطلب بسبب خطأ داخلي. حاول لاحقًا."},500);
  }
