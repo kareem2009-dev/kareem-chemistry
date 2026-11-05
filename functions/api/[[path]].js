@@ -48,7 +48,7 @@ export async function onRequest({request,env}){
   }
   if(path==="auth/logout"&&request.method==="POST")return json({ok:true},200,{"Set-Cookie":[...clearCookies,rememberCookie(false)]});
   if(path==="auth/me"&&request.method==="GET"){
-   const session=await currentUser(request,c);if(!session)return json({error:"غير مسجل الدخول."},401,{"Set-Cookie":clearCookies});
+   const session=await currentUser(request,c);if(!session)return json({error:"غير مسجل الدخول."},401);
    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({user:userShape(session.user)},200,extra);
   }
