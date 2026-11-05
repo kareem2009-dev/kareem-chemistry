@@ -1316,10 +1316,7 @@ o.innerHTML=`<b>المجهول: ${nmz[k]}</b><br>القانون: ${L('Mₐ·Vₐ
 <script>
 /* ===== Chemistry AI Assistant ===== */
 (function(){
-/* ضع مفتاح الـ API هنا (Gemini يبدأ بـ AIza، أو OpenAI يبدأ بـ sk-). اتركه فارغًا لتشغيل الردود المدمجة.
-   تنبيه: أي مفتاح داخل ملف HTML يظهر لكل من يفتح الموقع؛ استخدم مفتاحًا محدود الحصة أو وسيطًا (proxy). */
-const API_KEY = "";
-const SYSTEM_PROMPT = "أنت «مساعد كريم إبراهيم لتدريس الكيمياء لتالتة ثانوي». اشرح بأسلوب مبسط بالعامية المصرية الواضحة، واعتمد على قوانين ومفاهيم كتاب وزارة التربية والتعليم المصري. في المسائل اكتب المعطيات ثم القانون ثم خطوات الحل مرقمة ثم الناتج بالوحدة. اكتب الصيغ الكيميائية بالإنجليزية داخل `` مثل `H2O`. اختصر ولا تخرج عن نطاق الكيمياء.";
+/* مفاتيح مزودي الذكاء الاصطناعي لا توضع في HTML؛ تُضاف لاحقًا كـ Cloudflare Secrets. */
 const $=id=>document.getElementById(id);
 const fab=$('aiFab'),dr=$('aiDrawer'),box=$('aiMsgs'),inp=$('aiIn'),send=$('aiSend');
 const SUB='₀₁₂₃₄₅₆₇₈₉';
@@ -1423,21 +1420,17 @@ for(const [re,a] of KB) if(re.test(q)) return a;
 - الكيمياء العضوية
 ولو عندك مسألة اكتب معطياتها وهساعدك في خطواتها.`;
 }
-/* ---------- الاتصال بالـ API ---------- */
+/* ---------- الاتصال الآمن عبر Cloudflare ---------- */
 const hist=[];
 async function ask(q){
- const key=(API_KEY||'').trim();
- if(!key) return {t:local(q),local:true};
  try{
-  if(key.startsWith('AIza')){
-   const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},contents:hist.concat([{role:'user',parts:[{text:q}]}]).slice(-12)})});
-   if(!r.ok) throw Error(r.status);const d=await r.json();
-   const t=d.candidates[0].content.parts.map(p=>p.text||'').join('');hist.push({role:'user',parts:[{text:q}]},{role:'model',parts:[{text:t}]});return {t};
-  }
-  const msgs=[{role:'system',content:SYSTEM_PROMPT}].concat(hist.slice(-10),[{role:'user',content:q}]);
-  const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'gpt-4o-mini',messages:msgs})});
-  if(!r.ok) throw Error(r.status);const d=await r.json();const t=d.choices[0].message.content;
-  hist.push({role:'user',content:q},{role:'assistant',content:t});return {t};
+  const r=await fetch('/api/ai/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history:hist.slice(-10)})});
+  const d=await r.json();
+  if(r.status===503)return {t:local(q),local:true};
+  if(!r.ok)throw Error(d.error||'تعذر الاتصال بالمساعد.');
+  const t=String(d.reply||'').trim();if(!t)throw Error('لم يصل رد من المساعد.');
+  hist.push({role:'user',content:q},{role:'assistant',content:t});
+  return {t};
  }catch(e){return {t:local(q),local:true,err:true}}
 }
 /* ---------- الواجهة ---------- */
@@ -1450,7 +1443,7 @@ async function submit(q){
  ty.innerHTML=md(r.t)+(r.err?'<p><small>تعذر الاتصال بالخدمة، فاستخدمت الردود المدمجة.</small></p>':'');box.scrollTop=box.scrollHeight;send.disabled=false;inp.focus();
 }
 ['💡 اشرح لي فكرة ماء التبلر','⚖️ كيف أوازن معادلة أكسدة الحديد؟','🧪 ما دليل المعايرة المناسب لحمض قوي وقاعدة ضعيفة؟'].forEach(t=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>submit(t);$('aiChips').appendChild(b)});
-$('aiNote').textContent=API_KEY?'متصل بالذكاء الاصطناعي. راجع الإجابات مع كتاب الوزارة.':'يعمل الآن بالردود المدمجة (بدون مفتاح API). راجع الإجابات مع كتاب الوزارة.';
+$('aiNote').textContent='يعمل الآن بالردود المدمجة. عند إضافة مفتاح API كـ Cloudflare Secret سيتصل المساعد بالخدمة بأمان. راجع الإجابات مع كتاب الوزارة.';
 function toggle(o){dr.classList.toggle('on',o);fab.setAttribute('aria-expanded',o);if(o){if(!box.children.length)add('b',md(HELLO));setTimeout(()=>inp.focus(),50)}}
 fab.onclick=()=>toggle(!dr.classList.contains('on'));$('aiClose').onclick=()=>toggle(false);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
