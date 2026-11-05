@@ -1644,7 +1644,7 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
    return data.user;
   }catch(error){
    signedOut();
-   if(error.status>=500)msg('تعذر الاتصال بخدمة الحسابات حاليًا. يمكنك المحاولة مرة أخرى.',true);
+   if(!error.status||error.status>=500)msg('تعذر الاتصال بخدمة الحسابات حاليًا. تحقق من الاتصال ثم حاول مرة أخرى.',true);
    return null;
   }
  }
