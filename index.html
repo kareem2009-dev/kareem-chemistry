@@ -359,9 +359,56 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 #studentsList table{width:100%;border-collapse:collapse;min-width:420px}
 #studentsList th,#studentsList td{padding:9px;border-bottom:1px solid var(--line);text-align:right}
 
+
+/* Welcome presentation — lightweight CSS-only intro */
+#welcomeIntro{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:22px;overflow:auto;direction:rtl;color:#f4f7ff;background:radial-gradient(ellipse at 18% 18%,rgba(49,211,190,.18),transparent 34%),radial-gradient(ellipse at 88% 82%,rgba(220,181,99,.14),transparent 30%),#080e19;transition:opacity .45s ease,visibility .45s ease}
+#welcomeIntro.is-leaving{opacity:0;visibility:hidden;pointer-events:none}
+#welcomeIntro[hidden]{display:none!important}
+.welcome-shell{width:min(920px,100%);padding:clamp(26px,5vw,58px);border:1px solid rgba(255,255,255,.12);border-radius:30px;background:linear-gradient(145deg,rgba(19,31,49,.96),rgba(10,17,29,.98));box-shadow:0 35px 100px #0008;text-align:center;position:relative;isolation:isolate;overflow:hidden}
+.welcome-shell:before,.welcome-shell:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(65,220,198,.18);border-radius:50%;width:360px;height:360px;inset:-210px auto auto -130px;box-shadow:0 0 0 28px #36d6bd08,0 0 0 58px #36d6bd06}
+.welcome-shell:after{width:240px;height:240px;inset:auto -100px -160px auto;border-color:#dcb56355}
+.welcome-kicker{display:inline-flex;padding:8px 14px;border:1px solid #42d7c144;border-radius:99px;background:#36d6bd12;color:#75ead8;font-size:.78rem;font-weight:800;letter-spacing:.12em}
+.welcome-symbol{display:grid;place-items:center;width:82px;height:82px;margin:25px auto 18px;border:1px solid #dcb56377;border-radius:25px;background:linear-gradient(145deg,#dcb5632b,#dcb56308);font-size:42px;box-shadow:0 18px 42px #0005}
+.welcome-shell h1{margin:0 auto 14px;max-width:720px;font-size:clamp(2rem,5vw,3.6rem);line-height:1.3;color:#f7f9ff}
+.welcome-shell h1 span{color:#62dfcd}
+.welcome-shell>p{max-width:650px;margin:0 auto;color:#b6c5d8;font-size:clamp(.98rem,2vw,1.12rem);line-height:2}
+.welcome-features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:30px 0}
+.welcome-feature{padding:14px 10px;border:1px solid #ffffff18;border-radius:16px;background:#ffffff08;color:#dce8f4;font-weight:700}
+.welcome-feature b{display:block;font-size:1.5rem;margin-bottom:4px}
+#welcomeStart{min-width:210px;min-height:54px;padding:12px 24px;border:0;border-radius:14px;background:linear-gradient(105deg,#36d6bd,#23bda9);color:#06231f;font:900 1.05rem Tajawal,sans-serif;cursor:pointer;box-shadow:0 12px 30px #26ccb433;transition:transform .2s,filter .2s}
+#welcomeStart:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.welcome-note{display:block;margin-top:15px;color:#8295aa;font-size:.82rem}
+#loginGate #gateForms{display:flex;flex-direction:column}
+#loginGate #gateAuthHeader{max-width:470px;width:100%;margin:0 auto 14px;text-align:center}
+#loginGate #gateAuthHeader h2{margin:0 0 6px;color:#f5f8ff;font-size:1.45rem}
+#loginGate #gateAuthHeader p{color:#9fb0c5;font-size:.92rem}
+#loginGate #gateAuthHeader button{border:0;background:none;color:#65e0cf;font:800 .95rem Tajawal,sans-serif;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+#loginGate #authForms{display:block!important;margin:0 auto!important;width:100%;max-width:470px}
+#loginGate #loginForm[hidden],#loginGate #registerForm[hidden]{display:none!important}
+#loginGate #registerForm h3{font-size:1.25rem;color:#f5f8ff}
+#loginGate #registerForm{background:rgba(255,255,255,.045)!important}
+#loginGate .gate-foot{margin-top:18px}
+@media(max-width:760px){#welcomeIntro{padding:12px}.welcome-shell{padding:28px 18px;border-radius:22px}.welcome-symbol{width:64px;height:64px;font-size:32px;margin:20px auto 14px}.welcome-features{grid-template-columns:1fr;gap:8px;margin:20px 0}.welcome-feature{padding:10px}#loginGate .gate-card{max-height:calc(100dvh - 24px)}}
+@media(prefers-reduced-motion:reduce){#welcomeIntro,#welcomeStart{transition:none!important}}
+
 </style>
 </head>
 <body>
+<div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+ <div class="welcome-shell">
+  <span class="welcome-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
+  <div class="welcome-symbol" aria-hidden="true">⚗</div>
+  <h1 id="welcomeTitle">مش مجرد مذاكرة…<br><span>دي تجربة كيمياء مختلفة.</span></h1>
+  <p>اكتشف طريقة أذكى لفهم كيمياء الثانوية العامة؛ جرّب التفاعلات، افهم المعادلات، اختبر نفسك، وتابع تقدمك في مكان واحد.</p>
+  <div class="welcome-features">
+   <div class="welcome-feature"><b>⚗</b>معمل وتجارب تفاعلية</div>
+   <div class="welcome-feature"><b>✦</b>بنك أسئلة وتحديات</div>
+   <div class="welcome-feature"><b>↗</b>متابعة تقدمك الدراسي</div>
+  </div>
+  <button id="welcomeStart" type="button">ابدأ رحلتك الآن <span aria-hidden="true">←</span></button>
+  <small class="welcome-note">مساحتك التعليمية — KAREEM IBRAHIM</small>
+ </div>
+</div>
 <div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
  <div class="gate-card">
   <section class="gate-brand" aria-label="عن المنصة">
@@ -372,6 +419,10 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
    <div class="brand-points"><span><i>✓</i> معمل تفاعلي وتجارب تعليمية</span><span><i>✓</i> بنك أسئلة ومراجعات</span><span><i>✓</i> احفظ تقدمك الدراسي</span></div>
   </section>
   <div id="gateForms">
+   <div id="gateAuthHeader">
+    <h2 id="gateAuthTitle">إنشاء حساب طالب مجاني</h2>
+    <p><span id="gateSwitchPrompt">هل لديك حساب بالفعل؟</span> <button id="gateSwitch" type="button">تسجيل الدخول</button></p>
+   </div>
    <div class="gate-foot">مساحة تعليمية للتميز والفهم — KAREEM IBRAHIM</div>
   </div>
  </div>
@@ -1617,7 +1668,28 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  const state=text=>$id('accountState').textContent=text;
  const gate=$id('loginGate');
  const gateForms=$id('gateForms');
- gateForms.append($id('authForms'),$id('authMessage'));
+ const gateFooter=gateForms.querySelector('.gate-foot');
+ gateForms.insertBefore($id('authForms'),gateFooter);
+ gateForms.insertBefore($id('authMessage'),gateFooter);
+ const gateSwitch=$id('gateSwitch'),gateSwitchPrompt=$id('gateSwitchPrompt'),gateAuthTitle=$id('gateAuthTitle');
+ let gateMode='register';
+ function setGateMode(mode){
+  gateMode=mode;
+  const registering=mode==='register';
+  $id('registerForm').hidden=!registering;
+  $id('loginForm').hidden=registering;
+  gateAuthTitle.textContent=registering?'إنشاء حساب طالب مجاني':'أهلًا بعودتك';
+  gateSwitchPrompt.textContent=registering?'هل لديك حساب بالفعل؟':'ليس لديك حساب بعد؟';
+  gateSwitch.textContent=registering?'تسجيل الدخول':'إنشاء حساب مجاني';
+  msg('');
+ }
+ gateSwitch.addEventListener('click',()=>setGateMode(gateMode==='register'?'login':'register'));
+ setGateMode('register');
+ const welcomeIntro=$id('welcomeIntro');
+ $id('welcomeStart').addEventListener('click',()=>{
+  welcomeIntro.classList.add('is-leaving');
+  window.setTimeout(()=>{welcomeIntro.hidden=true;},460);
+ });
  const busy=(form,on)=>{form.querySelectorAll('button').forEach(b=>b.disabled=on)};
  async function api(path,body){
   const res=await fetch('/api/'+path,{method:body?'POST':'GET',credentials:'same-origin',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
