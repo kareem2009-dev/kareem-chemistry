@@ -239,6 +239,15 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 .fxw{fill:rgba(130,160,185,.45);animation:fxw 2.2s ease-out forwards}@keyframes fxw{to{transform:translateY(-46px) scale(2);opacity:0}}
 #fxF path{transform-box:fill-box;transform-origin:50% 100%;animation:fl .25s infinite alternate}@keyframes fl{to{transform:scale(.9,1.12)}}
 #fxDp.go{animation:fd 1s ease-in forwards}@keyframes fd{0%{transform:translateY(0);opacity:1}88%{transform:translateY(104px);opacity:1}100%{transform:translateY(110px);opacity:0}}
+
+/* Account UI */
+#accountPanel input{box-sizing:border-box;width:100%;min-height:42px;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+#accountPanel button{cursor:pointer}
+#accountPanel button:disabled{opacity:.6;cursor:wait}
+#accountPanel .tag{display:inline-block}
+#studentsList table{width:100%;border-collapse:collapse;min-width:420px}
+#studentsList th,#studentsList td{padding:9px;border-bottom:1px solid var(--line);text-align:right}
+
 </style>
 </head>
 <body>
@@ -402,6 +411,33 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 </section>
 
 <section class="view" id="v-student">
+
+<div id="accountPanel" class="card" style="margin:18px 0;padding:18px;border:1px solid var(--line)">
+ <div style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+  <div><span class="tag">حسابك السحابي</span><h3 style="margin:8px 0">تسجيل الدخول ومزامنة تقدمك</h3><p class="student-muted" style="margin:0">سجّل حسابًا مجانيًا للوصول إلى بياناتك من أجهزتك.</p></div>
+  <span id="accountState" class="tag">جارٍ التحقق من الحساب…</span>
+ </div>
+ <div id="authForms" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:16px">
+  <form id="loginForm" class="card" style="padding:14px">
+   <h3>تسجيل الدخول</h3><label for="loginUsername">اسم المستخدم</label><input id="loginUsername" autocomplete="username" minlength="3" maxlength="24" required placeholder="اسم المستخدم">
+   <label for="loginPassword" style="display:block;margin-top:10px">كلمة المرور</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور">
+   <button class="btn p" type="submit" style="margin-top:14px;width:100%">دخول</button>
+  </form>
+  <form id="registerForm" class="card" style="padding:14px">
+   <h3>إنشاء حساب طالب مجاني</h3><label for="registerName">الاسم الظاهر</label><input id="registerName" autocomplete="name" maxlength="50" required placeholder="اسمك">
+   <label for="registerUsername" style="display:block;margin-top:10px">اسم المستخدم</label><input id="registerUsername" autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]{3,24}" required placeholder="مثال: kareem_chem">
+   <label for="registerPassword" style="display:block;margin-top:10px">كلمة المرور (10 أحرف على الأقل)</label><input id="registerPassword" type="password" autocomplete="new-password" minlength="10" required placeholder="اختر كلمة مرور قوية">
+   <button class="btn p" type="submit" style="margin-top:14px;width:100%">إنشاء الحساب</button>
+  </form>
+ </div>
+ <div id="accountSignedIn" hidden style="margin-top:16px">
+  <p id="accountWelcome"></p><button id="logoutButton" class="btn" type="button">تسجيل الخروج</button>
+  <div id="adminArea" hidden class="card" style="margin-top:14px;padding:14px"><h3>إدارة الطلاب</h3><p class="student-muted">قائمة الحسابات المسجلة. لا تظهر إلا لحساب يحمل صلاحية admin.</p><button id="loadStudents" class="btn" type="button">عرض الطلاب</button><div id="studentsList" style="overflow:auto;margin-top:12px"></div></div>
+ </div>
+ <p id="authMessage" role="status" aria-live="polite" style="margin:12px 0 0"></p>
+ <small class="student-muted" style="display:block;margin-top:10px">ملاحظة: التسجيل باسم مستخدم وكلمة مرور فقط؛ استعادة الحساب عند نسيان كلمة المرور تتم حاليًا عن طريق مسؤول الموقع.</small>
+</div>
+
 <h2>لوحة الطالب الشخصية</h2>
 <p class="student-muted">مساحتك لمتابعة المذاكرة والنتائج وتنظيم المراجعة. بياناتك محفوظة محليًا على هذا الجهاز دون إنشاء حساب.</p>
 <div class="student-hero">
@@ -1390,6 +1426,64 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
  }
 })();
+
+/* Cloud account integration */
+(()=>{
+ const panel=document.getElementById('accountPanel'); if(!panel)return;
+ const $id=id=>document.getElementById(id);
+ const msg=(text,isError=false)=>{const el=$id('authMessage');el.textContent=text;el.style.color=isError?'#c43d3d':'var(--tq)'};
+ const state=text=>$id('accountState').textContent=text;
+ const busy=(form,on)=>{form.querySelectorAll('button').forEach(b=>b.disabled=on)};
+ async function api(path,body){
+  const res=await fetch('/api/'+path,{method:body?'POST':'GET',credentials:'same-origin',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
+  let data={};try{data=await res.json()}catch(_){}
+  if(!res.ok)throw new Error(data.error||'حدث خطأ في الاتصال. حاول مرة أخرى.');
+  return data;
+ }
+ function signedOut(){
+  $id('authForms').hidden=false;$id('accountSignedIn').hidden=true;$id('adminArea').hidden=true;
+  state('غير مسجل الدخول');
+ }
+ function signedIn(user){
+  $id('authForms').hidden=true;$id('accountSignedIn').hidden=false;
+  $id('accountWelcome').textContent='أهلًا '+(user.display_name||user.username)+' — @'+user.username;
+  $id('adminArea').hidden=user.role!=='admin';
+  state(user.role==='admin'?'مسجل الدخول · مسؤول':'مسجل الدخول · طالب');
+ }
+ async function refreshSession(){
+  try{const data=await api('auth/me');signedIn(data.user);return data.user}
+  catch(_){signedOut();return null}
+ }
+ $id('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();const form=e.currentTarget;busy(form,true);msg('');
+  try{const user=await api('auth/login',{username:$id('loginUsername').value.trim(),password:$id('loginPassword').value});signedIn(user.user);msg('تم تسجيل الدخول بنجاح.')}
+  catch(err){msg(err.message,true)}finally{busy(form,false)}
+ });
+ $id('registerForm').addEventListener('submit',async e=>{
+  e.preventDefault();const form=e.currentTarget;busy(form,true);msg('');
+  try{
+   const data=await api('auth/register',{display_name:$id('registerName').value.trim(),username:$id('registerUsername').value.trim(),password:$id('registerPassword').value});
+   signedIn(data.user);form.reset();msg('تم إنشاء الحساب وتسجيل الدخول. احتفظ باسم المستخدم وكلمة المرور في مكان آمن.');
+  }catch(err){msg(err.message,true)}finally{busy(form,false)}
+ });
+ $id('logoutButton').addEventListener('click',async()=>{
+  try{await api('auth/logout',{});}catch(_){}
+  signedOut();msg('تم تسجيل الخروج.');
+ });
+ $id('loadStudents').addEventListener('click',async()=>{
+  const b=$id('loadStudents');b.disabled=true;
+  try{
+   const data=await api('admin/students');
+   const rows=data.students.map(s=>'<tr><td></td><td></td><td></td></tr>');
+   const table=document.createElement('table');table.innerHTML='<thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>تاريخ التسجيل</th></tr></thead>';
+   const body=document.createElement('tbody');
+   data.students.forEach(s=>{const tr=document.createElement('tr');[s.display_name,s.username,new Date(s.created_at).toLocaleDateString('ar-EG')].forEach(v=>{const td=document.createElement('td');td.textContent=v||'—';tr.appendChild(td)});body.appendChild(tr)});
+   table.appendChild(body);$id('studentsList').replaceChildren(table);msg('تم تحميل '+data.students.length+' حساب.');
+  }catch(err){msg(err.message,true)}finally{b.disabled=false}
+ });
+ refreshSession();
+})();
+
 </script>
 </body>
 </html>
