@@ -241,6 +241,7 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 #fxDp.go{animation:fd 1s ease-in forwards}@keyframes fd{0%{transform:translateY(0);opacity:1}88%{transform:translateY(104px);opacity:1}100%{transform:translateY(110px);opacity:0}}
 
 /* Account UI */
+#accountPanel [hidden]{display:none!important}
 #accountPanel input{box-sizing:border-box;width:100%;min-height:42px;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
 #accountPanel button{cursor:pointer}
 #accountPanel button:disabled{opacity:.6;cursor:wait}
@@ -1474,7 +1475,6 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   const b=$id('loadStudents');b.disabled=true;
   try{
    const data=await api('admin/students');
-   const rows=data.students.map(s=>'<tr><td></td><td></td><td></td></tr>');
    const table=document.createElement('table');table.innerHTML='<thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>تاريخ التسجيل</th></tr></thead>';
    const body=document.createElement('tbody');
    data.students.forEach(s=>{const tr=document.createElement('tr');[s.display_name,s.username,new Date(s.created_at).toLocaleDateString('ar-EG')].forEach(v=>{const td=document.createElement('td');td.textContent=v||'—';tr.appendChild(td)});body.appendChild(tr)});
