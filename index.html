@@ -240,6 +240,36 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 #fxF path{transform-box:fill-box;transform-origin:50% 100%;animation:fl .25s infinite alternate}@keyframes fl{to{transform:scale(.9,1.12)}}
 #fxDp.go{animation:fd 1s ease-in forwards}@keyframes fd{0%{transform:translateY(0);opacity:1}88%{transform:translateY(104px);opacity:1}100%{transform:translateY(110px);opacity:0}}
 
+
+/* Admin control center */
+#adminDashboard[hidden]{display:none!important}
+#adminDashboard{position:fixed;inset:0;z-index:100000;display:flex;min-height:100vh;background:#080e19;color:#edf3fb;font-family:Tajawal,sans-serif;overflow:auto}
+.ad-sidebar{width:250px;flex:0 0 250px;display:flex;flex-direction:column;padding:25px 17px;background:#0d1727;border-left:1px solid rgba(255,255,255,.08)}
+.ad-logo{display:flex;align-items:center;gap:12px;padding:7px 9px 28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ad-logo>span{display:grid;place-items:center;width:43px;height:43px;border-radius:14px;background:rgba(54,214,189,.12);color:#49ddc6;font-size:25px}
+.ad-logo b,.ad-logo small{display:block;letter-spacing:.13em}.ad-logo b{font:700 17px Cinzel,serif}.ad-logo small{font-size:9px;color:#8ba0b7;margin-top:3px}
+.ad-side-label{margin:27px 9px 12px;color:#6f849d;font-size:11px}
+.ad-nav{display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;margin:4px 0;border:0;border-radius:12px;background:transparent;color:#aebed0;text-align:right;font:700 14px Tajawal;cursor:pointer}
+.ad-nav.active,.ad-nav:hover{background:linear-gradient(90deg,rgba(54,214,189,.15),rgba(54,214,189,.04));color:#66e4d2}
+.ad-sidebar-bottom{display:grid;gap:12px;margin-top:auto;padding:18px 8px 4px;border-top:1px solid rgba(255,255,255,.08);color:#8ea0b4;font-size:12px}
+.ad-logout,.ad-back{padding:10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:transparent;color:#d9e5f1;text-align:center;text-decoration:none;font:700 12px Tajawal;cursor:pointer}
+.ad-main{flex:1;min-width:0;padding:30px clamp(18px,4vw,48px);overflow:auto;background:radial-gradient(ellipse at 80% 0%,rgba(34,167,151,.09),transparent 32%),#080e19}
+.ad-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.ad-top small{color:#6edbc9;font-size:10px;letter-spacing:.17em}.ad-top h1{font-size:26px;margin-top:5px}.ad-secure{padding:8px 12px;border:1px solid rgba(68,219,195,.2);border-radius:999px;color:#6ee0cf;font-size:11px}
+.ad-view{display:none}.ad-view.active{display:block}
+.ad-welcome{display:flex;justify-content:space-between;align-items:center;min-height:185px;padding:28px 32px;border:1px solid rgba(71,214,194,.16);border-radius:22px;background:linear-gradient(110deg,#112c37,#142238 65%,#172239)}
+.ad-welcome small{color:#72e2d0}.ad-welcome h2{margin:10px 0;font-size:25px}.ad-welcome p{color:#aabbd0}.ad-orbit{display:grid;place-items:center;width:105px;height:105px;border:1px solid rgba(223,183,99,.5);border-radius:50%;color:#dfbb6b;font-size:48px;box-shadow:0 0 0 14px rgba(223,183,99,.04),0 0 45px rgba(223,183,99,.1)}
+.ad-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}
+.ad-stats article,.ad-panel{padding:20px;border:1px solid rgba(255,255,255,.09);border-radius:17px;background:#111c2d}
+.ad-stats article span,.ad-stats article small{display:block;color:#9eafc4;font-size:12px}.ad-stats article b{display:block;margin:10px 0;font-size:30px;color:#f4f7fb}.ad-stats article small{font-size:10px;color:#6c829b}
+.ad-panel{margin:18px 0}.ad-panel-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:18px}.ad-panel-head h3{font-size:18px}.ad-panel-head p{margin-top:4px;color:#90a3b9;font-size:12px}
+.ad-btn{padding:10px 15px;border:1px solid rgba(255,255,255,.13);border-radius:10px;background:#19283b;color:#dbe7f2;font:700 12px Tajawal;cursor:pointer}.ad-btn.primary{border:0;background:#39d5bd;color:#05231f}.ad-btn:disabled{opacity:.55;cursor:wait}
+.ad-table-wrap{overflow:auto}#adminDashboard table{width:100%;border-collapse:collapse;min-width:570px}#adminDashboard th,#adminDashboard td{padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.07);text-align:right;font-size:12px}#adminDashboard th{color:#7edccc;font-weight:700}#adminDashboard td{color:#d1dbe7}
+.ad-actions{display:flex;gap:7px;flex-wrap:wrap}.ad-actions button{padding:6px 9px;border-radius:8px;font:700 11px Tajawal;cursor:pointer}.ad-edit{border:1px solid #355b69;background:#15313a;color:#8de9da}.ad-delete{border:1px solid #673b48;background:#351d2a;color:#ffb5c0}
+.ad-editor{padding:20px;margin-bottom:18px;border:1px solid rgba(67,218,195,.2);border-radius:15px;background:#0c1726}.ad-editor h3{margin-bottom:16px}.ad-editor form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.ad-editor label{display:grid;gap:6px;color:#aebfd1;font-size:12px}.ad-editor label:nth-child(5),.ad-editor label:nth-child(6),.ad-editor label:nth-child(7),.ad-form-actions{grid-column:1/-1}
+.ad-editor input,.ad-editor textarea,.ad-editor select{width:100%;padding:11px;border:1px solid #2a3a50;border-radius:9px;background:#08111e;color:#edf4fb;font:13px Tajawal}.ad-editor textarea{resize:vertical}.ad-form-actions{display:flex;gap:9px}
+#adminNotice{margin-bottom:12px;color:#72e2d0;font-size:13px}#adminNotice.error{color:#ff9daa}
+@media(max-width:800px){#adminDashboard{display:block}.ad-sidebar{width:100%;padding:12px;display:block;border:0;border-bottom:1px solid #26344a}.ad-logo{padding:2px 6px 12px}.ad-side-label,.ad-sidebar-bottom{display:none}.ad-nav{display:inline-flex;width:auto;margin:10px 3px 0;padding:9px 10px;font-size:12px}.ad-main{padding:20px 13px}.ad-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ad-welcome{min-height:145px;padding:19px}.ad-orbit{width:70px;height:70px;font-size:32px}.ad-welcome h2{font-size:19px}.ad-editor form{grid-template-columns:1fr}.ad-editor label{grid-column:1/-1}.ad-top h1{font-size:21px}}
+
 /* First-screen sign-in gate */
 #loginGate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(ellipse at 50% 20%,rgba(35,190,169,.16),transparent 55%),var(--bg);overflow:auto}
 #loginGate[hidden]{display:none!important}
@@ -345,6 +375,53 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
    <div class="gate-foot">مساحة تعليمية للتميز والفهم — KAREEM IBRAHIM</div>
   </div>
  </div>
+</div>
+
+<div id="adminDashboard" hidden dir="rtl">
+ <aside class="ad-sidebar">
+  <div class="ad-logo"><span>⚗</span><div><b>KAREEM</b><small>CONTROL CENTER</small></div></div>
+  <div class="ad-side-label">القائمة الرئيسية</div>
+  <button class="ad-nav active" data-tab="overview">▦ <span>نظرة عامة</span></button>
+  <button class="ad-nav" data-tab="students">♙ <span>إدارة الطلاب</span></button>
+  <button class="ad-nav" data-tab="questions">▤ <span>بنك الأسئلة</span></button>
+  <div class="ad-sidebar-bottom"><small id="adminIdentity">مسؤول النظام</small><button id="adminLogout" class="ad-logout">تسجيل الخروج ↗</button><a href="/" class="ad-back">العودة للموقع ←</a></div>
+ </aside>
+ <main class="ad-main">
+  <header class="ad-top"><div><small>ADMINISTRATION / 2027</small><h1 id="adminPageTitle">نظرة عامة</h1></div><span class="ad-secure">● اتصال آمن</span></header>
+  <div id="adminNotice" role="status" aria-live="polite"></div>
+  <section class="ad-view active" id="ad-overview">
+   <div class="ad-welcome"><div><small>لوحة تحكم KAREEM CHEMISTRY</small><h2>أهلًا بيك في مركز الإدارة</h2><p>تابع الطلاب والمحتوى التعليمي من مكان واحد.</p></div><div class="ad-orbit">⚗</div></div>
+   <div class="ad-stats">
+    <article><span>إجمالي الطلاب</span><b id="statStudents">—</b><small>حساب مسجل</small></article>
+    <article><span>بنك الأسئلة</span><b id="statQuestions">—</b><small>سؤال محفوظ</small></article>
+    <article><span>نشاط آخر 7 أيام</span><b id="statActive">—</b><small>طالب لديه بيانات محدثة</small></article>
+    <article><span>ملفات تقدم محفوظة</span><b id="statTracked">—</b><small>سجل متابعة</small></article>
+   </div>
+   <article class="ad-panel"><div class="ad-panel-head"><div><h3>أحدث الحسابات</h3><p>آخر الطلاب الذين أنشأوا حسابًا</p></div><button class="ad-btn" data-goto="students">عرض كل الطلاب ←</button></div><div id="recentStudents" class="ad-table-wrap">جارٍ تحميل البيانات…</div></article>
+  </section>
+  <section class="ad-view" id="ad-students">
+   <div class="ad-panel"><div class="ad-panel-head"><div><h3>إدارة الطلاب</h3><p>عرض الحسابات وتعديل الاسم الظاهر أو حذف الحساب.</p></div><button class="ad-btn primary" id="refreshStudents">تحديث القائمة</button></div><div id="adminStudents" class="ad-table-wrap">جارٍ تحميل البيانات…</div></div>
+  </section>
+  <section class="ad-view" id="ad-questions">
+   <div class="ad-panel"><div class="ad-panel-head"><div><h3>إدارة بنك الأسئلة</h3><p>أضف سؤالًا جديدًا أو عدّل الأسئلة التي أضفتها من لوحة الإدارة.</p></div><button class="ad-btn primary" id="newQuestion">＋ إضافة سؤال</button></div>
+    <div id="questionEditor" class="ad-editor" hidden>
+     <h3 id="questionEditorTitle">إضافة سؤال جديد</h3>
+     <form id="adminQuestionForm">
+      <input type="hidden" id="questionId">
+      <label>عنوان السؤال<input id="questionTitle" required maxlength="160" placeholder="مثال: خواص عناصر الفئة s"></label>
+      <label>الباب / الفصل<input id="questionChapter" maxlength="80" placeholder="الباب الأول"></label>
+      <label>مستوى الصعوبة<select id="questionDifficulty"><option>سهل</option><option selected>متوسط</option><option>صعب</option></select></label>
+      <label>نص السؤال<textarea id="questionText" required maxlength="3000" rows="3"></textarea></label>
+      <label>الاختيارات (كل اختيار في سطر منفصل)<textarea id="questionOptions" required rows="4" placeholder="الاختيار الأول&#10;الاختيار الثاني&#10;الاختيار الثالث&#10;الاختيار الرابع"></textarea></label>
+      <label>رقم الإجابة الصحيحة<select id="questionCorrect"><option value="0">الأول</option><option value="1">الثاني</option><option value="2">الثالث</option><option value="3">الرابع</option><option value="4">الخامس</option><option value="5">السادس</option></select></label>
+      <label>تفسير الإجابة (اختياري)<textarea id="questionExplanation" rows="2" maxlength="2000"></textarea></label>
+      <div class="ad-form-actions"><button class="ad-btn primary" type="submit">حفظ السؤال</button><button class="ad-btn" type="button" id="cancelQuestion">إلغاء</button></div>
+     </form>
+    </div>
+    <div id="adminQuestions" class="ad-table-wrap">جارٍ تحميل البيانات…</div>
+   </div>
+  </section>
+ </main>
 </div>
 <header>
 <a class="logo" href="#home"><img class="av" alt="صورة KAREEM IBRAHIM"><span><b>KAREEM IBRAHIM</b><small>كيمياء الثانوية العامة</small></span></a>
@@ -528,7 +605,7 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
  </div>
  <div id="accountSignedIn" hidden style="margin-top:16px">
   <p id="accountWelcome"></p><button id="logoutButton" class="btn" type="button">تسجيل الخروج</button>
-  <div id="adminArea" hidden class="card" style="margin-top:14px;padding:14px"><h3>إدارة الطلاب</h3><p class="student-muted">قائمة الحسابات المسجلة. لا تظهر إلا لحساب يحمل صلاحية admin.</p><button id="loadStudents" class="btn" type="button">عرض الطلاب</button><div id="studentsList" style="overflow:auto;margin-top:12px"></div></div>
+  <div id="adminArea" hidden><p>تم تسجيل الدخول كمسؤول.</p><a class="btn p" href="/admin">فتح لوحة التحكم الكاملة</a></div>
  </div>
  <p id="authMessage" role="status" aria-live="polite" style="margin:12px 0 0"></p>
  <small class="student-muted" style="display:block;margin-top:10px">ملاحظة: التسجيل باسم مستخدم وكلمة مرور فقط؛ استعادة الحساب عند نسيان كلمة المرور تتم حاليًا عن طريق مسؤول الموقع.</small>
@@ -1571,18 +1648,83 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   try{await api('auth/logout',{});}catch(_){}
   signedOut();msg('تم تسجيل الخروج.');
  });
- $id('loadStudents').addEventListener('click',async()=>{
-  const b=$id('loadStudents');b.disabled=true;
-  try{
-   const data=await api('admin/students');
-   const table=document.createElement('table');table.innerHTML='<thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>تاريخ التسجيل</th></tr></thead>';
-   const body=document.createElement('tbody');
-   data.students.forEach(s=>{const tr=document.createElement('tr');[s.display_name,s.username,new Date(s.created_at).toLocaleDateString('ar-EG')].forEach(v=>{const td=document.createElement('td');td.textContent=v||'—';tr.appendChild(td)});body.appendChild(tr)});
-   table.appendChild(body);$id('studentsList').replaceChildren(table);msg('تم تحميل '+data.students.length+' حساب.');
-  }catch(err){msg(err.message,true)}finally{b.disabled=false}
+ const dashboard=$id('adminDashboard');
+ let adminUser=null,questionCache=[];
+ async function adminRequest(path,method="GET",data){
+  const res=await fetch('/api/'+path,{method,credentials:'same-origin',headers:data?{'Content-Type':'application/json'}:{},body:data?JSON.stringify(data):undefined});
+  let result={};try{result=await res.json()}catch(_){}
+  if(!res.ok)throw new Error(result.error||'تعذر تنفيذ العملية.');
+  return result;
+ }
+ function notice(text,error=false){const el=$id('adminNotice');el.textContent=text;el.classList.toggle('error',error)}
+ function safeCell(tr,value){const td=document.createElement('td');td.textContent=value??'—';tr.appendChild(td);return td}
+ function makeTable(headers,rows){const table=document.createElement('table'),thead=document.createElement('thead'),hr=document.createElement('tr');headers.forEach(h=>safeCell(hr,h));thead.appendChild(hr);table.appendChild(thead);const tbody=document.createElement('tbody');rows.forEach(row=>tbody.appendChild(row));table.appendChild(tbody);return table}
+ function showAdminTab(tab){
+  document.querySelectorAll('.ad-nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.ad-view').forEach(v=>v.classList.toggle('active',v.id==='ad-'+tab));
+  $id('adminPageTitle').textContent=({overview:'نظرة عامة',students:'إدارة الطلاب',questions:'بنك الأسئلة'})[tab]||'لوحة الإدارة';
+ }
+ async function loadOverview(){
+  const d=await adminRequest('admin/overview');
+  $id('statStudents').textContent=d.stats.students;$id('statQuestions').textContent=d.stats.questions;$id('statActive').textContent=d.stats.activeStudents;$id('statTracked').textContent=d.stats.trackedStudents;
+  const rows=d.recentStudents.map(s=>{const tr=document.createElement('tr');safeCell(tr,s.display_name);safeCell(tr,'@'+s.username);safeCell(tr,new Date(s.created_at).toLocaleDateString('ar-EG'));return tr});
+  $id('recentStudents').replaceChildren(makeTable(['الاسم','اسم المستخدم','تاريخ التسجيل'],rows));
+ }
+ async function loadStudents(){
+  const d=await adminRequest('admin/students');
+  const rows=d.students.map(s=>{
+   const tr=document.createElement('tr');safeCell(tr,s.display_name);safeCell(tr,'@'+s.username);safeCell(tr,new Date(s.created_at).toLocaleDateString('ar-EG'));safeCell(tr,s.last_activity?new Date(s.last_activity).toLocaleDateString('ar-EG'):'لا يوجد');
+   const actions=safeCell(tr,'');actions.className='ad-actions';
+   const edit=document.createElement('button');edit.className='ad-edit';edit.textContent='تعديل الاسم';edit.addEventListener('click',async()=>{const name=prompt('اكتب الاسم الجديد:',s.display_name);if(name===null)return;try{await adminRequest('admin/students/update','POST',{id:s.id,display_name:name});notice('تم تحديث بيانات الطالب.');await loadStudents();}catch(e){notice(e.message,true)}});
+   const del=document.createElement('button');del.className='ad-delete';del.textContent='حذف الحساب';del.addEventListener('click',async()=>{if(!confirm('حذف حساب '+s.username+' نهائيًا؟ سيتم حذف بياناته المرتبطة أيضًا.'))return;try{await adminRequest('admin/students/delete','POST',{id:s.id});notice('تم حذف الحساب.');await loadStudents();await loadOverview();}catch(e){notice(e.message,true)}});
+   actions.append(edit,del);return tr;
+  });
+  $id('adminStudents').replaceChildren(makeTable(['الاسم','اسم المستخدم','تاريخ التسجيل','آخر نشاط','إجراءات'],rows));
+ }
+ async function loadQuestions(){
+  const d=await adminRequest('admin/questions');questionCache=d.questions;
+  const rows=d.questions.map(q=>{
+   const tr=document.createElement('tr');safeCell(tr,q.title);safeCell(tr,q.chapter||'—');safeCell(tr,q.difficulty);safeCell(tr,q.enabled?'مفعّل':'مخفي');
+   const actions=safeCell(tr,'');actions.className='ad-actions';
+   const edit=document.createElement('button');edit.className='ad-edit';edit.textContent='تعديل';edit.addEventListener('click',()=>editQuestion(q));
+   const del=document.createElement('button');del.className='ad-delete';del.textContent='حذف';del.addEventListener('click',async()=>{if(!confirm('حذف السؤال نهائيًا؟'))return;try{await adminRequest('admin/questions/delete','POST',{id:q.id});notice('تم حذف السؤال.');await loadQuestions();await loadOverview()}catch(e){notice(e.message,true)}});
+   actions.append(edit,del);return tr;
+  });
+  $id('adminQuestions').replaceChildren(makeTable(['عنوان السؤال','الباب','المستوى','الحالة','إجراءات'],rows));
+ }
+ function editQuestion(q){
+  $id('questionEditor').hidden=false;$id('questionEditorTitle').textContent=q?'تعديل السؤال':'إضافة سؤال جديد';
+  $id('questionId').value=q?.id||'';$id('questionTitle').value=q?.title||'';$id('questionChapter').value=q?.chapter||'';$id('questionDifficulty').value=q?.difficulty||'متوسط';$id('questionText').value=q?.question||'';$id('questionOptions').value=(q?.options||[]).join('\n');$id('questionCorrect').innerHTML=(q?.options||['','','','']).map((_,i)=>'<option value="'+i+'">'+['الأول','الثاني','الثالث','الرابع','الخامس','السادس'][i]+'</option>').join('');$id('questionCorrect').value=String(q?.correct_answer||0);$id('questionExplanation').value=q?.explanation||'';
+  $id('questionEditor').scrollIntoView({behavior:'smooth',block:'start'});
+ }
+ $id('newQuestion').addEventListener('click',()=>editQuestion(null));
+ $id('cancelQuestion').addEventListener('click',()=>{$id('questionEditor').hidden=true;$id('adminQuestionForm').reset()});
+ $id('adminQuestionForm').addEventListener('submit',async e=>{
+  e.preventDefault();const id=$id('questionId').value,options=$id('questionOptions').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const data={title:$id('questionTitle').value,chapter:$id('questionChapter').value,difficulty:$id('questionDifficulty').value,question:$id('questionText').value,options,correct_answer:Number($id('questionCorrect').value),explanation:$id('questionExplanation').value};
+  try{await adminRequest('admin/questions',id?'PUT':'POST',id?{...data,id}:data);notice(id?'تم تحديث السؤال.':'تمت إضافة السؤال.');$id('questionEditor').hidden=true;$id('adminQuestionForm').reset();await loadQuestions();await loadOverview()}catch(e){notice(e.message,true)}
  });
+ document.querySelectorAll('.ad-nav').forEach(b=>b.addEventListener('click',()=>{showAdminTab(b.dataset.tab);if(b.dataset.tab==='students')loadStudents().catch(e=>notice(e.message,true));if(b.dataset.tab==='questions')loadQuestions().catch(e=>notice(e.message,true))}));
+ document.querySelectorAll('[data-goto="students"]').forEach(b=>b.addEventListener('click',()=>{showAdminTab('students');loadStudents().catch(e=>notice(e.message,true))}));
+ $id('refreshStudents').addEventListener('click',()=>loadStudents().then(()=>notice('تم تحديث القائمة.')).catch(e=>notice(e.message,true)));
+ async function openAdmin(){
+  dashboard.hidden=false;$id('adminIdentity').textContent='@'+(adminUser?.username||'admin');showAdminTab('overview');
+  try{await loadOverview();}catch(e){notice(e.message,true)}
+ }
+ $id('adminLogout').addEventListener('click',async()=>{try{await api('auth/logout',{})}catch(_){}adminUser=null;dashboard.hidden=true;location.href='/'});
+ const oldSignedIn=signedIn;
+ signedIn=function(user){
+  oldSignedIn(user);adminUser=user;
+  if(location.pathname.replace(/\/$/,'')==='/admin'){
+   if(user.role==='admin'){dashboard.hidden=false;openAdmin()}else{dashboard.hidden=true;location.replace('/')}
+  }else if(user.role==='admin'){location.replace('/admin')}
+ };
  gate.hidden=false;
- refreshSession();
+ const initialPath=location.pathname.replace(/\/$/,'');
+ refreshSession().then(user=>{
+  if(!user&&initialPath==='/admin'){$id('gateTitle').textContent='دخول مسؤول النظام';}
+ });
+
 })();
 
 </script>
