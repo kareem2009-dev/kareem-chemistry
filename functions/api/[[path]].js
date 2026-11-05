@@ -2,10 +2,14 @@ const headers={"Content-Type":"application/json; charset=utf-8","Cache-Control":
 const cookieBase="Path=/; HttpOnly; Secure; SameSite=Lax";
 const clearCookies=["kc_access=; "+cookieBase+"; Max-Age=0","kc_refresh=; "+cookieBase+"; Max-Age=0"];
 const json=(data,status=200,extra={})=>{const h=new Headers(headers);for(const [k,v] of Object.entries(extra)){if(k.toLowerCase()==="set-cookie"&&Array.isArray(v))v.forEach(x=>h.append(k,x));else h.set(k,v)}return new Response(JSON.stringify(data),{status,headers:h})};
-const cookies=(access,refresh,expires=3600)=>[
- "kc_access="+encodeURIComponent(access)+"; "+cookieBase+"; Max-Age="+expires,
- "kc_refresh="+encodeURIComponent(refresh)+"; "+cookieBase+"; Max-Age="+(expires*24*30)
-];
+const cookies=(access,refresh,expires=3600,remember=true)=>{
+ const age=remember?"; Max-Age=":"";
+ return [
+  "kc_access="+encodeURIComponent(access)+"; "+cookieBase+age+(remember?expires:""),
+  "kc_refresh="+encodeURIComponent(refresh)+"; "+cookieBase+age+(remember?expires*24*30:"")
+ ];
+};
+const rememberCookie=(remember)=>"kc_remember="+(remember?"1":"0")+"; "+cookieBase+"; Max-Age="+(remember?60*60*24*30:0);
 function readCookie(req,name){const raw=req.headers.get("Cookie")||"";const m=raw.match(new RegExp("(?:^|;\\s*)"+name+"=([^;]*)"));return m?decodeURIComponent(m[1]):""}
 function config(env){if(!env.SUPABASE_URL||!env.SUPABASE_ANON_KEY||!env.SUPABASE_SERVICE_ROLE_KEY)throw new Error("إعدادات Supabase غير مكتملة في Cloudflare.");return {url:env.SUPABASE_URL.replace(/\/+$/,""),anon:env.SUPABASE_ANON_KEY,service:env.SUPABASE_SERVICE_ROLE_KEY}}
 async function sb(url,key,options={}){const {token,...init}=options;const r=await fetch(url,{...init,headers:{"apikey":key,"Authorization":"Bearer "+(token||key),...(init.headers||{})}});const t=await r.text();let d={};try{d=t?JSON.parse(t):{}}catch(_){d={message:t}}if(!r.ok)throw new Error(d.msg||d.message||d.error_description||d.error||"فشل طلب Supabase");return d}
@@ -14,7 +18,7 @@ async function body(req){try{return await req.json()}catch(_){throw new Error("�
 async function currentUser(req,c){const access=readCookie(req,"kc_access"),refresh=readCookie(req,"kc_refresh");if(!access&&!refresh)return null;
  try{return {user:await sb(c.url+"/auth/v1/user",c.anon,{token:access}),rotated:null}}
  catch(_){if(!refresh)return null;
-  try{const d=await sb(c.url+"/auth/v1/token?grant_type=refresh_token",c.anon,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:refresh})});return {user:await sb(c.url+"/auth/v1/user",c.anon,{token:d.access_token}),rotated:d}}
+  try{const d=await sb(c.url+"/auth/v1/token?grant_type=refresh_token",c.anon,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({refresh_token:refresh})});return {user:await sb(c.url+"/auth/v1/user",c.anon,{token:d.access_token}),rotated:d,remember:readCookie(req,"kc_remember")==="1"}}
   catch(__){return null}
  }
 }
@@ -33,18 +37,19 @@ export async function onRequest({request,env}){
    try{await sb(c.url+"/rest/v1/student_profiles",c.service,{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({id:created.id,username:username.toLowerCase(),display_name})})}
    catch(e){await fetch(c.url+"/auth/v1/admin/users/"+created.id,{method:"DELETE",headers:{"apikey":c.service,"Authorization":"Bearer "+c.service}});throw e}
    const login=await sb(c.url+"/auth/v1/token?grant_type=password",c.anon,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,password})});
-   return json({user:userShape(login.user||created)},200,{"Set-Cookie":cookies(login.access_token,login.refresh_token)});
+   return json({user:userShape(login.user||created)},200,{"Set-Cookie":[...cookies(login.access_token,login.refresh_token,3600,false),rememberCookie(false)]});
   }
   if(path==="auth/login"&&request.method==="POST"){
    const b=await body(request),username=String(b.username||"").trim(),password=String(b.password||"");
    if(!/^[A-Za-z0-9_]{3,24}$/.test(username)||!password)return json({error:"اسم المستخدم أو كلمة المرور غير صحيحة."},401);
    const d=await sb(c.url+"/auth/v1/token?grant_type=password",c.anon,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:usernameEmail(username),password})});
-   return json({user:userShape(d.user)},200,{"Set-Cookie":cookies(d.access_token,d.refresh_token)});
+   const remember=b.remember===true;
+   return json({user:userShape(d.user)},200,{"Set-Cookie":[...cookies(d.access_token,d.refresh_token,3600,remember),rememberCookie(remember)]});
   }
-  if(path==="auth/logout"&&request.method==="POST")return json({ok:true},200,{"Set-Cookie":clearCookies});
+  if(path==="auth/logout"&&request.method==="POST")return json({ok:true},200,{"Set-Cookie":[...clearCookies,rememberCookie(false)]});
   if(path==="auth/me"&&request.method==="GET"){
    const session=await currentUser(request,c);if(!session)return json({error:"غير مسجل الدخول."},401,{"Set-Cookie":clearCookies});
-   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
+   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({user:userShape(session.user)},200,extra);
   }
   if(path==="student/data"&&(request.method==="GET"||request.method==="PUT")){
@@ -52,21 +57,21 @@ export async function onRequest({request,env}){
    const token=session.rotated?.access_token||readCookie(request,"kc_access");
    if(request.method==="GET"){
     const rows=await sb(c.url+"/rest/v1/student_data?select=progress&user_id=eq."+encodeURIComponent(session.user.id)+"&limit=1",c.anon,{token});
-    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
+    const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
     return json({progress:rows[0]?.progress||null},200,extra);
    }
    const b=await body(request),allowed=["kareemStudentStats","kareemStudentName","kareemStudentTasks","kareemStudentNotes","kareemFocusCompleted","kq"],progress={};
    for(const k of allowed)if(typeof b.progress?.[k]==="string")progress[k]=b.progress[k];
    if(JSON.stringify(progress).length>100000)return json({error:"حجم بيانات المذاكرة أكبر من المسموح."},413);
    await sb(c.url+"/rest/v1/student_data?on_conflict=user_id",c.anon,{token,method:"POST",headers:{"Content-Type":"application/json","Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({user_id:session.user.id,progress,updated_at:new Date().toISOString()})});
-   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
+   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({ok:true},200,extra);
   }
   if(path==="admin/students"&&request.method==="GET"){
    const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول أولًا."},401);
    if(session.user.app_metadata?.role!=="admin")return json({error:"ليس لديك صلاحية الوصول إلى هذه الصفحة."},403);
    const rows=await sb(c.url+"/rest/v1/student_profiles?select=username,display_name,created_at&order=created_at.desc&limit=500",c.anon,{token:session.rotated?.access_token||readCookie(request,"kc_access")});
-   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token)}:{};
+   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
    return json({students:rows},200,extra);
   }
   return json({error:"المسار غير موجود."},404);
