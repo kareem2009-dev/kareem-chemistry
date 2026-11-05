@@ -149,6 +149,32 @@ export async function onRequest({request,env}){
     return json({ok:true},200,rotated);
    }
   }
+  if(path==="ai/chat"&&request.method==="POST"){
+   const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول لاستخدام المساعد الذكي."},401);
+   const blocked=await limited(request,c,"ai-chat:"+session.user.id,20,600);if(blocked)return blocked;
+   const b=await body(request),message=String(b.message||"").trim();
+   if(!message||message.length>4000)return json({error:"اكتب سؤالًا لا يتجاوز 4000 حرف."},400);
+   const history=Array.isArray(b.history)?b.history.slice(-10).filter(x=>x&&["user","assistant"].includes(x.role)&&typeof x.content==="string").map(x=>({role:x.role,content:x.content.slice(0,4000)})):[];
+   const system="أنت مساعد كريم إبراهيم لتدريس الكيمياء للصف الثالث الثانوي في مصر. اشرح بالعامية المصرية الواضحة، واذكر المعطيات والقانون وخطوات الحل والوحدة في المسائل. اكتب الصيغ الكيميائية بوضوح، ولا تخترع معلومة عند عدم التأكد. التزم بالكيمياء والمنهج الدراسي.";
+   if(env.GEMINI_API_KEY){
+    const contents=history.map(x=>({role:x.role==="assistant"?"model":"user",parts:[{text:x.content}]}));
+    contents.push({role:"user",parts:[{text:message}]});
+    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="+encodeURIComponent(env.GEMINI_API_KEY),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
+    const data=await response.json();if(!response.ok)throw new Error("فشل مزود Gemini.");
+    const reply=(data.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("").trim();
+    if(!reply)return json({error:"لم يصل رد من المساعد."},502);
+    return json({reply});
+   }
+   if(env.OPENAI_API_KEY){
+    const messages=[{role:"system",content:system},...history,{role:"user",content:message}];
+    const response=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+env.OPENAI_API_KEY},body:JSON.stringify({model:"gpt-4o-mini",messages,max_tokens:1200})});
+    const data=await response.json();if(!response.ok)throw new Error("فشل مزود OpenAI.");
+    const reply=String(data.choices?.[0]?.message?.content||"").trim();
+    if(!reply)return json({error:"لم يصل رد من المساعد."},502);
+    return json({reply});
+   }
+   return json({error:"المساعد الذكي غير مفعّل بعد؛ تعمل الردود المدمجة حاليًا."},503);
+  }
   if(path==="questions/start"&&request.method==="POST"){
    const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول لبدء الاختبار."},401);
    const blocked=await limited(request,c,"question-start:"+session.user.id,20,3600);if(blocked)return blocked;
