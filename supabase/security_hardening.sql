@@ -87,6 +87,10 @@ begin
           when public.api_rate_limits.window_started_at + make_interval(secs => p_window_seconds) <= now()
           then 1 else public.api_rate_limits.hit_count + 1 end
   returning hit_count into v_count;
+  if random() < 0.01 then
+    delete from public.api_rate_limits
+    where window_started_at < now() - interval '2 days';
+  end if;
   return v_count <= p_limit;
 end;
 $$;
