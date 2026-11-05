@@ -1594,7 +1594,7 @@ async function loadAdminQuestions(){
   const response=await fetch('/api/questions/active',{credentials:'same-origin'});
   if(!response.ok)return;
   const data=await response.json();
-  const questions=(data.questions||[]).map(q=>['M',q.question,(q.options||[]).map(x=>String(x)),Number(q.correct_answer),q.explanation||'']);
+  const questions=(data.questions||[]).map(q=>['M',q.question,(q.options||[]).map(x=>String(x)),null,'',q.id]);
   if(questions.length)CH.push({id:99,ic:'✦',t:'أسئلة إضافية من المدرّس',q:questions});
  }catch(_){}
 }
@@ -1609,11 +1609,19 @@ function home(){
  $('bqCards').innerHTML=CH.map(c=>{const r=b[c.id];return `<button class="card bqc" data-c="${c.id}"><span class="bqi">${c.ic}</span><b>${c.t}</b><small>${c.q.length} سؤالًا${r?` · أفضل نتيجة ${r.best}%`:''}</small></button>`}).join('');
  $('bqCards').querySelectorAll('button').forEach(x=>x.onclick=()=>start(+x.dataset.c));
 }
-function start(id){
+async function start(id){
  if(quizTimer){clearInterval(quizTimer);quizTimer=null}
  const c=CH.find(x=>x.id===id),requested=$('bqCount').value,count=requested==='all'?c.q.length:Math.min(+requested,c.q.length);
  const selected=shuffle(c.q.map((q,index)=>({q,index}))).slice(0,count);
- S={c,i:0,pick:[],qs:selected.map(({q})=>{const [t,stem,o,a,e]=q,idx=shuffle(o.map((_,i)=>i));return {t,q:stem,o:idx.map(i=>o[i]),a:idx.indexOf(a),e}}),timed:$('bqTimed').checked,seconds:count*60};
+ let attemptId=null;
+ if(id===99){
+  try{
+   const response=await fetch('/api/questions/start',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({question_ids:selected.map(({q})=>q[5])})});
+   const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر بدء الاختبار.');
+   attemptId=data.attempt_id;
+  }catch(error){alert(error.message);return}
+ }
+ S={c,i:0,pick:[],attemptId,qs:selected.map(({q})=>{const [t,stem,o,a,e,serverId]=q,idx=shuffle(o.map((_,i)=>i));return {t,q:stem,o:idx.map(i=>o[i]),a:serverId?null:idx.indexOf(a),e,serverId,serverOrder:idx}}),timed:$('bqTimed').checked,seconds:count*60};
  $('bqSel').hidden=true;$('bqRun').hidden=false;$('bqRes').hidden=true;$('bqQ').hidden=false;draw();
  if(S.timed){$('bqTimer').hidden=false;const tick=()=>{if(!S)return;const m=Math.floor(S.seconds/60),sec=S.seconds%60;$('bqTimer').textContent='⏱ '+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');if(S.seconds<=0){clearInterval(quizTimer);quizTimer=null;finish(true);return}S.seconds--};tick();quizTimer=setInterval(tick,1000)}else $('bqTimer').hidden=true;
 }
@@ -1628,8 +1636,18 @@ function draw(){
  const ex=$('bqEx');ex.hidden=p==null;if(p!=null)ex.innerHTML=`<b>${p===q.a?'✅ إجابة صحيحة':'❌ إجابة خاطئة'} — تفسير وتوضيح علمي:</b><br>${R(q.e)}`;
  $('bqPrev').disabled=S.i===0;const last=S.i===n-1;$('bqNext').textContent=last?'إنهاء وعرض النتيجة':'السؤال التالي ◂';$('bqNext').disabled=p==null&&!last?true:(last&&done<n);
 }
-function answer(i){
- if(S.pick[S.i]!=null)return;S.pick[S.i]=i;const ok=i===S.qs[S.i].a;
+async function answer(i){
+ if(S.pick[S.i]!=null)return;
+ const current=S.qs[S.i];
+ if(current.serverId){
+  const buttons=$('bqOpts').querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
+  try{
+   const response=await fetch('/api/questions/answer',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({attempt_id:S.attemptId,question_id:current.serverId,answer_index:current.serverOrder[i]})});
+   const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر تصحيح الإجابة.');
+   current.a=current.serverOrder.indexOf(Number(data.correct_answer));current.e=data.explanation||'';
+  }catch(error){buttons.forEach(b=>b.disabled=false);alert(error.message);return}
+ }
+ S.pick[S.i]=i;const ok=i===current.a;
  const st=rd(SK,{attempts:0,correct:0,streak:0,bestStreak:0});
  st.attempts=(st.attempts||0)+1;if(ok){st.correct=(st.correct||0)+1;st.streak=(st.streak||0)+1}else st.streak=0;
  st.bestStreak=Math.max(st.bestStreak||0,st.streak);st.lastStudy=new Date().toLocaleDateString('sv');wr(SK,st);
