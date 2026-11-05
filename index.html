@@ -391,6 +391,48 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 @media(max-width:760px){#welcomeIntro{padding:12px}.welcome-shell{padding:28px 18px;border-radius:22px}.welcome-symbol{width:64px;height:64px;font-size:32px;margin:20px auto 14px}.welcome-features{grid-template-columns:1fr;gap:8px;margin:20px 0}.welcome-feature{padding:10px}#loginGate .gate-card{max-height:calc(100dvh - 24px)}}
 @media(prefers-reduced-motion:reduce){#welcomeIntro,#welcomeStart{transition:none!important}}
 
+
+/* Full-viewport authentication layout: remove nested scrollbars */
+html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){width:100%;height:100%;min-height:100%;overflow:hidden!important}
+#loginGate:not([hidden]){
+ position:fixed!important;inset:0!important;width:100vw;height:100vh;height:100dvh;
+ padding:0!important;margin:0!important;overflow:hidden!important;
+ display:flex!important;align-items:stretch!important;justify-content:stretch!important;
+}
+#loginGate:not([hidden]) .gate-card{
+ width:100%!important;height:100%!important;min-height:100%!important;max-height:none!important;
+ margin:0!important;padding:clamp(22px,4vh,54px) clamp(24px,6vw,88px)!important;
+ border:0!important;border-radius:0!important;overflow:hidden!important;
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ gap:clamp(28px,6vw,100px)!important;align-items:center!important;
+}
+#loginGate:not([hidden]) .gate-brand{width:100%;max-width:620px;margin:0 auto!important}
+#loginGate:not([hidden]) #gateForms{
+ width:100%;max-width:590px;min-width:0;margin:0 auto!important;
+ display:flex!important;flex-direction:column;justify-content:center;align-items:stretch;
+}
+#loginGate:not([hidden]) #gateAuthHeader{margin:0 auto 12px!important}
+#loginGate:not([hidden]) #authForms{width:100%!important;max-width:560px!important;margin:0 auto!important}
+#loginGate:not([hidden]) #registerForm,#loginGate:not([hidden]) #loginForm{max-height:none!important}
+#loginGate:not([hidden]) #authMessage{width:100%;max-width:560px!important}
+#loginGate:not([hidden]) .gate-foot{text-align:center}
+@media(max-width:800px){
+ #loginGate:not([hidden]) .gate-card{
+  grid-template-columns:minmax(0,1fr)!important;gap:0!important;
+  padding:20px 18px!important;overflow-y:auto!important;overflow-x:hidden!important;
+ }
+ #loginGate:not([hidden]) .gate-brand{display:none!important}
+ #loginGate:not([hidden]) #gateForms{max-width:560px;min-height:100%;justify-content:center}
+}
+@media(max-height:680px) and (min-width:801px){
+ #loginGate:not([hidden]) .gate-card{padding-top:14px!important;padding-bottom:14px!important;gap:24px!important}
+ #loginGate:not([hidden]) .brand-kicker{margin-bottom:12px}
+ #loginGate:not([hidden]) .brand-mark{width:48px;height:48px;margin-bottom:12px;font-size:24px}
+ #loginGate:not([hidden]) .brand-points{gap:7px;margin-top:14px}
+ #loginGate:not([hidden]) #loginForm,#loginGate:not([hidden]) #registerForm{padding:16px!important}
+ #loginGate:not([hidden]) #loginForm label,#loginGate:not([hidden]) #registerForm label{margin-top:8px}
+}
+
 </style>
 </head>
 <body>
