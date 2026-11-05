@@ -240,6 +240,17 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 #fxF path{transform-box:fill-box;transform-origin:50% 100%;animation:fl .25s infinite alternate}@keyframes fl{to{transform:scale(.9,1.12)}}
 #fxDp.go{animation:fd 1s ease-in forwards}@keyframes fd{0%{transform:translateY(0);opacity:1}88%{transform:translateY(104px);opacity:1}100%{transform:translateY(110px);opacity:0}}
 
+/* First-screen sign-in gate */
+#loginGate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(ellipse at 50% 20%,rgba(35,190,169,.16),transparent 55%),var(--bg);overflow:auto}
+#loginGate[hidden]{display:none!important}
+#loginGate .gate-card{width:min(760px,100%);max-height:calc(100vh - 44px);overflow:auto;padding:clamp(20px,4vw,38px);border:1px solid var(--line);border-radius:24px;background:var(--card);box-shadow:0 24px 90px rgba(0,0,0,.28)}
+#loginGate .gate-brand{text-align:center;margin-bottom:22px}
+#loginGate .gate-brand h1{font-size:clamp(1.5rem,4vw,2.25rem);margin:0 0 8px}
+#loginGate .gate-brand p{margin:0;color:var(--muted)}
+#loginGate #authForms{grid-template-columns:minmax(0,1fr)!important;max-width:440px;margin:20px auto 0!important}
+#loginGate #authMessage{max-width:440px;margin:12px auto 0!important}
+#loginGate .remember-row{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:.95rem}
+#loginGate .remember-row input{width:18px;min-height:18px;margin:0;accent-color:var(--tq)}
 /* Account UI */
 #accountPanel [hidden]{display:none!important}
 #accountPanel input{box-sizing:border-box;width:100%;min-height:42px;margin-top:6px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
@@ -252,6 +263,12 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 </style>
 </head>
 <body>
+<div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+ <div class="gate-card">
+  <div class="gate-brand"><h1 id="gateTitle">أهلًا بيك في معمل كيمياء كريم</h1><p>سجّل الدخول علشان تفتح الموقع وتكمل من حيث توقفت.</p></div>
+  <div id="gateForms"></div>
+ </div>
+</div>
 <header>
 <a class="logo" href="#home"><img class="av" alt="صورة KAREEM IBRAHIM"><span><b>KAREEM IBRAHIM</b><small>كيمياء الثانوية العامة</small></span></a>
 <nav aria-label="الأقسام"><a href="#home">الرئيسية</a><a href="#equations">المعادلات</a><a href="#labs">المعمل التفاعلي</a><a href="#calc">🧮 حاسبة</a><a href="#bank">📝 بنك الأسئلة</a><a href="#tools">✨ أدوات ذكية</a><a href="#sheet">📄 ملخص القوانين</a><a href="#student">لوحة الطالب</a></nav>
@@ -422,6 +439,7 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
   <form id="loginForm" class="card" style="padding:14px">
    <h3>تسجيل الدخول</h3><label for="loginUsername">اسم المستخدم</label><input id="loginUsername" autocomplete="username" minlength="3" maxlength="24" required placeholder="اسم المستخدم">
    <label for="loginPassword" style="display:block;margin-top:10px">كلمة المرور</label><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="كلمة المرور">
+   <label class="remember-row"><input id="rememberMe" type="checkbox"> تذكرني على هذا الجهاز</label>
    <button class="btn p" type="submit" style="margin-top:14px;width:100%">دخول</button>
   </form>
   <form id="registerForm" class="card" style="padding:14px">
@@ -1434,6 +1452,9 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  const $id=id=>document.getElementById(id);
  const msg=(text,isError=false)=>{const el=$id('authMessage');el.textContent=text;el.style.color=isError?'#c43d3d':'var(--tq)'};
  const state=text=>$id('accountState').textContent=text;
+ const gate=$id('loginGate');
+ const gateForms=$id('gateForms');
+ gateForms.append($id('authForms'),$id('authMessage'));
  const busy=(form,on)=>{form.querySelectorAll('button').forEach(b=>b.disabled=on)};
  async function api(path,body){
   const res=await fetch('/api/'+path,{method:body?'POST':'GET',credentials:'same-origin',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});
@@ -1442,10 +1463,12 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   return data;
  }
  function signedOut(){
+  gate.hidden=false;
   $id('authForms').hidden=false;$id('accountSignedIn').hidden=true;$id('adminArea').hidden=true;
   state('غير مسجل الدخول');
  }
  function signedIn(user){
+  gate.hidden=true;
   $id('authForms').hidden=true;$id('accountSignedIn').hidden=false;
   $id('accountWelcome').textContent='أهلًا '+(user.display_name||user.username)+' — @'+user.username;
   $id('adminArea').hidden=user.role!=='admin';
@@ -1457,7 +1480,7 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  }
  $id('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();const form=e.currentTarget;busy(form,true);msg('');
-  try{const user=await api('auth/login',{username:$id('loginUsername').value.trim(),password:$id('loginPassword').value});signedIn(user.user);msg('تم تسجيل الدخول بنجاح.')}
+  try{const user=await api('auth/login',{username:$id('loginUsername').value.trim(),password:$id('loginPassword').value,remember:$id('rememberMe').checked});signedIn(user.user);msg('تم تسجيل الدخول بنجاح.')}
   catch(err){msg(err.message,true)}finally{busy(form,false)}
  });
  $id('registerForm').addEventListener('submit',async e=>{
@@ -1481,6 +1504,7 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
    table.appendChild(body);$id('studentsList').replaceChildren(table);msg('تم تحميل '+data.students.length+' حساب.');
   }catch(err){msg(err.message,true)}finally{b.disabled=false}
  });
+ gate.hidden=false;
  refreshSession();
 })();
 
