@@ -132,6 +132,12 @@ export async function onRequest({request,env}){
     return json({ok:true},200,rotated);
    }
   }
+  if(path==="questions/active"&&request.method==="GET"){
+   const session=await currentUser(request,c);if(!session)return json({error:"سجّل الدخول لعرض الأسئلة."},401);
+   const rows=await sb(c.url+"/rest/v1/admin_questions?select=id,title,chapter,difficulty,question,options,correct_answer,explanation&enabled=eq.true&order=created_at.desc&limit=500",c.service);
+   const extra=session.rotated?{"Set-Cookie":cookies(session.rotated.access_token,session.rotated.refresh_token,3600,session.remember)}:{};
+   return json({questions:rows},200,extra);
+  }
   return json({error:"المسار غير موجود."},404);
  }catch(e){
   const m=String(e.message||"");
