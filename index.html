@@ -1731,13 +1731,27 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   dashboard.hidden=false;$id('adminIdentity').textContent='@'+(adminUser?.username||'admin');showAdminTab('overview');
   try{await loadOverview();}catch(e){notice(e.message,true)}
  }
- $id('adminLogout').addEventListener('click',async()=>{try{await api('auth/logout',{})}catch(_){}adminUser=null;dashboard.hidden=true;location.href='/'});
+ $id('adminLogout').addEventListener('click',async()=>{
+  try{await api('auth/logout',{})}catch(_){}
+  adminUser=null;dashboard.hidden=true;
+  history.replaceState(null,'','/');
+  signedOut();msg('تم تسجيل الخروج.');
+ });
  const oldSignedIn=signedIn;
  signedIn=function(user){
-  oldSignedIn(user);adminUser=user;
-  if(location.pathname.replace(/\/$/,'')==='/admin'){
-   if(user.role==='admin'){dashboard.hidden=false;openAdmin()}else{dashboard.hidden=true;location.replace('/')}
-  }else if(user.role==='admin'){location.replace('/admin')}
+  oldSignedIn(user);
+  adminUser=user;
+  const onAdminPath=location.pathname.replace(/\/$/,'')==='/admin';
+  if(user.role==='admin'){
+   // Change the address without reloading the whole site; this avoids
+   // restarting the auth check immediately after a successful login.
+   if(!onAdminPath)history.replaceState(null,'','/admin');
+   dashboard.hidden=false;
+   openAdmin();
+  }else{
+   dashboard.hidden=true;
+   if(onAdminPath)history.replaceState(null,'','/');
+  }
  };
  gate.hidden=false;
  const initialPath=location.pathname.replace(/\/$/,'');
