@@ -1125,7 +1125,6 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
   host.appendChild(renderer.domElement);
 
   const ambient=new THREE.HemisphereLight(0xd9f4ff,0x171525,1.7);scene.add(ambient);
-  const key=new THREE.AreaLight?null:null;
   const soft=new THREE.DirectionalLight(0xf2fbff,3.4);soft.position.set(-3,5,6);scene.add(soft);
   const rimLight=new THREE.PointLight(0x58dff4,34,9);rimLight.position.set(-2,1,2);scene.add(rimLight);
   const violetLight=new THREE.PointLight(0x9a72ff,25,8);violetLight.position.set(2,-.5,1);scene.add(violetLight);
@@ -1148,10 +1147,10 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
   baseRing.rotation.x=Math.PI/2;baseRing.position.y=-1.31;stage.add(baseRing);
 
   const liquidMaterial=new THREE.MeshPhysicalMaterial({color:0x17cbd5,emissive:0x075d91,emissiveIntensity:.65,metalness:.08,roughness:.13,transparent:true,opacity:.94,clearcoat:1});
-  const liquidProfile=[[0,-1.245],[.4,-1.245],[.59,-1.19],[.69,-1.02],[.7,-.82],[.62,-.59],[.48,-.28],[0,-.28]].map(([x,y])=>new THREE.Vector2(x,y));
-  const liquid=new THREE.Mesh(new THREE.LatheGeometry(liquidProfile,96),liquidMaterial);stage.add(liquid);
+  const liquidProfile=[[0,0],[.4,0],[.59,.055],[.69,.225],[.7,.425],[.62,.655],[.48,.965],[0,.965]].map(([x,y])=>new THREE.Vector2(x,y));
+  const liquid=new THREE.Mesh(new THREE.LatheGeometry(liquidProfile,96),liquidMaterial);liquid.position.y=-1.245;stage.add(liquid);
   const liquidSurface=new THREE.Mesh(new THREE.CircleGeometry(.61,96),new THREE.MeshPhysicalMaterial({color:0x54f1e5,emissive:0x1d8fc0,emissiveIntensity:.6,roughness:.12,metalness:.05,transparent:true,opacity:.88,side:THREE.DoubleSide}));
-  liquidSurface.rotation.x=-Math.PI/2;liquidSurface.position.set(0,-.275,0);stage.add(liquidSurface);
+  liquidSurface.rotation.x=-Math.PI/2;liquidSurface.position.set(0,-1.245,0);stage.add(liquidSurface);
 
   const pipettePath=new THREE.CatmullRomCurve3([
    new THREE.Vector3(-.88,2.85,0),new THREE.Vector3(-.88,2.35,0),new THREE.Vector3(-.78,2.18,0),
@@ -1240,9 +1239,9 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
    streamCore.visible=stream.visible;
    streamMaterial.opacity=.9*(1-finish*.85);
    liquid.scale.y=.06+reaction*.94;
-   liquid.position.y=-1.02+reaction*.0;
-   liquidSurface.position.y=-.28+reaction*.72;
-   liquidSurface.scale.setScalar(.12+reaction*.88);
+   liquid.position.y=-1.245;
+   liquidSurface.position.y=-1.245+reaction*.965;
+   liquidSurface.scale.set(.55+reaction*.35,1,.55+reaction*.35);
    liquidMaterial.color.setHSL(.49+reaction*.24,.78,.48);
    liquidMaterial.emissive.setHSL(.54+reaction*.18,.8,.18);
    wave.scale.setScalar(.1+hit*2.1);
