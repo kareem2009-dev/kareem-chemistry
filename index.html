@@ -2305,6 +2305,122 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
 .organic-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;box-shadow:0 0 10px #ffffff30,inset -2px -2px 3px #0006}
 .organic-disclaimer{font-size:.76rem;color:var(--mute);margin-top:14px}
 @media(max-width:650px){.organic-controls{grid-template-columns:1fr}.organic-stage{height:340px;max-height:58vh}.organic-info{grid-template-columns:repeat(2,minmax(0,1fr))}.organic-actions .btn{flex:1 1 calc(50% - 8px)}}
+
+/* KAREEM LUXURY OVERRIDES — deliberately last so every page section receives the finish */
+:root{
+ --kl-gold:#D9B35F;
+ --kl-teal:#3EE0C5;
+ --kl-glass:color-mix(in srgb,var(--card) 76%,transparent);
+ --kl-edge:color-mix(in srgb,var(--gold) 28%,var(--line));
+}
+html{scroll-behavior:smooth}
+body{
+ background-image:
+  radial-gradient(ellipse at 8% 7%,color-mix(in srgb,var(--tq) 12%,transparent),transparent 36%),
+  radial-gradient(ellipse at 92% 20%,color-mix(in srgb,var(--gold) 10%,transparent),transparent 34%),
+  linear-gradient(155deg,var(--bg),var(--bg2) 72%,var(--bg)) !important;
+ background-attachment:fixed;
+}
+body:after{
+ content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.16;
+ background-image:radial-gradient(color-mix(in srgb,var(--gold) 45%,transparent) .7px,transparent .7px);
+ background-size:28px 28px;
+ mask-image:linear-gradient(to bottom,black,transparent 82%);
+}
+header{
+ background:color-mix(in srgb,var(--bg) 72%,transparent) !important;
+ -webkit-backdrop-filter:blur(24px) saturate(180%) !important;
+ backdrop-filter:blur(24px) saturate(180%) !important;
+ border-bottom:1px solid var(--kl-edge) !important;
+ box-shadow:0 12px 38px #0002,inset 0 1px #ffffff20 !important;
+}
+.wrap{position:relative;z-index:1}
+.view{position:relative}
+.hero{
+ position:relative;isolation:isolate;
+ padding:clamp(28px,5vw,62px) clamp(12px,2vw,24px) 26px !important;
+ border:1px solid color-mix(in srgb,var(--gold) 22%,transparent);
+ border-radius:30px;
+ background:linear-gradient(125deg,color-mix(in srgb,var(--card) 72%,transparent),color-mix(in srgb,var(--bg2) 65%,transparent));
+ box-shadow:0 24px 70px #0002,inset 0 1px #ffffff20;
+ overflow:hidden;
+}
+.hero:before{
+ content:"";position:absolute;inset:-25%;z-index:-1;pointer-events:none;
+ background:radial-gradient(ellipse at 22% 50%,color-mix(in srgb,var(--tq) 24%,transparent),transparent 38%),radial-gradient(ellipse at 78% 35%,color-mix(in srgb,var(--gold) 20%,transparent),transparent 34%);
+ filter:blur(30px);animation:klAurora 13s ease-in-out infinite alternate;
+}
+.hero:after{
+ content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.2;
+ background-image:radial-gradient(circle at 18% 25%,var(--gold) 1px,transparent 1.6px),radial-gradient(circle at 75% 65%,var(--tq) 1px,transparent 1.6px);
+ background-size:76px 76px,104px 104px;
+}
+h1{letter-spacing:-.035em;text-shadow:0 8px 34px #0002}
+h2{
+ display:flex;align-items:center;gap:12px;
+ width:fit-content;max-width:100%;
+}
+h2:after{
+ content:"";display:block;width:clamp(34px,5vw,66px);height:3px;
+ border-radius:99px;margin:0;
+ background:linear-gradient(90deg,var(--gold),var(--tq));
+ box-shadow:0 0 18px color-mix(in srgb,var(--tq) 42%,transparent);
+}
+.card,.hubtile,.unit-card,.eq-card{
+ background:linear-gradient(145deg,color-mix(in srgb,var(--card) 88%,transparent),color-mix(in srgb,var(--bg2) 72%,transparent)) !important;
+ border:1px solid var(--kl-edge) !important;
+ border-radius:22px !important;
+ box-shadow:0 14px 38px #0002,inset 0 1px #ffffff1c !important;
+ transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s,border-color .32s !important;
+}
+.card:before{
+ content:"";position:absolute;top:0;left:8%;right:8%;height:1px;
+ background:linear-gradient(90deg,transparent,var(--gold),var(--tq),transparent);
+ opacity:.72;pointer-events:none;
+}
+.btn,.tg,.header-tool,.chips button,.tabs button{
+ border:1px solid color-mix(in srgb,var(--gold) 24%,var(--line)) !important;
+ border-radius:14px !important;
+ transition:transform .24s,box-shadow .24s,background .24s !important;
+}
+.btn.p{
+ background:linear-gradient(115deg,var(--gold),#f0d58e 52%,var(--gold)) !important;
+ color:#171207 !important;
+ border-color:#e6c778 !important;
+ box-shadow:0 8px 26px color-mix(in srgb,var(--gold) 32%,transparent),inset 0 1px #ffffff8a !important;
+}
+.header-tool{background:var(--kl-glass) !important;backdrop-filter:blur(14px)}
+nav a[aria-current]{box-shadow:0 0 22px color-mix(in srgb,var(--tq) 38%,transparent),inset 0 1px #ffffff40 !important}
+.logo b{text-shadow:0 0 22px color-mix(in srgb,var(--gold) 35%,transparent)}
+.tag{color:var(--gold) !important}
+.f{border-color:color-mix(in srgb,var(--tq) 36%,var(--line)) !important;box-shadow:inset 0 1px #ffffff18,0 8px 24px #0002 !important}
+@media(hover:hover) and (pointer:fine){
+ .card:hover,.hubtile:hover,.unit-card:hover,.eq-card:hover{
+  transform:translateY(-6px) scale(1.012) !important;
+  border-color:color-mix(in srgb,var(--gold) 62%,var(--line)) !important;
+  box-shadow:0 24px 52px #0003,0 0 26px color-mix(in srgb,var(--tq) 14%,transparent),inset 0 1px #ffffff28 !important;
+ }
+ .btn:hover,.tg:hover,.header-tool:hover,.chips button:hover,.tabs button:hover{
+  transform:translateY(-3px) !important;
+  box-shadow:0 12px 28px color-mix(in srgb,var(--gold) 24%,transparent) !important;
+ }
+}
+@keyframes klAurora{from{transform:translate3d(-2%,0,0) scale(.96)}to{transform:translate3d(2%,1%,0) scale(1.05)}}
+@keyframes klEnter{from{opacity:0;transform:translateY(15px);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+.view.on{animation:klEnter .48s ease both}
+@media(max-width:760px){
+ body{background-attachment:scroll}
+ .hero{border-radius:22px;padding:26px 16px 20px !important}
+ .card{border-radius:18px !important}
+ .hero:before{filter:blur(20px)}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ .hero:before,.view.on{animation:none !important}
+ .card,.btn,.tg,.header-tool{transition:none !important}
+}
+body.reduce-site-motion .hero:before,body.reduce-site-motion .view.on{animation:none !important}
+
 </style>
 
 <script id="balancedHumorSystem">
