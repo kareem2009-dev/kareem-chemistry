@@ -433,6 +433,74 @@ html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){width:100%
  #loginGate:not([hidden]) #loginForm label,#loginGate:not([hidden]) #registerForm label{margin-top:8px}
 }
 
+
+/* iOS-inspired glass layer */
+:root{
+ --glass-fill:color-mix(in srgb,var(--card) 72%,transparent);
+ --glass-edge:color-mix(in srgb,var(--ink) 12%,transparent);
+ --glass-shine:color-mix(in srgb,#fff 58%,transparent);
+ --glass-shadow:0 12px 34px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.32);
+}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){--glass-shine:rgba(255,255,255,.12);--glass-shadow:0 16px 38px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.10)}
+}
+:root[data-theme="dark]{--glass-shine:rgba(255,255,255,.12);--glass-shadow:0 16px 38px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.10)}
+header{
+ background:color-mix(in srgb,var(--bg) 70%,transparent);
+ -webkit-backdrop-filter:saturate(180%) blur(22px);
+ backdrop-filter:saturate(180%) blur(22px);
+ border-bottom:1px solid var(--glass-edge);
+ box-shadow:0 8px 28px rgba(0,0,0,.07),inset 0 1px 0 var(--glass-shine);
+}
+.card,.tg,.chips button,.tabs button,.msg,.f,.btn,
+input[type=search],select,
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+textarea{
+ background:var(--glass-fill);
+ border:1px solid var(--glass-edge);
+ -webkit-backdrop-filter:saturate(165%) blur(16px);
+ backdrop-filter:saturate(165%) blur(16px);
+ box-shadow:var(--glass-shadow);
+}
+.card{
+ border-radius:24px;
+ position:relative;
+ overflow:hidden;
+ transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease;
+}
+.card::before{
+ content:"";
+ position:absolute;
+ inset:0 0 auto;
+ height:1px;
+ background:linear-gradient(90deg,transparent,var(--glass-shine),transparent);
+ pointer-events:none;
+}
+.btn,.tg,.chips button,.tabs button,nav a{
+ transition:transform .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease,color .22s ease;
+}
+.btn{border-radius:15px}
+.btn.p{background:linear-gradient(135deg,var(--gold),color-mix(in srgb,var(--gold) 76%,#fff));}
+nav a[aria-current]{box-shadow:0 5px 18px color-mix(in srgb,var(--tq) 24%,transparent),inset 0 1px 0 rgba(255,255,255,.28)}
+.tg{border-radius:15px}
+.chips button,.tabs button{border-radius:14px}
+input[type=search],select,textarea{border-radius:15px}
+.f{border-radius:16px}
+@media (hover:hover) and (pointer:fine){
+ .card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--tq) 38%,var(--glass-edge));box-shadow:0 18px 42px rgba(0,0,0,.14),inset 0 1px 0 var(--glass-shine)}
+ .btn:hover,.tg:hover,.chips button:hover,.tabs button:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(0,0,0,.12),inset 0 1px 0 var(--glass-shine)}
+}
+@media (max-width:760px){
+ header{ -webkit-backdrop-filter:saturate(155%) blur(15px);backdrop-filter:saturate(155%) blur(15px)}
+ .card{border-radius:20px}
+}
+@supports not (backdrop-filter:blur(1px)){
+ .card,.tg,.chips button,.tabs button,.msg,.f,.btn,header,input[type=search],select,textarea{background:var(--card)}
+}
+@media (prefers-reduced-motion:reduce){
+ .card,.btn,.tg,.chips button,.tabs button,nav a{transition:none}
+ .card:hover,.btn:hover,.tg:hover,.chips button:hover,.tabs button:hover{transform:none}
+}
 </style>
 </head>
 <body>
