@@ -774,7 +774,7 @@ body.reduce-site-motion .view.on{animation:none}
   </div>
 </div>
 
-<div class="organic3d card" id="organic3d">
+<div class="organic3d card sol" id="organic3d">
  <div class="organic-head"><div><span class="tag">MOLECULAR STUDIO · 3D</span><h3>استوديو الجزيئات العضوية ثلاثي الأبعاد</h3><p>استكشف شكل الجزيئات وروابطها في مساحة تفاعلية.</p></div><span class="organic-live">● عرض تفاعلي</span></div>
  <div class="organic-controls">
   <label>اختر المركب
@@ -1027,7 +1027,7 @@ renderEq();
 $('#mt').innerHTML=(t=>t+t)(E.filter((_,i)=>i%3===0).map(e=>`<span>${f(e[2].split('   ')[0])}</span>`).join(''));
 
 /* lab tabs */
-const T=['الباب 2: كشف الأيونات','الباب 2: المعايرة','الباب 3: pH','الباب 3: لوشاتيليه','الباب 4: الخلية الجلفانية','المعمل الشامل','محاكي التفاعل'];
+const T=['الباب 2: كشف الأيونات','الباب 2: المعايرة','الباب 3: pH','الباب 3: لوشاتيليه','الباب 4: الخلية الجلفانية','المعمل الشامل','محاكي التفاعل','استوديو الجزيئات 3D'];
 $('#tabs').innerHTML=T.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('');
 function setLab(i){$$('.lab,.sol').forEach((p,j)=>p.classList.toggle('on',j===i));$$('#tabs button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i))}
 $('#tabs').onclick=e=>{if(e.target.dataset.i)setLab(+e.target.dataset.i)};setLab(0);
