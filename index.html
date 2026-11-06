@@ -1002,12 +1002,65 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 @media(prefers-reduced-transparency:reduce){.card,.btn,.tg,.chips button,.tabs button,.review-flip,header:not(.ad-top){backdrop-filter:none;-webkit-backdrop-filter:none}}
 </style>
 <style id="kc-splash-style">
-#kc-splash{position:fixed;inset:0;z-index:100002;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 44%,rgba(170,161,189,.13),transparent 34%),#171A20;color:#E5E8EF;opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}#kc-splash.is-done{opacity:0;visibility:hidden;pointer-events:none}
-.splash-content{display:flex;flex-direction:column;align-items:center;gap:17px;text-align:center;padding:24px}.splash-emblem{position:relative;width:112px;height:112px;display:grid;place-items:center;filter:drop-shadow(0 0 24px rgba(170,161,189,.2))}.splash-core{width:43px;height:43px;display:grid;place-items:center;border:1px solid rgba(195,187,211,.7);border-radius:15px;background:linear-gradient(145deg,#45404F,#292630);color:#F0ECF5;font-size:22px;font-weight:900;box-shadow:0 0 28px rgba(170,161,189,.22);z-index:2}.splash-orbit{position:absolute;inset:15px 0;border:1px solid rgba(183,174,202,.65);border-radius:50%;animation:splash-spin 2.8s linear infinite}.splash-orbit.orbit-two{transform:rotate(60deg);animation-duration:3.5s;border-color:rgba(155,164,181,.65)}.splash-orbit.orbit-three{transform:rotate(120deg);animation-duration:4.2s;border-color:rgba(190,181,207,.4)}.splash-electron{position:absolute;width:8px;height:8px;border-radius:50%;background:#C5BAD8;box-shadow:0 0 13px rgba(197,186,216,.9);top:13px;left:52px;animation:splash-pulse 1.3s ease-in-out infinite alternate}.electron-two{top:auto;left:14px;bottom:26px;width:6px;height:6px;animation-delay:.3s}.electron-three{top:31px;left:auto;right:12px;width:5px;height:5px;animation-delay:.6s}.splash-wordmark{font-size:1.02rem;font-weight:900;letter-spacing:.18em;color:#E7E8EF}.splash-wordmark span{color:#B7AEC8}.splash-caption{font-size:.88rem;color:#A8B0BD;letter-spacing:.02em}.splash-progress{width:126px;height:2px;border-radius:9px;background:#343944;overflow:hidden;margin-top:5px}.splash-progress i{display:block;width:40%;height:100%;border-radius:9px;background:#B7AEC8;animation:splash-load 1.45s ease-in-out forwards}@keyframes splash-spin{to{rotate:360deg}}@keyframes splash-pulse{to{transform:scale(.65);opacity:.45}}@keyframes splash-load{from{transform:translateX(260%)}to{transform:translateX(-260%)}}@media(prefers-reduced-motion:reduce){.splash-orbit,.splash-electron,.splash-progress i{animation:none!important}.splash-progress i{width:100%}#kc-splash{transition:none}}
+#kc-splash{position:fixed;inset:0;z-index:100002;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 58%,rgba(155,143,181,.18),transparent 34%),radial-gradient(ellipse at 50% 100%,rgba(122,133,157,.12),transparent 48%),#171A20;color:#E5E8EF;opacity:1;visibility:visible;transition:opacity .65s ease,visibility .65s ease}
+#kc-splash.is-done{opacity:0;visibility:hidden;pointer-events:none}
+.kc-lab-intro{position:relative;width:min(560px,94vw);height:min(510px,84vh);display:grid;place-items:center}
+.kc-flask-wrap{position:absolute;left:50%;top:48%;width:190px;height:280px;transform:translate(-50%,90vh) scale(.72);opacity:0;filter:drop-shadow(0 18px 38px rgba(0,0,0,.38));animation:kc-flask-rise 1s cubic-bezier(.16,.85,.22,1) .12s forwards}
+.kc-flask-svg{width:100%;height:100%;overflow:visible}
+.kc-flask-glass{fill:url(#kcGlass);stroke:#c4c8d4;stroke-width:2.2}
+.kc-liquid{fill:url(#kcLiquid);transform-origin:bottom;animation:kc-liquid-rise .85s ease-out .92s both}
+.kc-liquid-glow{fill:none;stroke:#d9d1ed;stroke-width:2;opacity:.8;filter:url(#kcGlow)}
+.kc-flask-shine{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;opacity:.55}
+.kc-cursor{position:absolute;z-index:5;left:-4%;top:48%;width:54px;height:64px;opacity:0;filter:drop-shadow(0 0 12px rgba(197,188,219,.7));animation:kc-cursor-move 1.2s cubic-bezier(.2,.75,.2,1) 1.12s forwards}
+.kc-cursor svg{width:100%;height:100%}
+.kc-ring{position:absolute;left:50%;top:48%;width:210px;height:210px;border:1px solid rgba(196,184,222,.0);border-radius:50%;transform:translate(-50%,-50%) scale(.5);animation:kc-ring-pop .85s ease-out 1.85s forwards}
+.kc-ring:before,.kc-ring:after{content:"";position:absolute;inset:15px;border:1px solid rgba(196,184,222,.0);border-radius:50%;animation:kc-ring-glow .85s ease-out 1.85s forwards}
+.kc-ring:after{inset:-18px;animation-delay:1.95s}
+.kc-sparks{position:absolute;inset:0;pointer-events:none}
+.kc-spark{position:absolute;left:var(--x);top:var(--y);width:5px;height:5px;border-radius:50%;background:#d8c9f3;box-shadow:0 0 13px 4px rgba(184,166,220,.7);opacity:0;animation:kc-spark-pop .9s ease-out var(--delay) both}
+.kc-brand-reveal{position:absolute;top:82%;left:50%;width:100%;transform:translate(-50%,16px);text-align:center;opacity:0;animation:kc-brand-in .75s ease-out 2s forwards}
+.kc-brand-reveal strong{display:block;direction:ltr;font:700 clamp(1rem,3vw,1.35rem) Cinzel,Georgia,serif;letter-spacing:.19em;color:#f0edf6;text-shadow:0 0 22px rgba(197,180,224,.65)}
+.kc-brand-reveal strong span{color:#bcb0d2}
+.kc-brand-reveal small{display:block;margin-top:9px;color:#a8b0bd;font:500 .88rem Tajawal,sans-serif}
+@keyframes kc-flask-rise{0%{opacity:0;transform:translate(-50%,90vh) scale(.72) rotate(-12deg)}72%{opacity:1;transform:translate(-50%,-56%) scale(1.04) rotate(3deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+@keyframes kc-liquid-rise{from{transform:scaleY(.12);opacity:.2}to{transform:scaleY(1);opacity:.9}}
+@keyframes kc-cursor-move{0%{opacity:0;transform:translate(-20px,35px) rotate(-12deg)}15%{opacity:1}78%{opacity:1;transform:translate(250px,-8px) rotate(0)}90%{transform:translate(250px,-8px) scale(.88)}100%{opacity:0;transform:translate(250px,-8px) scale(.88)}}
+@keyframes kc-ring-pop{to{transform:translate(-50%,-50%) scale(1);border-color:rgba(196,184,222,.62);box-shadow:0 0 36px rgba(174,157,204,.18),inset 0 0 30px rgba(174,157,204,.08)}}
+@keyframes kc-ring-glow{to{border-color:rgba(196,184,222,.32);box-shadow:0 0 20px rgba(174,157,204,.14)}}
+@keyframes kc-spark-pop{0%{opacity:0;transform:translate(0,18px) scale(.2)}30%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
+@keyframes kc-brand-in{to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:480px){.kc-flask-wrap{width:158px;height:238px}.kc-cursor{width:43px;height:52px}.kc-ring{width:180px;height:180px}.kc-brand-reveal{top:79%}}
+@media(prefers-reduced-motion:reduce){#kc-splash{transition:none}.kc-flask-wrap{opacity:1;transform:translate(-50%,-50%);animation:none}.kc-liquid{animation:none}.kc-cursor,.kc-ring,.kc-spark{display:none}.kc-brand-reveal{opacity:1;transform:translate(-50%,0);animation:none}}
 </style>
 </head>
 <body>
-<div id="kc-splash" role="status" aria-label="جاري تجهيز KAREEM CHEMISTRY"><div class="splash-content"><div class="splash-emblem" aria-hidden="true"><span class="splash-orbit orbit-one"></span><span class="splash-orbit orbit-two"></span><span class="splash-orbit orbit-three"></span><span class="splash-core">K</span><i class="splash-electron electron-one"></i><i class="splash-electron electron-two"></i><i class="splash-electron electron-three"></i></div><div class="splash-wordmark">KAREEM <span>CHEMISTRY</span></div><div class="splash-caption">نجهّز لك تجربة كيميائية مختلفة</div><div class="splash-progress"><i></i></div></div></div>
+<div id="kc-splash" role="status" aria-label="جاري تجهيز KAREEM CHEMISTRY">
+ <div class="kc-lab-intro">
+  <div class="kc-flask-wrap" aria-hidden="true">
+   <svg class="kc-flask-svg" viewBox="0 0 190 280" role="img" aria-label="دورق كيميائي">
+    <defs>
+     <linearGradient id="kcGlass" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset=".24" stop-color="#dfe5f0" stop-opacity=".04"/><stop offset=".72" stop-color="#fff" stop-opacity=".13"/><stop offset="1" stop-color="#9da8bb" stop-opacity=".08"/></linearGradient>
+     <linearGradient id="kcLiquid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#aaa0c4" stop-opacity=".92"/><stop offset=".52" stop-color="#85829f" stop-opacity=".82"/><stop offset="1" stop-color="#c5b7df" stop-opacity=".94"/></linearGradient>
+     <filter id="kcGlow"><feGaussianBlur stdDeviation="4"/></filter>
+    </defs>
+    <path class="kc-flask-glass" d="M72 12h46v58l48 118c13 33-5 62-40 62H64c-35 0-53-29-40-62L72 70z"/>
+    <path class="kc-liquid" d="M47 142h96l29 64c9 20-2 34-25 34H43c-23 0-34-14-25-34z"/>
+    <path class="kc-liquid-glow" d="M43 145q50-13 104 0"/>
+    <path class="kc-flask-shine" d="M79 23v42M57 94l-25 63"/>
+    <path d="M70 12h50M72 70h46" stroke="#dce1eb" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+    <circle cx="77" cy="183" r="5" fill="#f1eafa" opacity=".8"><animate attributeName="cy" values="188;155;188" dur="1.4s" repeatCount="indefinite"/></circle>
+    <circle cx="113" cy="205" r="3.5" fill="#fff" opacity=".75"><animate attributeName="cy" values="210;175;210" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="91" cy="220" r="2.5" fill="#e4d9f5" opacity=".8"><animate attributeName="cy" values="224;195;224" dur="1.2s" repeatCount="indefinite"/></circle>
+   </svg>
+  </div>
+  <div class="kc-cursor" aria-hidden="true"><svg viewBox="0 0 52 64"><path d="M5 4L7 53l13-13 9 19 9-5-9-18 18-2z" fill="#e8e5ef" stroke="#777187" stroke-width="2" stroke-linejoin="round"/><path d="M5 4l24 32" stroke="#fff" stroke-width="2" opacity=".8"/></svg></div>
+  <div class="kc-ring" aria-hidden="true"></div>
+  <div class="kc-sparks" aria-hidden="true">
+   <i class="kc-spark" style="--x:22%;--y:35%;--dx:-45px;--dy:-55px;--delay:1.9s"></i><i class="kc-spark" style="--x:75%;--y:36%;--dx:48px;--dy:-48px;--delay:2s"></i><i class="kc-spark" style="--x:28%;--y:64%;--dx:-58px;--dy:35px;--delay:2.05s"></i><i class="kc-spark" style="--x:72%;--y:66%;--dx:60px;--dy:38px;--delay:2.1s"></i><i class="kc-spark" style="--x:50%;--y:25%;--dx:0px;--dy:-70px;--delay:2.12s"></i><i class="kc-spark" style="--x:50%;--y:70%;--dx:0px;--dy:58px;--delay:2.16s"></i>
+  </div>
+  <div class="kc-brand-reveal"><strong>KAREEM <span>CHEMISTRY</span></strong><small>كل تجربة… بداية لفهم أعمق</small></div>
+ </div>
+</div>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-shell">
   <span class="welcome-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
@@ -2413,7 +2466,7 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  }
  gateSwitch.addEventListener('click',()=>setGateMode(gateMode==='register'?'login':'register'));
  setGateMode('register');
-const splash=$id('kc-splash');if(splash){const splashDelay=window.matchMedia('(prefers-reduced-motion: reduce)').matches?450:1550;window.setTimeout(()=>{splash.classList.add('is-done');window.setTimeout(()=>splash.remove(),600);},splashDelay);}
+const splash=$id('kc-splash');if(splash){const splashDelay=window.matchMedia('(prefers-reduced-motion: reduce)').matches?450:2900;window.setTimeout(()=>{splash.classList.add('is-done');window.setTimeout(()=>splash.remove(),600);},splashDelay);}
    const welcomeIntro=$id('welcomeIntro');
  $id('welcomeStart').addEventListener('click',()=>{
   welcomeIntro.classList.add('is-leaving');
