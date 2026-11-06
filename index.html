@@ -738,6 +738,45 @@ body.reduce-site-motion .hero::before{animation:none}
 }
 .tool-indicator{background:#56b9b2!important;box-shadow:0 0 0 3px rgba(86,185,178,.13)!important}
 </style>
+<style id="teal-only-theme">
+/* Replace the site's decorative gold identity with a consistent teal / silver palette */
+:root{
+ --gold:#159f94!important;
+ --signature-gold:#48d5c7!important;
+ --signature-gold-glow:rgba(45,205,190,.20)!important;
+}
+:root[data-theme="dark"]{
+ --gold:#42cdbd!important;
+ --signature-gold:#72e5d8!important;
+ --signature-gold-glow:rgba(66,205,189,.22)!important;
+}
+:root:not([data-theme="dark"]) .btn.p,
+:root:not([data-theme="dark"]) #aiSend,
+:root:not([data-theme="dark"]) .hot{
+ color:#06201e!important
+}
+.welcome-shell #welcomeStart{
+ background:linear-gradient(120deg,#159f94,#36cbbb)!important;
+ border-color:rgba(70,210,195,.35)!important;
+ box-shadow:0 12px 30px rgba(25,170,155,.20)!important
+}
+#welcomeIntro{
+ background:radial-gradient(ellipse at 18% 18%,rgba(49,211,190,.18),transparent 34%),radial-gradient(ellipse at 88% 82%,rgba(49,211,190,.10),transparent 30%),#080e19!important
+}
+.ad-orbit{
+ border-color:rgba(67,205,190,.5)!important;
+ color:#55d7c8!important;
+ box-shadow:0 0 0 14px rgba(67,205,190,.04),0 0 45px rgba(67,205,190,.1)!important
+}
+.header-actions .theme-toggle{
+ background:rgba(255,255,255,.24)!important;
+ border-color:rgba(120,145,165,.16)!important
+}
+:root[data-theme="dark"] .header-actions .theme-toggle{
+ background:rgba(255,255,255,.055)!important;
+ border-color:rgba(210,225,235,.12)!important
+}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
