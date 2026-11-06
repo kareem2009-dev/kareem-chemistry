@@ -160,7 +160,7 @@ export async function onRequest({request,env}){
    if(env.GEMINI_API_KEY){
     const contents=history.map(x=>({role:x.role==="assistant"?"model":"user",parts:[{text:x.content}]}));
     contents.push({role:"user",parts:[{text:message}]});
-    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
+    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
     const data=await response.json();if(!response.ok)throw new Error("فشل مزود Gemini.");
     const reply=(data.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("").trim();
     if(!reply)return json({error:"لم يصل رد من المساعد."},502);
