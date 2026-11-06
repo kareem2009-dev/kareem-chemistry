@@ -980,7 +980,7 @@ let ist=0,mys=0,gd=0;const cur=()=>IT[$('#is').value==='?'?mys:$('#is').value];
 $('#is').innerHTML=IT.map((t,i)=>`<option value="${i}">${t[0]}</option>`).join('')+'<option value="?">🎲 عينة مجهولة (تحدّي)</option>';
 function ionBtn(){const s=cur()[2][ist];$('#ib').disabled=!s;$('#ib').textContent=s?'أضف: '+s[0]:'خلّصت خطوات الكشف';
 if(!s&&$('#is').value==='?'&&!gd){gd=1;$('#io').insertAdjacentHTML('beforeend','<div class="msg"><b>إيه الأيون في العينة؟</b><br><select id="gs">'+IT.map((t,i)=>'<option value="'+i+'">'+t[0]+'</option>').join('')+'</select> <button class="btn p" id="gb">تأكيد</button><div id="gr" style="margin-top:8px"></div></div>');
-$('#gb').onclick=()=>{$('#gr').innerHTML=+$('#gs').value===mys?'✅ صح! ده فعلًا '+IT[mys][0]+'. اضغط «عينة جديدة» لتحدٍّ تاني.':'❌ لأ، راجع الملاحظات. الإجابة كانت: <b>'+IT[mys][0]+'</b>'}}}
+$('#gb').onclick=()=>{const ok=+$('#gs').value===mys,t=IT[mys],ex=t[2].map((step,i)=>'<p><b>'+step[0]+'</b>: '+step[5]+'</p>'+step[6].map(eq=>'<div class="f">'+f(eq)+'</div>').join('')).join('');$('#gr').innerHTML=(ok?'✅ إجابة صحيحة! دي عينة '+t[0]+'.':'❌ الإجابة مش صحيحة. العينة كانت '+t[0]+'.')+'<div class="msg"><b>تفسير كل خطوة:</b>'+ex+'</div>'}}}
 const Z=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
 const FX=[[{g:1},{g:1,lime:1}],[{g:1},{g:1,paper:['ثنائي كرومات البوتاسيوم المحمضة','#f08a24','#4c8f3a']}],[{g:1},{g:1,paper:['خلات الرصاص II','#f4f4ee','#16130f']}],[{},{}],[{},{}],[{},{}],[{},{}],[{}],[{},{}],[{},{}],[{g:1,heat:1,paper:['عباد شمس حمراء مبللة','#d9433f','#3a66d1']}],[{},{heat:1}]];
 let fxGas=0,fxLime=0,fxHasP=0;
