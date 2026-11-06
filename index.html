@@ -1001,8 +1001,13 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 ::selection{background:rgba(170,161,189,.32);color:var(--ink)}
 @media(prefers-reduced-transparency:reduce){.card,.btn,.tg,.chips button,.tabs button,.review-flip,header:not(.ad-top){backdrop-filter:none;-webkit-backdrop-filter:none}}
 </style>
+<style id="kc-splash-style">
+#kc-splash{position:fixed;inset:0;z-index:100002;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 44%,rgba(170,161,189,.13),transparent 34%),#171A20;color:#E5E8EF;opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}#kc-splash.is-done{opacity:0;visibility:hidden;pointer-events:none}
+.splash-content{display:flex;flex-direction:column;align-items:center;gap:17px;text-align:center;padding:24px}.splash-emblem{position:relative;width:112px;height:112px;display:grid;place-items:center;filter:drop-shadow(0 0 24px rgba(170,161,189,.2))}.splash-core{width:43px;height:43px;display:grid;place-items:center;border:1px solid rgba(195,187,211,.7);border-radius:15px;background:linear-gradient(145deg,#45404F,#292630);color:#F0ECF5;font-size:22px;font-weight:900;box-shadow:0 0 28px rgba(170,161,189,.22);z-index:2}.splash-orbit{position:absolute;inset:15px 0;border:1px solid rgba(183,174,202,.65);border-radius:50%;animation:splash-spin 2.8s linear infinite}.splash-orbit.orbit-two{transform:rotate(60deg);animation-duration:3.5s;border-color:rgba(155,164,181,.65)}.splash-orbit.orbit-three{transform:rotate(120deg);animation-duration:4.2s;border-color:rgba(190,181,207,.4)}.splash-electron{position:absolute;width:8px;height:8px;border-radius:50%;background:#C5BAD8;box-shadow:0 0 13px rgba(197,186,216,.9);top:13px;left:52px;animation:splash-pulse 1.3s ease-in-out infinite alternate}.electron-two{top:auto;left:14px;bottom:26px;width:6px;height:6px;animation-delay:.3s}.electron-three{top:31px;left:auto;right:12px;width:5px;height:5px;animation-delay:.6s}.splash-wordmark{font-size:1.02rem;font-weight:900;letter-spacing:.18em;color:#E7E8EF}.splash-wordmark span{color:#B7AEC8}.splash-caption{font-size:.88rem;color:#A8B0BD;letter-spacing:.02em}.splash-progress{width:126px;height:2px;border-radius:9px;background:#343944;overflow:hidden;margin-top:5px}.splash-progress i{display:block;width:40%;height:100%;border-radius:9px;background:#B7AEC8;animation:splash-load 1.45s ease-in-out forwards}@keyframes splash-spin{to{rotate:360deg}}@keyframes splash-pulse{to{transform:scale(.65);opacity:.45}}@keyframes splash-load{from{transform:translateX(260%)}to{transform:translateX(-260%)}}@media(prefers-reduced-motion:reduce){.splash-orbit,.splash-electron,.splash-progress i{animation:none!important}.splash-progress i{width:100%}#kc-splash{transition:none}}
+</style>
 </head>
 <body>
+<div id="kc-splash" role="status" aria-label="جاري تجهيز KAREEM CHEMISTRY"><div class="splash-content"><div class="splash-emblem" aria-hidden="true"><span class="splash-orbit orbit-one"></span><span class="splash-orbit orbit-two"></span><span class="splash-orbit orbit-three"></span><span class="splash-core">K</span><i class="splash-electron electron-one"></i><i class="splash-electron electron-two"></i><i class="splash-electron electron-three"></i></div><div class="splash-wordmark">KAREEM <span>CHEMISTRY</span></div><div class="splash-caption">نجهّز لك تجربة كيميائية مختلفة</div><div class="splash-progress"><i></i></div></div></div>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-shell">
   <span class="welcome-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
@@ -2408,7 +2413,8 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  }
  gateSwitch.addEventListener('click',()=>setGateMode(gateMode==='register'?'login':'register'));
  setGateMode('register');
- const welcomeIntro=$id('welcomeIntro');
+const splash=$id('kc-splash');if(splash){const splashDelay=window.matchMedia('(prefers-reduced-motion: reduce)').matches?450:1550;window.setTimeout(()=>{splash.classList.add('is-done');window.setTimeout(()=>splash.remove(),600);},splashDelay);}
+   const welcomeIntro=$id('welcomeIntro');
  $id('welcomeStart').addEventListener('click',()=>{
   welcomeIntro.classList.add('is-leaving');
   window.setTimeout(()=>{welcomeIntro.hidden=true;},460);
