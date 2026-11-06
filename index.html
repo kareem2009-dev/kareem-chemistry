@@ -2003,11 +2003,14 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
   adminUser=user;
   const onAdminPath=location.pathname.replace(/\/$/,'')==='/admin';
   if(user.role==='admin'){
-   // Change the address without reloading the whole site; this avoids
-   // restarting the auth check immediately after a successful login.
-   if(!onAdminPath)history.replaceState(null,'','/admin');
-   dashboard.hidden=false;
-   openAdmin();
+   // Open the dashboard only on the explicit /admin route.
+   // Returning to / keeps the admin session without reopening the dashboard.
+   if(onAdminPath){
+    dashboard.hidden=false;
+    openAdmin();
+   }else{
+    dashboard.hidden=true;
+   }
   }else{
    dashboard.hidden=true;
    if(onAdminPath)history.replaceState(null,'','/');
