@@ -547,6 +547,132 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 @media(min-width:1600px){
   .wrap{padding-inline:clamp(36px,3vw,64px)}
 }
+
+/* KAREEM SIGNATURE — luxury visual refinement */
+:root{
+  --signature-gold:color-mix(in srgb,var(--gold) 88%,#fff 12%);
+  --signature-glow:color-mix(in srgb,var(--tq) 30%,transparent);
+  --signature-gold-glow:color-mix(in srgb,var(--gold) 28%,transparent);
+  --signature-ease:cubic-bezier(.2,.8,.2,1);
+}
+html{scroll-behavior:smooth}
+body{
+  background-image:
+    radial-gradient(ellipse at 12% 8%,color-mix(in srgb,var(--tq) 7%,transparent),transparent 34%),
+    radial-gradient(ellipse at 88% 22%,color-mix(in srgb,var(--gold) 6%,transparent),transparent 30%);
+  background-attachment:fixed;
+}
+header{
+  border-bottom-color:color-mix(in srgb,var(--gold) 18%,var(--glass-edge));
+  box-shadow:0 10px 34px rgba(0,0,0,.13),inset 0 1px 0 var(--glass-shine);
+}
+.logo b{
+  text-shadow:0 0 22px var(--signature-gold-glow);
+  transition:text-shadow .35s var(--signature-ease);
+}
+.logo .av,.sig .av{
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 10%,transparent),0 0 24px var(--signature-gold-glow);
+}
+.hero{
+  isolation:isolate;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  inset:4% 8%;
+  pointer-events:none;
+  border-radius:50%;
+  background:
+    radial-gradient(ellipse at 28% 55%,var(--signature-glow),transparent 42%),
+    radial-gradient(ellipse at 75% 38%,var(--signature-gold-glow),transparent 38%);
+  filter:blur(34px);
+  opacity:.72;
+  animation:signatureAurora 16s ease-in-out infinite alternate;
+}
+h1{
+  text-wrap:balance;
+  text-shadow:0 5px 28px rgba(0,0,0,.14);
+}
+h2{
+  position:relative;
+  width:fit-content;
+  max-width:100%;
+  padding-bottom:9px;
+}
+h2::after{
+  content:"";
+  display:block;
+  width:clamp(42px,7vw,76px);
+  height:2px;
+  margin-top:8px;
+  border-radius:99px;
+  background:linear-gradient(90deg,var(--gold),var(--tq),transparent);
+  box-shadow:0 0 14px var(--signature-glow);
+}
+.card{
+  border-color:color-mix(in srgb,var(--glass-edge) 72%,var(--gold) 8%);
+  box-shadow:0 12px 34px rgba(0,0,0,.12),inset 0 1px 0 var(--glass-shine);
+}
+.card::before{
+  height:1px;
+  opacity:.9;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold) 55%,var(--glass-shine)),transparent);
+}
+.btn{
+  position:relative;
+  box-shadow:0 7px 20px rgba(0,0,0,.12),inset 0 1px 0 var(--glass-shine);
+}
+.btn.p{
+  background:linear-gradient(120deg,var(--gold),color-mix(in srgb,var(--gold) 76%,#fff));
+  box-shadow:0 8px 24px var(--signature-gold-glow),inset 0 1px 0 rgba(255,255,255,.38);
+}
+nav a[aria-current]{
+  box-shadow:0 5px 22px var(--signature-glow),inset 0 1px 0 rgba(255,255,255,.28);
+}
+.tag{
+  letter-spacing:.015em;
+  text-shadow:0 0 16px var(--signature-gold-glow);
+}
+.f{
+  border-color:color-mix(in srgb,var(--tq) 18%,var(--glass-edge));
+  box-shadow:inset 0 1px 0 var(--glass-shine),0 8px 22px rgba(0,0,0,.08);
+}
+:focus-visible{
+  outline-color:var(--gold);
+  box-shadow:0 0 0 4px var(--signature-gold-glow);
+}
+@keyframes signatureAurora{
+  0%{transform:translate3d(-1.5%,0,0) scale(.96);opacity:.52}
+  50%{transform:translate3d(1%,1.5%,0) scale(1.04);opacity:.82}
+  100%{transform:translate3d(2%,-1%,0) scale(1);opacity:.62}
+}
+@media (hover:hover) and (pointer:fine){
+  .card:hover{
+    transform:translateY(-5px) scale(1.008);
+    border-color:color-mix(in srgb,var(--gold) 36%,var(--glass-edge));
+    box-shadow:0 22px 48px rgba(0,0,0,.2),0 0 24px color-mix(in srgb,var(--tq) 9%,transparent),inset 0 1px 0 var(--glass-shine);
+  }
+  .btn:hover,.tg:hover,.chips button:hover,.tabs button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 28px rgba(0,0,0,.17),0 0 18px var(--signature-gold-glow),inset 0 1px 0 var(--glass-shine);
+  }
+  .btn.p:hover{
+    box-shadow:0 12px 30px var(--signature-gold-glow),0 0 22px var(--signature-gold-glow),inset 0 1px 0 rgba(255,255,255,.48);
+  }
+  .logo:hover b{text-shadow:0 0 28px var(--signature-gold-glow)}
+}
+@media(max-width:760px){
+  body{background-attachment:scroll}
+  .hero::before{inset:8% 2%;filter:blur(24px);opacity:.5}
+  .card{box-shadow:0 9px 25px rgba(0,0,0,.12),inset 0 1px 0 var(--glass-shine)}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero::before{animation:none}
+}
+body.reduce-site-motion .hero::before{animation:none}
+
 </style>
 </head>
 <body>
