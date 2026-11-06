@@ -1017,7 +1017,7 @@ function tnew(){Cb=+(.06+Math.random()*.08).toFixed(3);let d='';for(let v=0;v<=4
 window.TD=d.split(/(?=[ML])/);$('#tv').value=0;$('#tmsg').textContent='حرّك الحجم لحد ما يتغير لون الدليل، وبعدها اضغط احسب.';tit()}
 $('#tv').oninput=$('#ti').onchange=tit;$('#tnew').onclick=tnew;$('#tk').onchange=()=>{WK=+$('#tk').value;tnew()};
 $('#tcalc').onclick=()=>{const v=+$('#tv').value,ve=Cb*Vb/Ca;if(v<1){$('#tmsg').textContent='أضف الحمض تدريجيًا وحدد حجم نقطة التكافؤ أولًا.';return}
-if(Math.abs(v-ve)>.5){$('#tmsg').innerHTML=(v<ve?'لسه قبل نقطة التكافؤ.':'عدّيت نقطة التكافؤ.')+'<br>حجم الحمض الحالي: '+v.toFixed(1)+' mL — حجم التكافؤ في العينة: '+ve.toFixed(1)+' mL.<br>حرّك المؤشر لحد حجم التكافؤ تقريبًا، وبعدها احسب التركيز.';return}
+if(Math.abs(v-ve)>.5){$('#tmsg').innerHTML=(v<ve?'لسه قبل نقطة التكافؤ؛ زوّد الحمض تدريجيًا.':'عدّيت نقطة التكافؤ؛ راجع المنحنى وحدد نقطة الانعطاف.')+'<br>القراءة الحالية: '+v.toFixed(1)+' mL. لا تحسب التركيز قبل تحديد حجم التكافؤ من المنحنى.';return}
 const m=Ca*v/Vb;
 $('#tmsg').innerHTML='<span dir="ltr">M(base) × V(base) = M(acid) × V(eq)<br>M(base) = (0.1 × '+v.toFixed(1)+') / 25 = <b>'+m.toFixed(4)+'</b></span> مول/لتر<br>أنت قريب من نقطة التكافؤ؛ دي قيمة التركيز التجريبية التقريبية.'+(WK?'<br>ملحوظة: تكافؤ قاعدة ضعيفة مع حمض قوي يكون الوسط عنده حمضيًا (pH أقل من 7).':'')};
 tnew();
