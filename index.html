@@ -1002,9 +1002,119 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 @media(prefers-reduced-transparency:reduce){.card,.btn,.tg,.chips button,.tabs button,.review-flip,header:not(.ad-top){backdrop-filter:none;-webkit-backdrop-filter:none}}
 </style>
 
+<style id="kc-living-intro-style">
+#kc-living-intro{position:fixed;inset:0;z-index:100003;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#252432 0%,#171a20 38%,#101218 100%);color:#eef0f6;opacity:1;visibility:visible;transition:opacity .65s ease,visibility .65s ease}
+#kc-living-intro.is-out{opacity:0;visibility:hidden;pointer-events:none}
+#kc-living-intro:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.025) 50%,transparent 78%);pointer-events:none}
+.kc-living-stage{position:relative;width:min(100vw,1050px);height:min(720px,100svh);min-height:430px;display:grid;place-items:center}
+#kc-living-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.kc-living-wordmark{position:absolute;z-index:2;top:67%;left:0;right:0;text-align:center;direction:ltr;opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+#kc-living-intro.is-revealed .kc-living-wordmark{opacity:1;transform:translateY(0)}
+.kc-living-wordmark strong{display:block;font:600 clamp(2rem,7vw,4.5rem)/1.05 Cinzel,Georgia,serif;letter-spacing:.16em;color:#e8eaf0;text-shadow:0 2px 22px rgba(191,181,220,.22)}
+.kc-living-wordmark span{display:block;margin-top:10px;font:600 clamp(.8rem,2.2vw,1.15rem)/1.2 Tajawal,sans-serif;letter-spacing:.48em;color:#aaa1bd}
+.kc-living-wordmark small{display:block;margin-top:17px;font:500 10px/1.5 Tajawal,sans-serif;letter-spacing:.28em;color:rgba(221,222,232,.55)}
+.kc-living-fallback{position:absolute;inset:0;display:grid;place-items:center;font:600 clamp(2rem,7vw,4rem) Cinzel,Georgia,serif;letter-spacing:.12em;color:#e8eaf0}
+@media(max-width:600px){.kc-living-stage{height:82svh;min-height:470px}.kc-living-wordmark{top:68%}.kc-living-wordmark strong{letter-spacing:.1em}.kc-living-wordmark span{letter-spacing:.32em}.kc-living-wordmark small{letter-spacing:.14em}}
+@media(prefers-reduced-motion:reduce){#kc-living-intro{transition:none}.kc-living-wordmark{opacity:1;transform:none;transition:none}}
+</style>
 </head>
 <body>
 
+<div id="kc-living-intro" role="status" aria-label="KAREEM CHEMISTRY">
+ <div class="kc-living-stage">
+  <canvas id="kc-living-canvas" aria-hidden="true"></canvas>
+  <div class="kc-living-wordmark"><strong>KAREEM</strong><span>CHEMISTRY</span><small>UNDERSTAND THE ELEMENTS · MASTER THE SCIENCE</small></div>
+ </div>
+</div>
+<script type="module" id="kcLivingIntroScript">
+(async()=>{
+ const root=document.getElementById('kc-living-intro');
+ const canvas=document.getElementById('kc-living-canvas');
+ if(!root||!canvas)return;
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const finish=()=>{root.classList.add('is-out');window.setTimeout(()=>root.remove(),700)};
+ const timer=window.setTimeout(finish,reduced?1450:4700);
+ try{
+  const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
+  if(!document.body.contains(root))return;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(34,1,.1,50);
+  camera.position.set(0,.15,7.2);
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.12;
+  renderer.setClearColor(0x000000,0);
+  scene.add(new THREE.HemisphereLight(0xdedcf2,0x171820,1.25));
+  const key=new THREE.DirectionalLight(0xf3f1ff,3.1);key.position.set(-3,4,5);scene.add(key);
+  const rim=new THREE.PointLight(0xa99acb,28,12);rim.position.set(3,1,1);scene.add(rim);
+  const cool=new THREE.PointLight(0x9ac7d7,18,10);cool.position.set(-3,-1,-2);scene.add(cool);
+  const sculpture=new THREE.Group();scene.add(sculpture);
+  const pts=[
+   new THREE.Vector3(-2.25,-.25,.15),new THREE.Vector3(-1.65,1.1,.55),
+   new THREE.Vector3(-.35,1.35,-.15),new THREE.Vector3(.55,.35,-.75),
+   new THREE.Vector3(1.85,-.9,-.25),new THREE.Vector3(2.15,.45,.5),
+   new THREE.Vector3(1.05,1.2,.25),new THREE.Vector3(-.05,.2,-.65),
+   new THREE.Vector3(-1.25,-1.05,.15),new THREE.Vector3(-2.05,-.35,.55),
+   new THREE.Vector3(-1.2,.75,.8),new THREE.Vector3(.15,.9,.2),
+   new THREE.Vector3(1.2,-.15,-.55),new THREE.Vector3(2.15,-.55,.1)
+  ];
+  const curve=new THREE.CatmullRomCurve3(pts,false,'centripetal');
+  const frames=curve.computeFrenetFrames(420,false),segments=420,width=.34;
+  const positions=[],uvs=[],indices=[];
+  for(let i=0;i<=segments;i++){
+   const t=i/segments,p=curve.getPointAt(t),n=frames.normals[i],b=frames.binormals[i];
+   const twist=Math.sin(t*Math.PI*4)*.34;
+   const side=n.clone().multiplyScalar(Math.cos(twist)).addScaledVector(b,Math.sin(twist)).normalize();
+   const depth=n.clone().multiplyScalar(-Math.sin(twist)).addScaledVector(b,Math.cos(twist)).normalize();
+   for(let j=0;j<2;j++){
+    const v=j?1:-1,point=p.clone().addScaledVector(side,v*width*.5);
+    point.addScaledVector(depth,.045*Math.sin(t*Math.PI*8));
+    positions.push(point.x,point.y,point.z);uvs.push(t,j);
+   }
+  }
+  for(let i=0;i<segments;i++){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2)}
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+  geo.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geo.setIndex(indices);geo.computeVertexNormals();geo.setDrawRange(0,0);
+  const mat=new THREE.MeshPhysicalMaterial({color:0xc9c7d4,metalness:.78,roughness:.19,clearcoat:1,clearcoatRoughness:.08,side:THREE.DoubleSide});
+  const ribbon=new THREE.Mesh(geo,mat);sculpture.add(ribbon);
+  const edgeCurve=new THREE.CatmullRomCurve3(pts.map((p,i)=>p.clone().add(new THREE.Vector3(0,.025*Math.sin(i),.035))));
+  const edgeGeo=new THREE.TubeGeometry(edgeCurve,420,.012,8,false);
+  const edgeMat=new THREE.MeshBasicMaterial({color:0xb8a8d5,transparent:true,opacity:.78});
+  const edge=new THREE.Mesh(edgeGeo,edgeMat);edge.geometry.setDrawRange(0,0);sculpture.add(edge);
+  const core=new THREE.Mesh(new THREE.SphereGeometry(.055,24,16),new THREE.MeshBasicMaterial({color:0xf2edff}));
+  core.position.set(0,.12,.05);sculpture.add(core);
+  const resize=()=>{const w=canvas.clientWidth||innerWidth,h=canvas.clientHeight||innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};
+  resize();const ro=new ResizeObserver(resize);ro.observe(canvas);
+  let raf=0,start=performance.now();
+  function frame(now){
+   if(!document.body.contains(root)){cancelAnimationFrame(raf);ro.disconnect();renderer.dispose();return}
+   const elapsed=(now-start)/1000,progress=reduced?1:Math.min(1,Math.max(0,(elapsed-.25)/1.8));
+   const ease=1-Math.pow(1-progress,3);
+   geo.setDrawRange(0,Math.floor(segments*6*ease));
+   edge.geometry.setDrawRange(0,Math.floor(420*8*ease));
+   sculpture.rotation.y=reduced?0:Math.sin(elapsed*.85)*.18+elapsed*.12;
+   sculpture.rotation.x=reduced?0:Math.sin(elapsed*.7)*.07;
+   const approach=reduced?0:Math.min(1,Math.max(0,(elapsed-1.35)/1.3));
+   camera.position.z=7.2-approach*1.05;camera.position.x=Math.sin(elapsed*.42)*.12;camera.lookAt(0,.08,0);
+   rim.intensity=24+Math.sin(elapsed*2.2)*5;
+   root.classList.toggle('is-revealed',elapsed>(reduced?.1:2.15));
+   renderer.render(scene,camera);
+   if(!reduced)raf=requestAnimationFrame(frame);
+  }
+  frame(start);
+  if(reduced){renderer.render(scene,camera)}
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelAnimationFrame(raf);else if(!reduced)raf=requestAnimationFrame(frame)});
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);ro.disconnect();renderer.dispose();geo.dispose();edgeGeo.dispose()},{once:true});
+ }catch(err){
+  console.warn('Living logo intro fallback',err);
+  root.classList.add('is-revealed');
+  const fallback=document.createElement('div');fallback.className='kc-living-fallback';fallback.textContent='KAREEM';root.appendChild(fallback);
+ }
+})();
+</script>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-shell">
   <span class="welcome-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
