@@ -2358,6 +2358,21 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
    ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=1.1;ctx.stroke();
    ctx.beginPath();ctx.ellipse(p.x-radius*.28,p.y-radius*.36,radius*.22,radius*.11,-.55,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.48)';ctx.fill();ctx.restore();
   });
+  // Arabic name tag for every atom, with a fine pointer to its exact position
+  pts.forEach(function(p){
+   var names={C:'كربون',H:'هيدروجين',O:'أكسجين',N:'نيتروجين'};
+   var label=(names[p.el]||'ذرة')+' ('+p.el+')';
+   var vx=p.x-w/2,vy=p.y-h/2,vl=Math.hypot(vx,vy)||1;
+   var lx=p.x+(vx/vl)*22,ly=p.y+(vy/vl)*22-13;
+   var fs=Math.max(8,Math.min(10.5,w/42));
+   ctx.save();ctx.font='700 '+fs+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
+   var tw=ctx.measureText(label).width,pad=6,bw=tw+pad*2,bh=19;
+   lx=Math.max(bw/2+5,Math.min(w-bw/2-5,lx));ly=Math.max(bh/2+5,Math.min(h-bh/2-5,ly));
+   ctx.strokeStyle='rgba(140,220,220,.62)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(lx,ly+bh/2);ctx.stroke();
+   ctx.fillStyle='rgba(5,18,29,.88)';ctx.strokeStyle='rgba(125,220,214,.55)';
+   ctx.beginPath();ctx.roundRect(lx-bw/2,ly-bh/2,bw,bh,6);ctx.fill();ctx.stroke();
+   ctx.fillStyle='#f2fbff';ctx.fillText(label,lx,ly+.5);ctx.restore();
+  });
  }
  function frame(t){if(!auto)return;if(t-last>28){ry+=.003;last=t;draw();}raf=requestAnimationFrame(frame);}
  function setModel(){var m=models[selected];$('organicName').textContent=m.name;$('organicFormula').textContent=m.formula;$('organicBond').textContent=m.bond;$('organicShape').textContent=m.shape;draw();}
