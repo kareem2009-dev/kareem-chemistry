@@ -907,6 +907,38 @@ body.reduce-site-motion .hero::before{animation:none}
 @media(max-width:650px){.review-controls{grid-template-columns:1fr 1fr}.review-search{grid-column:1/-1}.review-flip{min-height:195px}}
 @media(prefers-reduced-motion:reduce){.review-flip{transition:none}.review-flip:hover{transform:none}}
 </style>
+
+<style id="balanced-header-layout">
+/* Header layout: brand and quick tools share the first row; section links get a clean centered row */
+header:not(.ad-top){
+ display:grid!important;
+ grid-template-columns:minmax(220px,auto) minmax(0,1fr);
+ grid-template-areas:"brand tools" "nav nav";
+ align-items:center!important;
+ column-gap:clamp(16px,2.4vw,38px)!important;
+ row-gap:10px!important;
+ padding:12px clamp(18px,4vw,64px)!important;
+}
+header:not(.ad-top)>.logo{grid-area:brand;justify-self:start;min-width:0}
+header:not(.ad-top)>nav{grid-area:nav;justify-content:center;align-items:center;gap:clamp(2px,.45vw,8px);width:100%;min-width:0}
+header:not(.ad-top)>nav a{padding:7px clamp(9px,1vw,16px);white-space:nowrap;font-size:clamp(.78rem,.9vw,.94rem)}
+header:not(.ad-top)>.header-actions{grid-area:tools;justify-self:end;align-self:center;max-width:100%}
+@media(min-width:1250px){
+ header:not(.ad-top){grid-template-columns:minmax(235px,auto) minmax(0,1fr);grid-template-areas:"brand tools" "nav nav"}
+ header:not(.ad-top)>nav{flex-wrap:nowrap}
+}
+@media(max-width:900px){
+ header:not(.ad-top){grid-template-columns:minmax(0,1fr);grid-template-areas:"brand" "tools" "nav";justify-items:stretch;row-gap:9px!important}
+ header:not(.ad-top)>.logo{justify-self:center}
+ header:not(.ad-top)>.header-actions{justify-self:center}
+ header:not(.ad-top)>nav{justify-content:center;flex-wrap:wrap}
+}
+@media(max-width:520px){
+ header:not(.ad-top){padding:10px 12px!important}
+ header:not(.ad-top)>nav{gap:3px}
+ header:not(.ad-top)>nav a{padding:6px 8px;font-size:.76rem}
+}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
