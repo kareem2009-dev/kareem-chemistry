@@ -740,6 +740,23 @@ input[type=search],select,textarea{border-radius:15px}
   </div>
 </div>
 
+<div class="organic3d card" id="organic3d">
+ <div class="organic-head"><div><span class="tag">MOLECULAR STUDIO · 3D</span><h3>استوديو الجزيئات العضوية ثلاثي الأبعاد</h3><p>استكشف شكل الجزيئات وروابطها في مساحة تفاعلية.</p></div><span class="organic-live">● عرض تفاعلي</span></div>
+ <div class="organic-controls">
+  <label>اختر المركب
+   <select id="organicMolecule">
+    <option value="methane">الميثان CH₄</option><option value="ethane">الإيثان C₂H₆</option><option value="ethene">الإيثين C₂H₄</option><option value="ethyne">الإيثاين C₂H₂</option><option value="ethanol">الإيثانول C₂H₆O</option><option value="acetone">البروبانون (الأسيتون) C₃H₆O</option><option value="acetic">حمض الإيثانويك CH₃COOH</option><option value="benzene">البنزين C₆H₆</option>
+   </select>
+  </label>
+  <label>طريقة العرض<select id="organicStyle"><option value="ball">كرات وعصي</option><option value="space">ملء الفراغ</option><option value="wire">روابط وذرات</option></select></label>
+ </div>
+ <div class="organic-stage" id="organicStage"><canvas id="organicCanvas" aria-label="نموذج ثلاثي الأبعاد تفاعلي لجزيء عضوي"></canvas><div class="organic-hint">اسحب بإصبعك أو بالماوس لتدوير الجزيء</div><div class="organic-axis">3D</div></div>
+ <div class="organic-actions"><button class="btn p" id="organicRotate" type="button">⏸ إيقاف الدوران</button><button class="btn" id="organicReset" type="button">↺ إعادة العرض</button><button class="btn" id="organicZoomIn" type="button">＋ تكبير</button><button class="btn" id="organicZoomOut" type="button">− تصغير</button></div>
+ <div class="organic-info"><div><small>اسم المركب</small><b id="organicName">الميثان</b></div><div><small>الصيغة الجزيئية</small><b id="organicFormula">CH₄</b></div><div><small>نوع الروابط</small><b id="organicBond">أحادية</b></div><div><small>الهندسة حول الذرة المركزية</small><b id="organicShape">رباعي الأوجه</b></div></div>
+ <div class="organic-legend"><span><i style="background:#50545b"></i> كربون</span><span><i style="background:#f4f6fa"></i> هيدروجين</span><span><i style="background:#e34c4c"></i> أكسجين</span><span><i style="background:#4388df"></i> نيتروجين</span></div>
+ <p class="organic-disclaimer">النماذج تمثيلات تعليمية تقريبية للشكل الفراغي وليست قياسات هندسية دقيقة. الألوان: الكربون رمادي، الهيدروجين أبيض، الأكسجين أحمر، والنيتروجين أزرق.</p>
+</div>
+
 </section>
 
 <section class="view" id="v-student">
@@ -2079,6 +2096,31 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
   }
   .desktop-cursor-aura.is-visible { opacity: 1; }
 }
+
+/* Organic 3D molecular studio */
+.organic3d{margin:26px 0;padding:clamp(14px,2.5vw,26px);border-radius:26px}
+.organic-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.organic-head h3{font-size:1.35rem;margin:5px 0}
+.organic-head p{color:var(--mute)}
+.organic-live{font-size:.8rem;color:var(--tq);font-weight:700}
+.organic-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.organic-controls label{margin:0}
+.organic-stage{height:390px;max-height:62vh;min-height:270px;position:relative;overflow:hidden;border:1px solid var(--glass-edge,var(--line));border-radius:22px;background:radial-gradient(ellipse at 50% 42%,color-mix(in srgb,var(--tq) 12%,var(--bg2)),var(--bg2) 72%);touch-action:pan-y}
+#organicCanvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+#organicCanvas:active{cursor:grabbing}
+.organic-hint{position:absolute;bottom:12px;right:14px;color:var(--mute);font-size:.78rem;pointer-events:none}
+.organic-axis{position:absolute;top:12px;left:14px;color:var(--tq);font:700 12px monospace;opacity:.7;pointer-events:none}
+.organic-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.organic-actions .btn{margin:0}
+.organic-info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+.organic-info>div{padding:12px;border-radius:15px;background:var(--glass-fill,var(--bg2));border:1px solid var(--glass-edge,var(--line));min-width:0}
+.organic-info small{display:block;color:var(--mute);font-size:.78rem}
+.organic-info b{display:block;margin-top:3px;overflow-wrap:anywhere}
+.organic-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;color:var(--mute);font-size:.85rem}
+.organic-legend span{display:flex;align-items:center;gap:6px}
+.organic-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;box-shadow:0 1px 4px #0004}
+.organic-disclaimer{font-size:.78rem;color:var(--mute);margin-top:12px}
+@media(max-width:650px){.organic-controls{grid-template-columns:1fr}.organic-stage{height:320px}.organic-info{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
 <script id="balancedHumorSystem">
@@ -2257,6 +2299,52 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
   window.addEventListener('blur',function(){
     visible=false;aura.classList.remove('is-visible');
   });
+})();
+</script>
+
+<script id="organic3dEngine">
+(function(){
+ var canvas=document.getElementById('organicCanvas');if(!canvas)return;
+ var ctx=canvas.getContext('2d');if(!ctx)return;
+ var $=function(id){return document.getElementById(id)};
+ var models={
+ methane:{name:'الميثان',formula:'CH₄',bond:'أحادية',shape:'رباعي الأوجه',atoms:[['C',0,0,0],['H',1,1,1],['H',-1,-1,1],['H',-1,1,-1],['H',1,-1,-1]],bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1]]},
+ ethane:{name:'الإيثان',formula:'C₂H₆',bond:'أحادية',shape:'حول كل كربون رباعي الأوجه',atoms:[['C',-.65,0,0],['C',.65,0,0],['H',-1.1,1,.7],['H',-1.1,-1,.7],['H',-1.1,0,-1],['H',1.1,1,-.7],['H',1.1,-1,-.7],['H',1.1,0,1]],bonds:[[0,1,1],[0,2,1],[0,3,1],[0,4,1],[1,5,1],[1,6,1],[1,7,1]]},
+ ethene:{name:'الإيثين',formula:'C₂H₄',bond:'رابطة مزدوجة C=C',shape:'مستوٍ حول كل كربون',atoms:[['C',-.65,0,0],['C',.65,0,0],['H',-1.2,.9,0],['H',-1.2,-.9,0],['H',1.2,.9,0],['H',1.2,-.9,0]],bonds:[[0,1,2],[0,2,1],[0,3,1],[1,4,1],[1,5,1]]},
+ ethyne:{name:'الإيثاين',formula:'C₂H₂',bond:'رابطة ثلاثية C≡C',shape:'خطي',atoms:[['C',-.65,0,0],['C',.65,0,0],['H',-1.6,0,0],['H',1.6,0,0]],bonds:[[0,1,3],[0,2,1],[1,3,1]]},
+ ethanol:{name:'الإيثانول',formula:'C₂H₆O',bond:'أحادية',shape:'تركيب غير مستوٍ',atoms:[['C',-.8,0,0],['C',.5,0,0],['O',1.35,.65,0],['H',1.9,.35,0],['H',-1.2,1,.7],['H',-1.2,-1,.7],['H',-1.2,0,-1],['H',.6,-.9,.7],['H',.6,.9,-.7]],bonds:[[0,1,1],[1,2,1],[2,3,1],[0,4,1],[0,5,1],[0,6,1],[1,7,1],[1,8,1]]},
+ acetone:{name:'البروبانون (الأسيتون)',formula:'C₃H₆O',bond:'رابطة مزدوجة C=O وأحادية',shape:'مستوٍ تقريبًا حول مجموعة الكربونيل',atoms:[['C',-1,0,0],['C',0,0,0],['O',0,1.1,0],['C',1,0,0],['H',-1.5,.8,.5],['H',-1.5,-.8,.5],['H',-1.5,0,-.8],['H',1.5,.8,-.5],['H',1.5,-.8,-.5],['H',1.5,0,.8]],bonds:[[0,1,1],[1,2,2],[1,3,1],[0,4,1],[0,5,1],[0,6,1],[3,7,1],[3,8,1],[3,9,1]]},
+ acetic:{name:'حمض الإيثانويك',formula:'CH₃COOH',bond:'رابطة مزدوجة C=O وأحادية',shape:'مجموعة الكربوكسيل مستوية تقريبًا',atoms:[['C',-.7,0,0],['C',.55,0,0],['O',1.1,1,0],['O',1.35,-.85,0],['H',2.15,-.65,0],['H',-1.1,1,.7],['H',-1.1,-1,.7],['H',-1.25,0,-.9]],bonds:[[0,1,1],[1,2,2],[1,3,1],[3,4,1],[0,5,1],[0,6,1],[0,7,1]]},
+ benzene:{name:'البنزين',formula:'C₆H₆',bond:'روابط متبادلة/إلكترونات π غير متمركزة',shape:'حلقة سداسية مستوية',atoms:[],bonds:[]}
+ };
+ for(var k=0;k<6;k++){var a=k*Math.PI/3;models.benzene.atoms.push(['C',Math.cos(a),Math.sin(a),0]);models.benzene.atoms.push(['H',1.65*Math.cos(a),1.65*Math.sin(a),0]);models.benzene.bonds.push([2*k,2*((k+1)%6),1],[2*k,2*k+1,1]);}
+ var selected='methane',style='ball',rx=-.35,ry=.65,zoom=1,auto=true,drag=null,raf=0,last=0,w=0,h=0,dpr=1;
+ function resize(){var r=canvas.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);w=Math.max(1,r.width);h=Math.max(1,r.height);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw();}
+ function rotate(p){var x=p[0],y=p[1],z=p[2],c=Math.cos(ry),s=Math.sin(ry),x1=x*c-z*s,z1=x*s+z*c,cy=Math.cos(rx),sy=Math.sin(rx);return [x1,y1=y*cy-z1*sy,y*sy+z1*cy];}
+ function draw(){
+  if(!w||!h)return;ctx.clearRect(0,0,w,h);
+  var m=models[selected],pts=m.atoms.map(function(a){var p=rotate([a[1],a[2],a[3]]);var depth=5/(5-p[2]*.35);return {x:w/2+p[0]*Math.min(w,h)*.19*zoom*depth,y:h/2+p[1]*Math.min(w,h)*.19*zoom*depth,z:p[2],el:a[0],depth:depth};});
+  var max= Math.max.apply(null,m.atoms.map(function(a){return Math.hypot(a[1],a[2],a[3])}))||1;
+  var scale=Math.min(w,h)*.36/(max||1);pts=m.atoms.map(function(a){var p=rotate([a[1],a[2],a[3]]),depth=5/(5-p[2]*.35);return {x:w/2+p[0]*scale*zoom*depth,y:h/2+p[1]*scale*zoom*depth,z:p[2],el:a[0],depth:depth};});
+  var edges=m.bonds.map(function(b){return {a:pts[b[0]],b:pts[b[1]],n:b[2],z:(pts[b[0]].z+pts[b[1]].z)/2};}).sort(function(a,b){return a.z-b.z;});
+  edges.forEach(function(e){var dx=e.b.x-e.a.x,dy=e.b.y-e.a.y,len=Math.hypot(dx,dy)||1,px=-dy/len,py=dx/len,offset=4;ctx.lineCap='round';ctx.strokeStyle=style==='wire'?'#94a3b8':'rgba(160,174,192,.9)';ctx.lineWidth=style==='wire'?2:5*Math.min(e.a.depth,e.b.depth);for(var j=0;j<e.n;j++){var off=(j-(e.n-1)/2)*offset;ctx.beginPath();ctx.moveTo(e.a.x+px*off,e.a.y+py*off);ctx.lineTo(e.b.x+px*off,e.b.y+py*off);ctx.stroke();}});
+  pts.sort(function(a,b){return a.z-b.z;}).forEach(function(p){var radius=(p.el==='H'?8:p.el==='O'?13:12)*Math.min(p.depth,1.35);if(style==='space')radius*=1.65;if(style==='wire'){ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.strokeStyle=p.el==='C'?'#606975':p.el==='O'?'#e34c4c':'#cbd5e1';ctx.lineWidth=2;ctx.stroke();return;}var colors={C:['#777e89','#343a45'],H:['#fff','#b9c4d2'],O:['#ff7777','#a51f2b'],N:['#76b7ff','#174b9a']},g=ctx.createRadialGradient(p.x-radius*.35,p.y-radius*.4,1,p.x,p.y,radius);g.addColorStop(0,colors[p.el][0]);g.addColorStop(1,colors[p.el][1]);ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='rgba(255,255,255,.32)';ctx.lineWidth=1;ctx.stroke();});
+ }
+ function frame(t){if(!auto)return;if(t-last>28){ry+=.003;last=t;draw();}raf=requestAnimationFrame(frame);}
+ function setModel(){var m=models[selected];$('organicName').textContent=m.name;$('organicFormula').textContent=m.formula;$('organicBond').textContent=m.bond;$('organicShape').textContent=m.shape;draw();}
+ $('organicMolecule').addEventListener('change',function(e){selected=e.target.value;setModel();});
+ $('organicStyle').addEventListener('change',function(e){style=e.target.value;draw();});
+ $('organicRotate').addEventListener('click',function(){auto=!auto;this.textContent=auto?'⏸ إيقاف الدوران':'▶ تشغيل الدوران';if(auto){last=0;raf=requestAnimationFrame(frame);}else cancelAnimationFrame(raf);});
+ $('organicReset').addEventListener('click',function(){rx=-.35;ry=.65;zoom=1;draw();});
+ $('organicZoomIn').addEventListener('click',function(){zoom=Math.min(2.2,zoom*1.15);draw();});
+ $('organicZoomOut').addEventListener('click',function(){zoom=Math.max(.55,zoom/1.15);draw();});
+ canvas.addEventListener('pointerdown',function(e){drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
+ canvas.addEventListener('pointermove',function(e){if(!drag)return;ry+=(e.clientX-drag.x)*.009;rx=Math.max(-1.5,Math.min(1.5,rx+(e.clientY-drag.y)*.009));drag={x:e.clientX,y:e.clientY};draw();});
+ ['pointerup','pointercancel','lostpointercapture'].forEach(function(n){canvas.addEventListener(n,function(){drag=null;});});
+ canvas.addEventListener('wheel',function(e){e.preventDefault();zoom=Math.max(.55,Math.min(2.2,zoom*(e.deltaY<0?1.08:.92)));draw();},{passive:false});
+ if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);
+ setModel();resize();if(auto)raf=requestAnimationFrame(frame);
+ document.addEventListener('visibilitychange',function(){if(document.hidden)cancelAnimationFrame(raf);else if(auto)raf=requestAnimationFrame(frame);});
 })();
 </script>
 </body>
