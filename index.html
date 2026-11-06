@@ -923,7 +923,7 @@ function ph(){const[t,k]=S[$('#ps').selectedIndex],C=10**$('#pr').value;
 const x=k?(-k+Math.sqrt(k*k+4*k*C))/2:C,p=t==='a'?-Math.log10(x):14+Math.log10(x);
 $('#pc').textContent=C.toPrecision(2);$('#pv').textContent='pH '+p.toFixed(2);$('#pt').textContent=kind(p);
 $('#pm').style.left=`calc(${p/14*100}% - 2px)`;paint($('#pf'),p);
-$('#pd').innerHTML=`<div class="row"><span>pOH</span><span>${(14-p).toFixed(2)}</span></div><div class="row"><span>[H<sup>+</sup>]</span><span>${sci(10**-p)}</span></div><div class="row"><span>[OH<sup>−</sup>]</span><span>${sci(10**(p-14))}</span></div>`+(k?`<div class="row"><span>درجة التأين α</span><span>${(x/C*100).toFixed(2)}%</span></div>`:'<div class="row"><span>التأين</span><span>تام</span></div>')}
+$('#pd').innerHTML=`<div class="msg"><b>خطوات الحساب عند 25°C</b><br>${k?(t==='a'?'حمض ضعيف: [H⁺] = (−Ka + √(Ka² + 4KaC)) / 2.':'قاعدة ضعيفة: [OH⁻] = (−Kb + √(Kb² + 4KbC)) / 2.'):(t==='a'?'حمض قوي أحادي: [H⁺] ≈ C.':'قاعدة قوية أحادية: [OH⁻] ≈ C.')}<br>pH = −log[H⁺]، و pOH = −log[OH⁻]، وعند 25°C: pH + pOH = 14.</div><div class="row"><span>pOH</span><span>${(14-p).toFixed(2)}</span></div><div class="row"><span>[H<sup>+</sup>]</span><span>${sci(10**-p)}</span></div><div class="row"><span>[OH<sup>−</sup>]</span><span>${sci(10**(p-14))}</span></div>`+(k?`<div class="row"><span>درجة التأين α</span><span>${(x/C*100).toFixed(2)}%</span></div>`:'<div class="row"><span>التأين</span><span>تام</span></div>')}
 $('#ps').onchange=$('#pr').oninput=ph;ph();
 
 /* lab 2: Le Chatelier */
@@ -1172,7 +1172,7 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  function render(){
   if(!ctx||!width||!height)return;
   ctx.clearRect(0,0,width,height);
-  const mass=window.__rxCalcState&&window.__rxCalcState.key===$r('rxChoice').value?window.__rxCalcState.productMass:0;const amountFactor=Math.max(.08,Math.min(1.6,Math.sqrt(Math.max(0,mass)/.5)));const solidCount=Math.floor(extent*particles.length*.72*amountFactor);
+  const mass=window.__rxCalcState&&window.__rxCalcState.key===$r('rxChoice').value?window.__rxCalcState.productMass:0;const amountFactor=mass>0?Math.max(.08,Math.min(1.6,Math.sqrt(mass/.5))):0;const solidCount=Math.floor(extent*particles.length*.72*amountFactor);
   particles.forEach((p,i)=>{
    if(i<solidCount&&model.kind.includes('precip')){
     const settle=Math.max(0,extent-.28);
@@ -1923,6 +1923,32 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  };
  var sel=document.getElementById('rxChoice'),panel=document.querySelector('#rxLab .rxpanel');
  if(sel&&panel){var box=el('section','');box.id='rxTheory';panel.appendChild(box);function update(){var d=details[sel.value];if(!d)return;box.innerHTML='';box.appendChild(el('h3','', 'التفسير العلمي للتفاعل: '+d[0]));box.appendChild(el('p','',d[6]));var grid=el('div','rx-theory-grid');[['المعادلة الجزيئية',d[1]],['الأيونية الكاملة',d[2]],['الأيونية النهائية',d[3]],['الملاحظة',d[4]],['الأيونات المتفرجة',d[5]]].forEach(function(c){var cell=el('div','rx-theory-cell');cell.appendChild(el('b','',c[0]));cell.appendChild(el(c[0].indexOf('معادلة')>=0||c[0].indexOf('الأيونية')>=0?'div':'p',c[0].indexOf('معادلة')>=0||c[0].indexOf('الأيونية')>=0?'rxt-eq':'',c[1]));grid.appendChild(cell)});box.appendChild(grid);box.appendChild(el('p','','حالات المواد: (s) صلب، (aq) محلول مائي، (g) غاز، (l) سائل. يجب حفظ الذرات والشحنة في طرفي المعادلة.'))}sel.addEventListener('change',update);update()}
+})();
+</script>
+
+
+<script id="labIonInterpretationV2">
+(function(){
+ var root=document.getElementById('v-labs'),io=document.getElementById('io'),sel=document.getElementById('is');
+ if(!root||!io||!sel)return;
+ var notes=[
+  ['يتفاعل CO₃²⁻ مع الحمض مطلقًا CO₂. تعكير ماء الجير ينتج من راسب CaCO₃، وقد يختفي التعكير مع فائض CO₂ بسبب تكوّن البيكربونات الذائبة.','CO₃²⁻ + 2H⁺ → CO₂↑ + H₂O','CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O'],
+  ['SO₂ عامل مختزل؛ يختزل ثنائي الكرومات الحمضي من Cr(VI) البرتقالي إلى Cr(III) الأخضر. الغاز سام ومهيّج ولا يُستنشق.','SO₃²⁻ + 2H⁺ → SO₂↑ + H₂O','Cr₂O₇²⁻ + 3SO₂ + 2H⁺ → 2Cr³⁺ + 3SO₄²⁻ + H₂O'],
+  ['يتكون H₂S من الكبريتيد مع الحمض، ثم يعطي مع Pb²⁺ راسب PbS الأسود. H₂S شديد السمية ولا يُشم مطلقًا.','S²⁻ + 2H⁺ → H₂S↑','Pb²⁺ + H₂S → PbS↓ + 2H⁺'],
+  ['Ba²⁺ وSO₄²⁻ يكوّنان BaSO₄ أبيض شديد الانخفاض في الذوبانية؛ عدم ذوبانه في الحمض المخفف يدعم الاستدلال على الكبريتات.','Ba²⁺ + SO₄²⁻ → BaSO₄↓',''],
+  ['AgCl راسب أبيض يذوب في النشادر الزائد بسبب تكوّن معقد الفضة ثنائي الأمين الذائب؛ هذه علامة تأكيدية للكلوريد.','Ag⁺ + Cl⁻ → AgCl↓','AgCl + 2NH₃ ⇌ [Ag(NH₃)₂]⁺ + Cl⁻'],
+  ['في اختبار الحلقة البنية تُختزل النترات إلى NO، ثم يرتبط NO بأيون الحديد الثنائي مكوّنًا معقدًا بنيًا عند الحد الفاصل بين الطبقتين.','NO₃⁻ + 3Fe²⁺ + 4H⁺ → NO + 3Fe³⁺ + 2H₂O','[Fe(H₂O)₆]²⁺ + NO ⇌ [Fe(H₂O)₅(NO)]²⁺ + H₂O'],
+  ['Cu(OH)₂ راسب أزرق. في فائض NH₃ يتكون معقد نحاس ثنائي أزرق داكن؛ اختفاء الراسب وظهور اللون الداكن يوضح تكوّن المعقد.','Cu²⁺ + 2OH⁻ → Cu(OH)₂↓','Cu²⁺ + 4NH₃ ⇌ [Cu(NH₃)₄]²⁺'],
+  ['Fe³⁺ يعطي Fe(OH)₃ بنيًا محمرًا مع OH⁻؛ اللون والراسب قرينة على الحديد الثلاثي.','Fe³⁺ + 3OH⁻ → Fe(OH)₃↓',''],
+  ['Fe²⁺ يعطي Fe(OH)₂ أخضر، ثم يتأكسد بالأكسجين إلى Fe(OH)₃ البني المحمر؛ لذلك قد يتغير لون الراسب مع الزمن.','Fe²⁺ + 2OH⁻ → Fe(OH)₂↓','4Fe(OH)₂ + O₂ + 2H₂O → 4Fe(OH)₃↓'],
+  ['Al(OH)₃ راسب أبيض أمفوتيري؛ يذوب في زيادة NaOH مكونًا أيون الألومينات الذائب. الذوبان في الزيادة يميزه عن رواسب أخرى.','Al³⁺ + 3OH⁻ → Al(OH)₃↓','Al(OH)₃ + OH⁻ → [Al(OH)₄]⁻'],
+  ['يتحرر NH₃ من NH₄⁺ في الوسط القاعدي. النشادر تجعل ورقة عباد الشمس الحمراء المبللة زرقاء؛ لا يُستنشق الغاز.','NH₄⁺ + OH⁻ → NH₃↑ + H₂O',''],
+  ['PbCl₂ راسب أبيض تزداد ذوبانيته في الماء الساخن؛ التغير مع الحرارة يساعد على تمييزه. مركبات الرصاص سامة.','Pb²⁺ + 2Cl⁻ → PbCl₂↓','']
+ ];
+ var make=function(t,c,v){var n=document.createElement(t);if(c)n.className=c;if(v)n.textContent=v;return n};
+ var observer=new MutationObserver(function(records){records.forEach(function(rec){rec.addedNodes.forEach(function(n){if(n.nodeType!==1||!n.classList.contains('msg')||n.querySelector('.ion-detail'))return;var i=sel.value==='?'?-1:+sel.value;if(i<0||!notes[i])return;var d=make('div','ion-detail');d.appendChild(make('b','','ليه ظهرت النتيجة دي؟'));d.appendChild(make('p','',notes[i][0]));notes[i].slice(1).filter(Boolean).forEach(function(eq){d.appendChild(make('div','lab-guide-eq',eq))});n.appendChild(d)})})});
+ observer.observe(io,{childList:true});
+ var card=root.querySelector('.lab .card');if(card&&!card.querySelector('.ion-safety-v2')){var safety=make('div','ion-safety ion-safety-v2');safety.innerHTML='<b>تنبيه سلامة مهم:</b> الغازات المذكورة مثل H₂S وSO₂ وNH₃ قد تكون سامة أو مهيّجة. لا تُشم ولا تُستنشق. كل الخطوات هنا محاكاة رقمية فقط وليست تعليمات لتنفيذ التجربة.';card.appendChild(safety)}
 })();
 </script>
 
