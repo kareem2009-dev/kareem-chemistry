@@ -1976,5 +1976,95 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
 })();
 </script>
 
+<style>
+/* Balanced humor: small, optional-feeling accents that preserve the study UI */
+.humor-note{display:block;margin-top:9px;padding:7px 10px;border-inline-start:3px solid var(--gold);border-radius:8px;background:var(--bg2);color:var(--mute);font-size:.86rem;line-height:1.6}
+#siteHumorToast{position:fixed;top:calc(84px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:55;width:min(440px,calc(100vw - 28px));display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);box-shadow:0 12px 32px #0002;font-size:.92rem;animation:rise .3s ease}
+#siteHumorToast button{flex:none;border:0;background:transparent;color:var(--mute);font:700 1.1rem Tajawal,sans-serif;cursor:pointer;padding:0 4px}
+@media(prefers-reduced-motion:reduce){#siteHumorToast{animation:none}}
+</style>
+
+<script id="balancedHumorSystem">
+(function(){
+ 'use strict';
+ var assistantLines=[
+  'الكيمياء بتحب التركيز… مش لازم نراضيها، بس نفهمها 😂',
+  'خدها خطوة خطوة؛ حتى الإلكترونات مش بتجري من غير سبب.',
+  'المعادلة الموزونة مبسوطة دلوقتي… كل ذرة لقت مكانها 😄',
+  'معلومة صغيرة كل يوم أحسن من سباق كبير من غير فهم.'
+ ];
+ var correctLines=[
+  'الله عليك! الذرات متوزنة وفخورة بيك 👏',
+  'إجابة مظبوطة… واضح إنك صاحي للكيمياء النهارده 😎',
+  'تمام التمام! نقطة في صالح فريق الفهم مش الحفظ 😂',
+  'برافو! كده التفاعل مشي على أصوله.'
+ ];
+ var retryLines=[
+  'ولا يهمك، الغلطة هنا تدريب مجاني. راجع الفكرة وجرب تاني 😄',
+  'قربت! الكيمياء عايزة تركيز زيادة نص درجة بس.',
+  'مش مشكلة؛ حتى المعادلات بتحتاج إعادة وزن أحيانًا 😂',
+  'راجع السبب بهدوء، والمحاولة الجاية ممكن تكون الصح.'
+ ];
+ var siteLines=[
+  'أهلاً بيك في المعمل! هنا بنفهم الكيمياء… مش بنخوف من الجدول الدوري 😄',
+  'نصيحة المعمل: افهم الفكرة الأول، والحفظ هييجي أسهل.',
+  'خلي بالك: الاستراحة القصيرة جزء من خطة المذاكرة، مش تهريب من المنهج 😂',
+  'كل سؤال بتحله بيقربك خطوة. يلا نخلّي الذرات تتفاهم!'
+ ];
+ function pick(a){return a[Math.floor(Math.random()*a.length)]}
+ function addNote(target,line){
+  if(!target||target.querySelector('.humor-note'))return;
+  var n=document.createElement('span');n.className='humor-note';n.textContent='😄 '+line;target.appendChild(n);
+ }
+ function decorateAssistant(node){
+  if(!node||node.classList.contains('u')||node.querySelector('.aiTy')||node.dataset.humored)return;
+  if(!node.textContent.trim())return;
+  node.dataset.humored='1';addNote(node,pick(assistantLines));
+ }
+ var ai=document.getElementById('aiMsgs');
+ if(ai){
+  var aiObserver=new MutationObserver(function(records){
+   records.forEach(function(rec){
+    if(rec.type==='childList')rec.addedNodes.forEach(function(n){
+     if(n.nodeType===1){if(n.matches('.aiM.b'))decorateAssistant(n);n.querySelectorAll&&n.querySelectorAll('.aiM.b').forEach(decorateAssistant)}
+    });
+    if(rec.type==='childList'&&rec.target.nodeType===1&&rec.target.matches('.aiM.b'))decorateAssistant(rec.target);
+   });
+  });
+  aiObserver.observe(ai,{childList:true,subtree:true});
+ }
+ var qf=document.getElementById('qf');
+ if(qf){
+  var qObserver=new MutationObserver(function(){
+   var feedback=qf.querySelector('.msg');
+   if(!feedback||feedback.dataset.humored)return;
+   feedback.dataset.humored='1';
+   var ok=/صح!|إجابة صحيحة|ممتاز/i.test(feedback.textContent);
+   addNote(feedback,ok?pick(correctLines):pick(retryLines));
+  });
+  qObserver.observe(qf,{childList:true,subtree:true});
+ }
+ document.querySelectorAll('.lab-quiz').forEach(function(quiz){
+  var feedback=quiz.querySelector('.lab-quiz-feedback');if(!feedback)return;
+  var observer=new MutationObserver(function(){
+   if(!feedback.textContent.trim()||feedback.dataset.humored)return;
+   feedback.dataset.humored='1';
+   addNote(feedback,/إجابة صحيحة|صحيح/i.test(feedback.textContent)?pick(correctLines):pick(retryLines));
+  });
+  observer.observe(feedback,{childList:true,characterData:true,subtree:true});
+ });
+ function showSiteToast(){
+  if(document.getElementById('siteHumorToast'))return;
+  var toast=document.createElement('div');toast.id='siteHumorToast';toast.setAttribute('role','status');toast.setAttribute('aria-live','polite');
+  var msg=document.createElement('span');msg.textContent='😄 '+pick(siteLines);
+  var close=document.createElement('button');close.type='button';close.setAttribute('aria-label','إغلاق');close.textContent='×';close.onclick=function(){toast.remove()};
+  toast.append(msg,close);document.body.appendChild(toast);
+  window.setTimeout(function(){if(toast.isConnected)toast.remove()},6500);
+ }
+ if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: reduce)').matches)window.setTimeout(showSiteToast,900);
+ else window.setTimeout(showSiteToast,900);
+})();
+</script>
+
 </body>
 </html>
