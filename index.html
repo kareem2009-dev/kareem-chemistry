@@ -2801,31 +2801,60 @@ body.reduce-site-motion #homeParticles{display:none}
  if(!canvas)return;
  var hero=canvas.closest('.hero'),ctx=canvas.getContext('2d');
  if(!ctx)return;
- var particles=[],w=0,h=0,raf=0,last=0,active=true,dpr=1;
+ var stars=[],meteors=[],w=0,h=0,raf=0,last=0,active=true,dpr=1,spawnTick=0;
  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  function resize(){
   var r=hero.getBoundingClientRect();w=Math.max(1,r.width);h=Math.max(1,r.height);
   dpr=Math.min(window.devicePixelRatio||1,1.5);
   canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  var count=Math.max(18,Math.min(54,Math.round(w/22)));
-  particles=Array.from({length:count},function(){return{x:Math.random()*w,y:Math.random()*h,r:Math.random()*2.1+.55,vx:(Math.random()-.5)*.24,vy:-(Math.random()*.32+.08),a:Math.random()*.42+.12,p:Math.random()*Math.PI*2,tw:Math.random()*.012+.003}});
-  draw(0);
+  var count=Math.max(34,Math.min(90,Math.round(w/14)));
+  stars=Array.from({length:count},function(){return{x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+.45,vx:(Math.random()-.5)*.85,vy:(Math.random()-.5)*.75,a:Math.random()*.62+.22,p:Math.random()*Math.PI*2,tw:Math.random()*.055+.018,shape:Math.random()>.72}});
+  meteors=[];spawnTick=0;draw();
  }
- function draw(t){
+ function star(p){
+  var alpha=p.a*(.48+.52*Math.sin(p.p));
+  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.p*.16);ctx.globalAlpha=alpha;
+  ctx.fillStyle='#d9fff8';ctx.shadowColor='#78f4df';ctx.shadowBlur=p.r*7;
+  if(p.shape){
+   ctx.beginPath();ctx.moveTo(0,-p.r*2.8);ctx.lineTo(p.r*.48,-p.r*.48);ctx.lineTo(p.r*2.8,0);ctx.lineTo(p.r*.48,p.r*.48);ctx.lineTo(0,p.r*2.8);ctx.lineTo(-p.r*.48,p.r*.48);ctx.lineTo(-p.r*2.8,0);ctx.lineTo(-p.r*.48,-p.r*.48);ctx.closePath();ctx.fill();
+  }else{ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill()}
+  ctx.restore();
+ }
+ function meteor(){
+  var fromRight=Math.random()>.5;
+  var x=fromRight?w+20:Math.random()*w*.75;
+  var y=Math.random()*h*.48-12;
+  var speed=8+Math.random()*7;
+  meteors.push({x:x,y:y,vx:fromRight?-speed:speed*.75,vy:speed*.62,len:45+Math.random()*65,life:0,max:42+Math.random()*28});
+ }
+ function draw(){
   ctx.clearRect(0,0,w,h);
-  particles.forEach(function(p){
+  stars.forEach(function(p){
    p.x+=p.vx;p.y+=p.vy;p.p+=p.tw;
-   if(p.y<-8){p.y=h+8;p.x=Math.random()*w}
-   if(p.x<-8)p.x=w+8;if(p.x>w+8)p.x=-8;
-   var alpha=p.a*(.68+.32*Math.sin(p.p));
-   var g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*4.5);
-   g.addColorStop(0,'rgba(105,235,215,'+alpha+')');g.addColorStop(.35,'rgba(105,235,215,'+(alpha*.34)+')');g.addColorStop(1,'rgba(105,235,215,0)');
-   ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*4.5,0,Math.PI*2);ctx.fill();
-   ctx.fillStyle='rgba(225,205,150,'+(alpha*.75)+')';ctx.beginPath();ctx.arc(p.x,p.y,p.r*.7,0,Math.PI*2);ctx.fill();
+   if(p.x<-4)p.x=w+4;if(p.x>w+4)p.x=-4;
+   if(p.y<-4)p.y=h+4;if(p.y>h+4)p.y=-4;
+   star(p);
+  });
+  spawnTick++;
+  if(spawnTick>34&&meteors.length<2){meteor();spawnTick=0}
+  meteors=meteors.filter(function(m){
+   m.x+=m.vx;m.y+=m.vy;m.life++;
+   var fade=Math.min(1,(m.max-m.life)/12);
+   var tx=m.x-m.vx*(m.len/Math.max(1,Math.abs(m.vx)));
+   var ty=m.y-m.vy*(m.len/Math.max(1,Math.abs(m.vx)));
+   var grad=ctx.createLinearGradient(tx,ty,m.x,m.y);
+   grad.addColorStop(0,'rgba(115,230,220,0)');
+   grad.addColorStop(.72,'rgba(125,240,225,'+(.48*fade)+')');
+   grad.addColorStop(1,'rgba(255,248,220,'+(.98*fade)+')');
+   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=fade;
+   ctx.strokeStyle=grad;ctx.lineWidth=2;ctx.lineCap='round';ctx.shadowColor='#8cf5e5';ctx.shadowBlur=12;
+   ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(m.x,m.y);ctx.stroke();
+   ctx.fillStyle='rgba(255,250,225,'+fade+')';ctx.beginPath();ctx.arc(m.x,m.y,1.8,0,Math.PI*2);ctx.fill();ctx.restore();
+   return m.life<m.max&&m.y<h+30&&m.x>-100&&m.x<w+100;
   });
  }
- function frame(t){if(!active||reduce||document.hidden)return;if(t-last>24){draw(t);last=t}raf=requestAnimationFrame(frame)}
+ function frame(t){if(!active||reduce||document.hidden)return;if(t-last>20){draw();last=t}raf=requestAnimationFrame(frame)}
  function start(){if(!reduce&&!document.hidden&&!raf){active=true;raf=requestAnimationFrame(frame)}}
  function stop(){active=false;if(raf)cancelAnimationFrame(raf);raf=0}
  if('ResizeObserver'in window)new ResizeObserver(resize).observe(hero);else window.addEventListener('resize',resize);
