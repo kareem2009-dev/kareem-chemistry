@@ -160,13 +160,20 @@ export async function onRequest({request,env}){
    if(env.GEMINI_API_KEY){
     const contents=history.map(x=>({role:x.role==="assistant"?"model":"user",parts:[{text:x.content}]}));
     contents.push({role:"user",parts:[{text:message}]});
-    const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents,generationConfig:{thinkingConfig:{thinkingLevel:"low"}}})});
-    const raw=await response.text();
+    const primaryBody={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{thinkingConfig:{thinkingLevel:"low"}}};
+    let response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify(primaryBody)});
+    let raw=await response.text();
     let data={};try{data=raw?JSON.parse(raw):{}}catch(_){data={}};
+    if(response.status===503){
+     console.warn("[ai/chat] Gemini primary model overloaded; trying Flash-Lite fallback");
+     response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
+     raw=await response.text();
+     data={};try{data=raw?JSON.parse(raw):{}}catch(_){data={}};
+    }
     if(!response.ok){
      const providerMessage=String(data.error?.message||data.message||"No provider error message").slice(0,500);
      console.error("[ai/chat] Gemini provider error",{status:response.status,message:providerMessage});
-     return json({error:"تعذر على Gemini معالجة الطلب. حاول مرة أخرى لاحقًا."},502);
+     return json({error:"المساعد مشغول حاليًا. حاول مرة أخرى بعد قليل."},502);
     }
     const reply=(data.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("").trim();
     if(!reply)return json({error:"لم يصل رد من المساعد."},502);
