@@ -1246,7 +1246,7 @@ if(q.dataset.k!==k){q.dataset.k=k;const I=(id,v)=>`<input id="${id}" type="numbe
 const g=id=>+$r(id).value,a=g('qc1')*g('qv1')/1e3,b=g('qc2')*g('qv2')/1e3,x=Math.min(a/m[2],b/m[3]),A=a/m[2]<=b/m[3];
 $r('qo2').innerHTML=x>0?`المادة المحددة: <b>${A?m[0]:m[1]}</b><br>${m[5]} الناتج: <b>${(x*m[4]).toFixed(3)} g</b> (${x.toFixed(4)} mol)<br>المتبقي من ${A?m[1]:m[0]}: ${(A?b-x*m[3]:a-x*m[2]).toFixed(4)} mol`:'أدخل قيمًا موجبة.'}
 $r('rxChoice').addEventListener('change',qcalc);
-resize();status();render();qcalc();
+resize();choose();qcalc();
 })();
 
 </script>
