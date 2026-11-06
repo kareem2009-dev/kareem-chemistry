@@ -1157,7 +1157,7 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  };
  let model=models.cu,extent=0,running=false,stir=false,last=0,raf=0,particles=[],bubbles=[],width=0,height=0;
  const canvas=$r('rxParticles'),ctx=canvas.getContext('2d');
- const rand=(a,b)=>a+Math.random()*(b-a);
+ const rand=(a,b)=>a+Math.random()*(b-a);\n function blendHex(a,b,t){const h=x=>[parseInt(x.slice(1,3),16),parseInt(x.slice(3,5),16),parseInt(x.slice(5,7),16)],A=h(a),B=h(b),v=A.map((n,i)=>Math.round(n+(B[i]-n)*Math.max(0,Math.min(1,t))));return '#'+v.map(n=>n.toString(16).padStart(2,'0')).join('')}
  function resize(){
   const box=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
   width=box.width;height=box.height;canvas.width=Math.max(1,Math.round(width*dpr));canvas.height=Math.max(1,Math.round(height*dpr));
@@ -1198,10 +1198,10 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
   bubbles=bubbles.filter(b=>b.y>-8);
  }
  function status(){
-  const pct=Math.round(extent*100),phase=extent===0?'قبل الإضافة':extent<.28?'بداية العرض':extent<.82?'المشهد مستمر':'اكتمل العرض';
+  const pct=Math.round(extent*100),phase=extent===0?'قبل الإضافة':extent<.28?'اختلاط وبداية التفاعل':extent<.82?'تكوّن النواتج':'المشهد النهائي';
   $r('rxProgress').textContent=pct+'%';$r('rxPhase').textContent=phase;
   $r('rxSolid').textContent=model.kind.includes('precip')?(extent<.08?'لم يظهر':extent<.75?'يتكوّن':'ظهر'):'لا يتكوّن';
-  $r('rxLiquid').style.setProperty('--rx-liquid',extent>.15?model.final:model.color);
+  $r('rxLiquid').style.setProperty('--rx-liquid',blendHex(model.color,model.final,extent));
   $r('rxLiquid').style.height='65%';
   $r('rxEquation').textContent=model.eq;
   const log=extent===0?model.start:extent<.3?model.start:extent<.82?model.mid:model.end;
