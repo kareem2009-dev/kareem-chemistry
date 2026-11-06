@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0E8F7E">
+<meta name="theme-color" content="#171A20">
 <meta name="description" content="معمل كيمياء تفاعلي ومكتبة معادلات وحاسبات وبنك أسئلة للصف الثالث الثانوي.">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./chemistry-icon.svg" type="image/svg+xml">
@@ -939,6 +939,68 @@ header:not(.ad-top)>.header-actions{grid-area:tools;justify-self:end;align-self:
  header:not(.ad-top)>nav a{padding:6px 8px;font-size:.76rem}
 }
 </style>
+
+<style id="graphite-titanium-design-system">
+/* KAREEM CHEMISTRY — Graphite Titanium / Muted Gray Violet */
+:root{
+ color-scheme:dark;
+ --bg:#171A20;--bg2:#202630;--card:#252B34;--ink:#E5E8EF;--mute:#A8B0BD;--line:#424B59;
+ --gold:#AAA1BD;--tq:#AAA1BD;--on:#171A20;
+ --glass-fill:rgba(37,43,52,.68);--glass-edge:rgba(166,176,192,.20);
+ --glass-shine:rgba(255,255,255,.075);--glass-shadow:0 18px 48px rgba(0,0,0,.24);
+ --signature-gold:#AAA1BD;--signature-glow:rgba(170,161,189,.22);--signature-gold-glow:rgba(170,161,189,.18);
+ --kl-gold:#AAA1BD;--kl-teal:#AAA1BD;--kl-glass:rgba(37,43,52,.68);--kl-edge:rgba(166,176,192,.20);
+}
+:root[data-theme="dark"]{
+ color-scheme:dark;--bg:#171A20;--bg2:#202630;--card:#252B34;--ink:#E5E8EF;--mute:#A8B0BD;--line:#424B59;
+ --gold:#AAA1BD;--tq:#AAA1BD;--on:#171A20;--glass-fill:rgba(37,43,52,.68);--glass-edge:rgba(166,176,192,.20);
+ --glass-shine:rgba(255,255,255,.075);--glass-shadow:0 18px 48px rgba(0,0,0,.24);
+ --signature-gold:#AAA1BD;--signature-glow:rgba(170,161,189,.22);--signature-gold-glow:rgba(170,161,189,.18);
+ --kl-gold:#AAA1BD;--kl-teal:#AAA1BD;--kl-glass:rgba(37,43,52,.68);--kl-edge:rgba(166,176,192,.20);
+}
+:root[data-theme="light"]{
+ color-scheme:light;--bg:#EEF0F4;--bg2:#E3E6EC;--card:#F8F9FB;--ink:#252A33;--mute:#626A77;--line:#CDD2DC;
+ --gold:#716681;--tq:#716681;--on:#FFFFFF;--glass-fill:rgba(248,249,251,.72);--glass-edge:rgba(90,99,116,.18);
+ --glass-shine:rgba(255,255,255,.82);--glass-shadow:0 16px 42px rgba(36,42,54,.09);
+ --signature-gold:#716681;--signature-glow:rgba(113,102,129,.16);--signature-gold-glow:rgba(113,102,129,.14);
+ --kl-gold:#716681;--kl-teal:#716681;--kl-glass:rgba(248,249,251,.72);--kl-edge:rgba(90,99,116,.18);
+}
+html{background:var(--bg);color-scheme:dark}
+:root[data-theme="light"] html{color-scheme:light}
+body{background:var(--bg);color:var(--ink)}
+body::before{background:var(--bg)}
+header:not(.ad-top){background:color-mix(in srgb,var(--bg) 82%,transparent);border-color:var(--line);backdrop-filter:blur(22px) saturate(125%);-webkit-backdrop-filter:blur(22px) saturate(125%)}
+.logo b, .sig b{color:var(--ink)}
+.av{border-color:var(--gold);background:var(--bg)}
+nav a[aria-current],.btn.p,.hot{background:var(--gold);border-color:var(--gold);color:var(--on)}
+.btn,.tg,.chips button,.tabs button,.card,.hubtile,.studyhub,.review-flip,.review-controls,.msg,.hubresult{
+ background:var(--glass-fill);border-color:var(--glass-edge);color:var(--ink);
+ box-shadow:inset 0 1px 0 var(--glass-shine),0 12px 32px rgba(0,0,0,.08);
+ backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.btn.p{background:linear-gradient(135deg,#5B5368,#464151);border-color:#777087;color:#F1EDF6}
+:root[data-theme="light"] .btn.p{background:linear-gradient(135deg,#776B89,#625773);color:#fff}
+.tag,.big,.hubtile b,.hubresult strong{color:var(--gold)}
+.no{-webkit-text-stroke-color:var(--gold)}
+input:not([type=checkbox]):not([type=range]),textarea,select{background:var(--bg2);border-color:var(--line);color:var(--ink)}
+input::placeholder,textarea::placeholder{color:var(--mute)}
+.header-actions{background:color-mix(in srgb,var(--card) 74%,transparent)!important;border-color:var(--glass-edge)!important;box-shadow:0 10px 30px rgba(0,0,0,.14),inset 0 1px 0 var(--glass-shine)!important}
+.header-actions .theme-toggle{background:color-mix(in srgb,var(--gold) 13%,var(--card));border-color:color-mix(in srgb,var(--gold) 30%,var(--line));color:var(--ink)}
+.header-actions .header-tool:hover,.header-actions .tg:hover{background:color-mix(in srgb,var(--gold) 13%,var(--card));border-color:color-mix(in srgb,var(--gold) 34%,var(--line));color:var(--ink)}
+.tool-indicator{background:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 18%,transparent)}
+#v-flashcards .review-flip{background:linear-gradient(145deg,color-mix(in srgb,var(--card) 92%,transparent),color-mix(in srgb,var(--bg2) 88%,transparent))}
+#v-flashcards .review-flip[aria-expanded="true"]{border-color:color-mix(in srgb,var(--gold) 58%,var(--line))}
+#v-flashcards .review-face small{color:var(--gold)}
+#loginGate .gate-card,#welcomeIntro .welcome-shell{background:linear-gradient(145deg,color-mix(in srgb,var(--card) 96%,transparent),color-mix(in srgb,var(--bg2) 92%,transparent));border-color:var(--glass-edge);color:var(--ink);box-shadow:0 30px 90px rgba(0,0,0,.3),inset 0 1px 0 var(--glass-shine)}
+#loginGate .gate-brand{background:linear-gradient(145deg,#252B34,#30313D);color:#E5E8EF}
+#loginGate .gate-brand p,#loginGate .brand-kicker,#loginGate .brand-points{color:#C1C5D0}
+#welcomeIntro{background:radial-gradient(ellipse at 50% 20%,rgba(110,101,128,.18),transparent 58%),rgba(16,18,24,.96)}
+#welcomeIntro .welcome-symbol,#loginGate .brand-mark{color:#B9B0C9;text-shadow:0 0 35px rgba(170,161,189,.24)}
+#welcomeIntro button,#loginGate button[type=submit]{background:linear-gradient(135deg,#625970,#494454);border-color:#827991;color:#fff}
+:focus-visible{outline-color:var(--gold);box-shadow:0 0 0 4px var(--signature-gold-glow)}
+::selection{background:rgba(170,161,189,.32);color:var(--ink)}
+@media(prefers-reduced-transparency:reduce){.card,.btn,.tg,.chips button,.tabs button,.review-flip,header:not(.ad-top){backdrop-filter:none;-webkit-backdrop-filter:none}}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
@@ -1335,7 +1397,7 @@ const IMG='data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD/4gIoSUNDX1BST0ZJTE
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const f=s=>s.replace(/\b(Fe|Cu|Zn|Al|Pb|Mg|Ca|Ba|Mn|Cr)(\d)([+−])/g,'$1^{$2$3}').replace(/_\{([^}]*)\}/g,'<sub>$1</sub>').replace(/\^\{([^}]*)\}/g,'<sup>$1</sup>').replace(/([A-Za-z\)\]])(\d+)/g,'$1<sub>$2</sub>').replace(/([A-Za-z>])([+−])(?=[\s\]]|$)/g,'$1<sup>$2</sup>');
 const root=document.documentElement;
-try{const savedTheme=localStorage.getItem('kareemTheme');if(savedTheme==='dark'||savedTheme==='light')root.dataset.theme=savedTheme}catch(_){}
+try{const savedTheme=localStorage.getItem('kareemTheme');root.dataset.theme=(savedTheme==='light'||savedTheme==='dark')?savedTheme:'dark'}catch(_){root.dataset.theme='dark'}
 $$('.av').forEach(i=>i.src=IMG);
 $('#tg').onclick=()=>{const d=matchMedia('(prefers-color-scheme: dark)').matches;const cur=root.dataset.theme||(d?'dark':'light');const next=cur==='dark'?'light':'dark';root.dataset.theme=next;try{localStorage.setItem('kareemTheme',next)}catch(_){}};
 
@@ -3104,7 +3166,7 @@ body.reduce-site-motion #homeParticles{display:none}
  const motionRow=document.createElement('label');motionRow.className='setting-row';const motionText=document.createElement('span');motionText.textContent='تقليل الحركات والمؤثرات';const motionCheck=document.createElement('input');motionCheck.type='checkbox';motionRow.append(motionText,motionCheck);
  settingsBody.append(themeRow,compactRow,motionRow);
  const settingsDialog=makeDialog('siteSettingsDialog','تخصيص تجربة الموقع',settingsBody);
- const prefs=safeRead('kareemExperiencePrefs',(()=>{let old='system';try{old=localStorage.getItem('kareemTheme')||'system'}catch(_){}return {theme:['dark','light'].includes(old)?old:'system',compact:false,reduceMotion:false}})());
+ const prefs=safeRead('kareemExperiencePrefs',(()=>{let old='dark';try{old=localStorage.getItem('kareemTheme')||'dark'}catch(_){}return {theme:['dark','light'].includes(old)?old:'dark',compact:false,reduceMotion:false}})());if(prefs.theme==='system')prefs.theme='dark';
  themeSelect.value=prefs.theme;compactCheck.checked=!!prefs.compact;motionCheck.checked=!!prefs.reduceMotion;
  function applyPrefs(){
   const p={theme:themeSelect.value,compact:compactCheck.checked,reduceMotion:motionCheck.checked};
