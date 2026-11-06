@@ -161,7 +161,13 @@ export async function onRequest({request,env}){
     const contents=history.map(x=>({role:x.role==="assistant"?"model":"user",parts:[{text:x.content}]}));
     contents.push({role:"user",parts:[{text:message}]});
     const response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
-    const data=await response.json();if(!response.ok)throw new Error("فشل مزود Gemini.");
+    const raw=await response.text();
+    let data={};try{data=raw?JSON.parse(raw):{}}catch(_){data={}};
+    if(!response.ok){
+     const providerMessage=String(data.error?.message||data.message||"No provider error message").slice(0,500);
+     console.error("[ai/chat] Gemini provider error",{status:response.status,message:providerMessage});
+     return json({error:"تعذر على Gemini معالجة الطلب. حاول مرة أخرى لاحقًا."},502);
+    }
     const reply=(data.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("").trim();
     if(!reply)return json({error:"لم يصل رد من المساعد."},502);
     return json({reply});
@@ -213,6 +219,7 @@ export async function onRequest({request,env}){
   if(path==="auth/register"&&/already registered|already been registered|already exists|duplicate key|unique constraint/i.test(m))return json({error:"اسم المستخدم مستخدم بالفعل. اختر اسمًا آخر."},409);
   if(/duplicate key|unique constraint/i.test(m))return json({error:"تم تسجيل هذه الإجابة بالفعل."},409);
   if(/Invalid login credentials/i.test(m))return json({error:"اسم المستخدم أو كلمة المرور غير صحيحة."},401);
+  if(path==="ai/chat"){console.error("[ai/chat] internal request error",{message:m.slice(0,500)});return json({error:"تعذر إكمال الطلب بسبب خطأ داخلي. حاول لاحقًا."},500)}
   return json({error:"تعذر إكمال الطلب بسبب خطأ داخلي. حاول لاحقًا."},500);
  }
 }
