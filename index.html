@@ -770,6 +770,30 @@ body.reduce-site-motion .hero::before{animation:none}
 
 <section class="view" id="v-home">
 <div class="hero"><canvas id="bg"></canvas>
+<svg class="home-molecule-field" id="homeMoleculeField" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+ <defs>
+  <radialGradient id="hmCarbon"><stop offset="0" stop-color="#f5f8fb"/><stop offset=".55" stop-color="#9aa9b6"/><stop offset="1" stop-color="#334653"/></radialGradient>
+  <radialGradient id="hmOxygen"><stop offset="0" stop-color="#fff1f1"/><stop offset=".55" stop-color="#ff777e"/><stop offset="1" stop-color="#8e2430"/></radialGradient>
+  <radialGradient id="hmHydrogen"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#8ba5b5"/></radialGradient>
+  <filter id="hmGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ </defs>
+ <g class="hmolecule hmolecule-a">
+  <g stroke="#83d9d1" stroke-width="5" stroke-linecap="round" opacity=".72"><path d="M130 110L205 62L280 110L280 198L205 244L130 198Z"/><path d="M130 110L55 66M280 110L355 65"/></g>
+  <g filter="url(#hmGlow)"><circle cx="130" cy="110" r="21" fill="url(#hmCarbon)"/><circle cx="205" cy="62" r="18" fill="url(#hmOxygen)"/><circle cx="280" cy="110" r="21" fill="url(#hmCarbon)"/><circle cx="280" cy="198" r="18" fill="url(#hmHydrogen)"/><circle cx="205" cy="244" r="20" fill="url(#hmCarbon)"/><circle cx="130" cy="198" r="18" fill="url(#hmOxygen)"/><circle cx="55" cy="66" r="13" fill="url(#hmHydrogen)"/><circle cx="355" cy="65" r="13" fill="url(#hmHydrogen)"/></g>
+  <text x="205" y="285" class="hm-label">C₆H₆</text>
+ </g>
+ <g class="hmolecule hmolecule-b">
+  <g stroke="#d9b35f" stroke-width="5" stroke-linecap="round" opacity=".8"><path d="M760 110L840 65L920 110"/><path d="M840 65L840 160"/></g>
+  <g filter="url(#hmGlow)"><circle cx="760" cy="110" r="22" fill="url(#hmOxygen)"/><circle cx="840" cy="65" r="24" fill="url(#hmCarbon)"/><circle cx="920" cy="110" r="22" fill="url(#hmOxygen)"/><circle cx="840" cy="160" r="15" fill="url(#hmHydrogen)"/></g>
+  <text x="840" y="208" class="hm-label">CO₂ · H₂O</text>
+ </g>
+ <g class="hmolecule hmolecule-c">
+  <path d="M520 350L590 310L660 350L660 430L590 470L520 430Z" fill="none" stroke="#d9b35f" stroke-width="4" opacity=".7"/>
+  <g filter="url(#hmGlow)"><circle cx="520" cy="350" r="17" fill="url(#hmCarbon)"/><circle cx="590" cy="310" r="17" fill="url(#hmOxygen)"/><circle cx="660" cy="350" r="17" fill="url(#hmCarbon)"/><circle cx="660" cy="430" r="17" fill="url(#hmHydrogen)"/><circle cx="590" cy="470" r="17" fill="url(#hmCarbon)"/><circle cx="520" cy="430" r="17" fill="url(#hmOxygen)"/></g>
+  <text x="590" y="510" class="hm-label">ترابط ذري</text>
+ </g>
+ <g class="hm-orbit"><circle cx="1040" cy="350" r="72" fill="none" stroke="#65e5d0" stroke-width="2" stroke-dasharray="5 11" opacity=".55"/><circle cx="1040" cy="350" r="17" fill="#d9b35f" filter="url(#hmGlow)"/><circle r="9" fill="#65e5d0"><animateMotion dur="8s" repeatCount="indefinite" path="M1040 278 A72 72 0 1 1 1039.9 278"/></circle></g>
+</svg>
 <div><h1>كيمياء تالتة ثانوي… جرّبها بإيدك</h1>
 <p class="lead">معادلات المنهج المصري، ومعامل تفاعلية تغيّر فيها المتغيرات وتشوف تأثيرها. سجّل حساب طالب مجاني علشان تدخل المنصة وتحفظ تقدمك وتستخدم أدواتها.</p>
 <a class="btn p" href="#labs">ابدأ التجارب</a><a class="btn" href="#equations">مكتبة المعادلات</a><a class="btn" href="#tools">✨ الأدوات الذكية</a>
@@ -2421,6 +2445,22 @@ nav a[aria-current]{box-shadow:0 0 22px color-mix(in srgb,var(--tq) 38%,transpar
 }
 body.reduce-site-motion .hero:before,body.reduce-site-motion .view.on{animation:none !important}
 
+
+/* Animated chemistry molecules in the homepage atmosphere */
+.hero{position:relative;isolation:isolate}
+.home-molecule-field{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:visible;opacity:.56;mix-blend-mode:screen}
+.home-molecule-field .hmolecule{transform-box:fill-box;transform-origin:center;animation:hmFloat 13s ease-in-out infinite}
+.home-molecule-field .hmolecule-b{animation-duration:17s;animation-delay:-5s}
+.home-molecule-field .hmolecule-c{animation-duration:20s;animation-delay:-9s}
+.home-molecule-field .hm-label{font:700 17px Arial,sans-serif;letter-spacing:2px;fill:#d9b35f;opacity:.9;text-anchor:middle;paint-order:stroke;stroke:#07131d;stroke-width:4px;stroke-linejoin:round}
+.home-molecule-field .hm-orbit{transform-box:fill-box;transform-origin:center;animation:hmSpin 24s linear infinite}
+.hero>div,.hero>.port{position:relative;z-index:2}
+.hero>canvas#bg{z-index:0}
+@keyframes hmFloat{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -20px;rotate:3deg}}
+@keyframes hmSpin{to{rotate:360deg}}
+@media(max-width:760px){.home-molecule-field{opacity:.25}.home-molecule-field .hm-label{font-size:14px}.hero{overflow:hidden}}
+@media(prefers-reduced-motion:reduce){.home-molecule-field *{animation:none!important}}
+body.reduce-site-motion .home-molecule-field *{animation:none!important}
 </style>
 
 <script id="balancedHumorSystem">
