@@ -14,15 +14,19 @@ on:
 jobs:
   syntax:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Check Cloudflare API syntax
         run: node --check "functions/api/[[path]].js"
+
       - name: Check inline scripts and JSON
         run: |
           if [ -f scripts/validate-html.mjs ]; then
