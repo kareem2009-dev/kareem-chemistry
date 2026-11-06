@@ -561,7 +561,7 @@ html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){width:100%
 
 <div class="lab"><div class="card"><h3>المعايرة (التحليل الحجمي)</h3>
 <p>الدورق فيه 25 mL من محلول NaOH تركيزه مجهول، والسحاحة فيها HCl تركيزه 0.1 مول/لتر.</p>
-<label for="tk">نوع المعايرة</label><select id="tk"><option value="0">NaOH مجهول (قاعدة قوية)</option><option value="1">NH₃ مجهولة (قاعدة ضعيفة)</option></select><label for="ti">الدليل</label><select id="ti"><option value="pp">فينولفثالين</option><option value="mo">ميثيل برتقالي</option><option value="litmus">عباد الشمس</option><option value="btb">أزرق البروموثيمول</option></select>
+<label for="tk">نوع المعايرة</label><select id="tk"><option value="0">NaOH مجهول (قاعدة قوية)</option><option value="1">NH₃ مجهولة (قاعدة ضعيفة)</option></select><label for="ti">الدليل</label><select id="ti"><option value="pp">فينولفثالين</option><option value="mo">ميثيل برتقالي</option><option value="litmus">عباد الشمس</option><option value="btb">أزرق البروموثيمول</option><option value="mr">أحمر الميثيل</option></select>
 <div class="msg" id="tindmsg" aria-live="polite" style="margin-top:8px">الفينولفثالين: عديم اللون في الوسط الحمضي، ووردي في الوسط القاعدي.</div>
 <label for="tv">حجم الحمض المضاف: <span id="tvv"></span> mL</label><input id="tv" type="range" min="0" max="40" step=".1" value="0">
 <div class="btns" style="margin:12px 0"><button class="btn p" id="tcalc">احسب تركيز القاعدة</button><button class="btn" id="tnew">عينة جديدة</button></div>
@@ -965,8 +965,8 @@ $('#es').onclick=e=>{const r=e.target.closest('[data-k]');if(!r||!r.dataset.k)re
 const L='#cfe8f5',W='#f4f6f8';
 const IT=[
 ['كربونات CO₃²⁻',L,[['حمض HCl المخفف',L,0,1,0,'فوران غاز عديم الرائحة (CO₂).',['Na2CO3 + 2HCl → 2NaCl + H2O + CO2↑']],['تمرير الغاز في ماء الجير','#e6edf2',0,0,0,'ماء الجير بيتعكّر (راسب أبيض).',['CO2 + Ca(OH)2 → CaCO3↓ + H2O']]]],
-['كبريتيت SO₃²⁻',L,[['حمض HCl المخفف',L,0,1,0,'غاز SO₂ برائحة نفاذة.',['Na2SO3 + 2HCl → 2NaCl + H2O + SO2↑']],['ورقة ثنائي كرومات البوتاسيوم المحمضة',L,0,1,0,'الورقة تتحول من البرتقالي للأخضر.',['K2Cr2O7 + 3SO2 + H2SO4 → K2SO4 + Cr2(SO4)3 + H2O']]]],
-['كبريتيد S²⁻',L,[['حمض HCl المخفف',L,0,1,0,'غاز H₂S برائحة البيض الفاسد.',['Na2S + 2HCl → 2NaCl + H2S↑']],['ورقة خلات الرصاص II',L,0,1,0,'الورقة بتسوَدّ.',['(CH3COO)2Pb + H2S → PbS↓ + 2CH3COOH']]]],
+['كبريتيت SO₃²⁻',L,[['حمض HCl المخفف',L,0,1,0,'غاز SO₂ سام ومهيّج للجهاز التنفسي؛ لا يُستنشق.',['Na2SO3 + 2HCl → 2NaCl + H2O + SO2↑']],['ورقة ثنائي كرومات البوتاسيوم المحمضة',L,0,1,0,'الورقة تتحول من البرتقالي للأخضر.',['K2Cr2O7 + 3SO2 + H2SO4 → K2SO4 + Cr2(SO4)3 + H2O']]]],
+['كبريتيد S²⁻',L,[['حمض HCl المخفف',L,0,1,0,'غاز H₂S شديد السمية؛ لا يُشم ولا يُستنشق.',['Na2S + 2HCl → 2NaCl + H2S↑']],['ورقة خلات الرصاص II',L,0,1,0,'الورقة بتسوَدّ.',['(CH3COO)2Pb + H2S → PbS↓ + 2CH3COOH']]]],
 ['كبريتات SO₄²⁻',L,[['محلول BaCl2',L,W,0,0,'راسب أبيض من BaSO₄.',['Na2SO4 + BaCl2 → BaSO4↓ + 2NaCl']],['حمض HCl المخفف',L,W,0,0,'الراسب لا يذوب في الحمض.',[]]]],
 ['كلوريد Cl⁻',L,[['محلول AgNO3',L,W,0,0,'راسب أبيض مقطّع من AgCl.',['NaCl + AgNO3 → AgCl↓ + NaNO3']],['محلول النشادر',L,0,0,0,'الراسب بيذوب.',['AgCl + 2NH4OH → [Ag(NH3)2]Cl + 2H2O']]]],
 ['نيترات NO₃⁻','#d9eadf',[['محلول كبريتات حديد II','#cfe3d3',0,0,0,'اتضاف المحلول لعينة النترات.',[]],['H2SO4 المركز على جدار الأنبوبة','#cfe3d3',0,0,1,'حلقة بنية عند سطح الفصل.',['6FeSO4 + 2HNO3 + 3H2SO4 → 3Fe2(SO4)3 + 2NO + 4H2O','FeSO4 + NO → [Fe(NO)]SO4']]]],
@@ -974,7 +974,7 @@ const IT=[
 ['حديد Fe³⁺','#f0d9a8',[['محلول NaOH','#f0e0b8','#8a3b12',0,0,'راسب بني محمر من Fe(OH)₃.',['Fe^{3+} + 3OH^{-} → Fe(OH)3↓']]]],
 ['حديد Fe²⁺','#d6ead6',[['محلول NaOH','#d8ecd8','#6f8f55',0,0,'راسب أخضر من Fe(OH)₂.',['Fe^{2+} + 2OH^{-} → Fe(OH)2↓']],['تعريضه للهواء','#d8ecd8','#8a3b12',0,0,'بيتحول للبني المحمر.',['4Fe(OH)2 + O2 + 2H2O → 4Fe(OH)3']]]],
 ['ألومنيوم Al³⁺',L,[['محلول NaOH',L,W,0,0,'راسب أبيض جيلاتيني.',['Al^{3+} + 3OH^{-} → Al(OH)3↓']],['زيادة من NaOH',L,0,0,0,'الراسب بيذوب.',['Al(OH)3 + NaOH → NaAlO2 + 2H2O']]]],
-['أمونيوم NH₄⁺',L,[['NaOH مع التسخين',L,0,1,0,'غاز النشادر برائحة نفاذة بيزرّق ورقة عباد الشمس الحمراء.',['NH4Cl + NaOH → NaCl + H2O + NH3↑']]]],
+['أمونيوم NH₄⁺',L,[['NaOH مع التسخين',L,0,1,0,'يتصاعد NH₃؛ يغيّر ورقة عباد الشمس الحمراء المبللة إلى الأزرق. لا يُستنشق.',['NH4Cl + NaOH → NaCl + H2O + NH3↑']]]],
 ['رصاص Pb²⁺',L,[['حمض HCl المخفف',L,W,0,0,'راسب أبيض من PbCl₂.',['Pb^{2+} + 2Cl^{-} → PbCl2↓']],['التسخين',L,0,0,0,'الراسب بيذوب في الماء الساخن.',[]]]]];
 let ist=0,mys=0,gd=0;const cur=()=>IT[$('#is').value==='?'?mys:$('#is').value];
 $('#is').innerHTML=IT.map((t,i)=>`<option value="${i}">${t[0]}</option>`).join('')+'<option value="?">🎲 عينة مجهولة (تحدّي)</option>';
@@ -986,7 +986,7 @@ const FX=[[{g:1},{g:1,lime:1}],[{g:1},{g:1,paper:['ثنائي كرومات ال�
 let fxGas=0,fxLime=0,fxHasP=0;
 function fxMk(p,cls,x0,x1,y,tag,at){const c=document.createElementNS(NS,tag||'circle');c.setAttribute('cx',x0+Math.random()*(x1-x0));c.setAttribute('cy',y);if(tag){c.setAttribute('rx',5);c.setAttribute('ry',3)}else c.setAttribute('r',1.5+Math.random()*2.5);c.setAttribute('class',cls);Z(p).appendChild(c);setTimeout(()=>c.remove(),2400)}
 setInterval(()=>{if(document.hidden||!$('#v-labs').classList.contains('on')||!fxGas||!Z('fxB'))return;fxMk('fxB','fxb',126,174,285);if(fxLime)fxMk('fxB2','fxb2',240,264,268);else if(Math.random()<.6)fxMk('fxG','fxw',138,160,62,'ellipse')},360);
-function fxFlakes(c){const g=Z('fxFl');g.innerHTML='';for(let i=0;i<34;i++){const e=document.createElementNS(NS,'circle'),y0=175+Math.random()*80;e.setAttribute('cx',124+Math.random()*52);e.setAttribute('cy',y0);e.setAttribute('r',1.8+Math.random()*2.4);e.setAttribute('fill',c);e.setAttribute('stroke','#4f6a7a');e.setAttribute('stroke-width','.8');e.style.transition='transform '+(2+Math.random()*3)+'s ease-in';g.appendChild(e);const d=288-y0-Math.random()*10;setTimeout(()=>e.style.transform='translateY('+d+'px)',60)}setTimeout(()=>{if(fxHasP)g.innerHTML=''},6500)}
+function fxFlakes(c){const g=Z('fxFl');g.innerHTML='';for(let i=0;i<34;i++){const e=document.createElementNS(NS,'circle'),y0=175+Math.random()*80;e.setAttribute('cx',124+Math.random()*52);e.setAttribute('cy',y0);e.setAttribute('r',1.8+Math.random()*2.4);e.setAttribute('fill',c);e.setAttribute('stroke','#4f6a7a');e.setAttribute('stroke-width','.8');e.style.transition='transform '+(2+Math.random()*3)+'s ease-in';g.appendChild(e);const d=288-y0-Math.random()*10;setTimeout(()=>e.style.transform='translateY('+d+'px)',60)}/* الراسب يظل ظاهرًا حتى إعادة العينة أو ذوبانه. */}
 function fxApply(s,fx){Z('fxL').style.fill=s[1];
 if(s[2]){Z('fxP').style.fill=s[2];if(!fxHasP){fxHasP=1;const T=Z('fxT');T.style.transition='none';T.style.fill=s[2];T.style.opacity=.95;void T.getBoundingClientRect();T.style.transition='';T.style.opacity=0;Z('fxP').style.transform='scaleY(1)';fxFlakes(s[2])}}
 else if(fxHasP){fxHasP=0;Z('fxP').style.transform='scaleY(0)';Z('fxFl').innerHTML=''}
@@ -1006,12 +1006,12 @@ const IND={
 pp:{color:p=>p<8.2?'rgba(225,238,248,.5)':`rgba(226,43,134,${Math.min(.9,.15+(p-8.2)/1.8*.75)})`,name:'الفينولفثالين',note:'عديم اللون في الوسط الحمضي، ويتحول إلى وردي في الوسط القاعدي (مدى التحول التقريبي 8.2–10).'},
 mo:{color:p=>p<3.1?'#e2412f':p>4.4?'#f2c230':'#ee8a2e',name:'الميثيل البرتقالي',note:'أحمر في الوسط الحمضي، وبرتقالي أثناء التحول، وأصفر بعد التحول (مدى 3.1–4.4).'},
 litmus:{color:p=>p<4.5?'#e34b55':p>8.3?'#3976dc':'#8d65b5',name:'عباد الشمس',note:'أحمر في الوسط الحمضي، وأزرق في الوسط القاعدي، وبنفسجي قرب التعادل؛ لذلك يعطي تقديرًا عامًا لطبيعة الوسط.'},
-btb:{color:p=>p<6?'#e8cf35':p>7.6?'#3188d7':'#45b98a',name:'أزرق البروموثيمول',note:'أصفر في الوسط الحمضي، وأخضر قرب التعادل، وأزرق في الوسط القاعدي (مدى التحول التقريبي 6.0–7.6).'}
+btb:{color:p=>p<6?'#e8cf35':p>7.6?'#3188d7':'#45b98a',name:'أزرق البروموثيمول',note:'أصفر في الوسط الحمضي، وأخضر قرب التعادل، وأزرق في الوسط القاعدي (مدى التحول التقريبي 6.0–7.6).'},mr:{color:p=>p<4.4?'#e34b55':p>6.2?'#f2c230':'#ee8a2e',name:'أحمر الميثيل',note:'أحمر في الوسط الحمضي، وبرتقالي أثناء التحول، وأصفر في الوسط الأقل حمضية (مدى التحول 4.4–6.2).'}
 };
 const phS=v=>{const d=Cb*Vb-Ca*v,t=Vb+v;return Math.abs(d)<1e-9?7:d>0?14+Math.log10(d/t):-Math.log10(-d/t)};
 let WK=0;const phAt=v=>{if(!WK)return phS(v);const nb=Cb*Vb,na=Ca*v,t=Vb+v,Kb=1.8e-5;if(v===0)return 14+Math.log10(Math.sqrt(Kb*Cb));if(Math.abs(na-nb)<1e-9)return -Math.log10(Math.sqrt(1e-14/Kb*nb/t));return na<nb?14-(-Math.log10(Kb)+Math.log10(na/(nb-na))):-Math.log10((na-nb)/t)};flask($('#tf'),'t');
 function tit(){const v=+$('#tv').value,p=phAt(v);$('#tvv').textContent=v.toFixed(1);
-const ind=IND[$('#ti').value];$('.liq',$('#tf')).style.fill=ind.color(p);$('#tindmsg').textContent=ind.name+': '+ind.note;$('#tbu').style.height=(100-v/40*100)+'%';$('#tph').textContent='pH = '+p.toFixed(2);
+const ind=IND[$('#ti').value];$('.liq',$('#tf')).style.fill=ind.color(p);$('#tindmsg').textContent=ind.name+': '+ind.note+(WK?' المؤشر الأقرب لمدى تكافؤ قاعدة ضعيفة مع حمض قوي هنا هو أحمر الميثيل (4.4–6.2).':' في معايرة حمض قوي بقاعدة قوية، الأزرق البروموثيمول مناسب لقفزة pH حول 7.');$('#tbu').style.height=(100-v/40*100)+'%';$('#tph').textContent='pH = '+p.toFixed(2);
 $('#tcp').setAttribute('d',(window.TD||[]).slice(0,Math.floor(v/.5)+1).join(''));$('#tcd').setAttribute('cx',v/40*300);$('#tcd').setAttribute('cy',160-Math.max(0,Math.min(14,p))/14*160)}
 function tnew(){Cb=+(.06+Math.random()*.08).toFixed(3);let d='';for(let v=0;v<=40;v+=.5)d+=(v?'L':'M')+(v/40*300).toFixed(1)+' '+(160-phAt(v)/14*160).toFixed(1);
 window.TD=d.split(/(?=[ML])/);$('#tv').value=0;$('#tmsg').textContent='حرّك الحجم لحد ما يتغير لون الدليل، وبعدها اضغط احسب.';tit()}
@@ -1032,7 +1032,7 @@ const simDefs={
  buffer:{a:'[الملح] (mol/L)',b:'[الحمض] (mol/L)',formula:'pH = pKa + log([A⁻]/[HA])',concept:'المحلول المنظم يقاوم تغير pH عند إضافة كميات صغيرة من حمض أو قاعدة.',challenge:'اجعل تركيز الملح مساويًا لتركيز الحمض؛ يصبح pH قريبًا من pKa.',calc:(a,b)=>`باعتبار pKa لحمض الإيثانويك = 4.76: pH = <strong>${(4.76+Math.log10(a/b)).toFixed(2)}</strong>. نموذج هندرسون–هاسلباخ تقريبي.`},
  dilution:{a:'التركيز الابتدائي M₁',b:'الحجم النهائي V₂ (mL)',formula:'M₁V₁ = M₂V₂',concept:'عند التخفيف بالماء تظل كمية المذاب ثابتة بينما يقل التركيز.',challenge:'زِد الحجم النهائي للضعف؛ ماذا يحدث للتركيز؟',calc:(a,b)=>`إذا كان V₁ = 10 mL: M₂ = M₁V₁/V₂ = <strong>${(a*10/b).toFixed(4)} mol/L</strong>.`},
  yield:{a:'الناتج الفعلي (g)',b:'الناتج النظري (g)',formula:'% yield = (actual / theoretical) × 100',concept:'المردود المئوي يقارن الناتج الفعلي بأقصى ناتج نظري محسوب.',challenge:'اجعل الناتج الفعلي مساويًا للنظري؛ تحصل على 100%.',calc:(a,b)=>`المردود المئوي = <strong>${(a/b*100).toFixed(2)}%</strong>.`},
- equilibrium:{a:'تركيز المتفاعلات (نسبي)',b:'تركيز النواتج (نسبي)',formula:'Q = [products]ᶜ / [reactants]ᵃ',concept:'نقارن Q بـ K لتحديد اتجاه الانزياح، ولا تتغير K إلا بتغير درجة الحرارة.',challenge:'قارن Q بقيمة K المفترضة 1.0.',calc:(a,b)=>{let q=b*b/(a*a);return `Q = <strong>${q.toFixed(3)}</strong> مقابل K=1. ${q>1?'Q > K: ينزاح عكسيًا نحو المتفاعلات.':q<1?'Q < K: ينزاح طرديًا نحو النواتج.':'Q = K: النظام عند الاتزان.'}`}}
+ equilibrium:{a:'تركيز المتفاعلات (نسبي)',b:'تركيز النواتج (نسبي)',formula:'للتفاعل 2A ⇌ 2B: Q = [B]²/[A]²',concept:'نقارن Q بـ K لتحديد اتجاه الانزياح، ولا تتغير K إلا بتغير درجة الحرارة.',challenge:'قارن Q بقيمة K المفترضة 1.0.',calc:(a,b)=>{let q=b*b/(a*a);return `Q = <strong>${q.toFixed(3)}</strong> مقابل K=1. ${q>1?'Q > K: ينزاح عكسيًا نحو المتفاعلات.':q<1?'Q < K: ينزاح طرديًا نحو النواتج.':'Q = K: النظام عند الاتزان.'}`}}
 };
 function configureSim(){const k=$('#simType').value,A=$('#simA'),B=$('#simB');const cfg={rate:[.1,2,.1,1,.1,3,.1,1],gas:[200,1000,10,300,.2,5,.1,1],faraday:[.1,5,.1,1,1,60,1,10],solubility:[1e-6,1e-4,1e-6,1e-5,1e-6,1e-4,1e-6,1e-5],buffer:[.1,2,.1,1,.1,2,.1,1],dilution:[.1,2,.1,1,10,1000,10,100],yield:[.1,2,.1,1,.1,3,.1,1],equilibrium:[.1,2,.1,1,.1,2,.1,1]}[k];A.min=cfg[0];A.max=cfg[1];A.step=cfg[2];A.value=cfg[3];B.min=cfg[4];B.max=cfg[5];B.step=cfg[6];B.value=cfg[7];updateSim()}
 function updateSim(){let k=$('#simType').value,d=simDefs[k],a=+$('#simA').value,b=+$('#simB').value;$('#simALabel').firstChild.textContent=d.a+': ';$('#simBLabel').firstChild.textContent=d.b+': ';$('#simAOut').textContent=k==='solubility'?a.toExponential(1):a.toFixed(1);$('#simBOut').textContent=k==='solubility'?b.toExponential(1):b.toFixed(1);$('#simFormula').textContent=d.formula;$('#simConcept').textContent=d.concept;$('#simChallenge').textContent=d.challenge;$('#simResult').innerHTML=d.calc(a,b);chart(k,a,b)}
@@ -1151,7 +1151,7 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  const models={
   cu:{eq:'CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄',color:'#72a9d0',final:'#7cafd0',solid:'#b9e4f2',kind:'precip',ionA:'Cu²⁺',ionB:'OH⁻',name:'هيدروكسيد النحاس',start:'المحلول أزرق فاتح. عند إضافة أيونات الهيدروكسيد تبدأ نوى الراسب الأزرق في الظهور ثم تتجمع.',mid:'تتكون جسيمات راسب Cu(OH)₂ الأزرق وتزداد كثافتها مع استمرار الإضافة.',end:'اكتمل النموذج: راسب أزرق جيلاتيني موزع ثم يستقر تدريجيًا في قاع البيكر.'},
   ag:{eq:'AgNO₃ + NaCl → AgCl↓ + NaNO₃',color:'#d9e4e9',final:'#d8e0e3',solid:'#f2f4f3',kind:'precip',ionA:'Ag⁺',ionB:'Cl⁻',name:'كلوريد الفضة',start:'المحلولان شفافان تقريبًا. تبدأ الأيونات في الانتشار والاختلاط.',mid:'تتحد أيونات الفضة والكلوريد لتكوين جسيمات AgCl بيضاء دقيقة.',end:'اكتمل النموذج: زادت كمية الراسب الأبيض وبدأت الجسيمات في الترسب.'},
-  lime:{eq:'CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O',color:'#dce8ee',final:'#d4dfe3',solid:'#f1f0e8',kind:'gas-precip',ionA:'CO₂(aq)',ionB:'Ca²⁺ / OH⁻',name:'كربونات الكالسيوم',start:'ماء الجير شفاف في البداية. يبدأ ثاني أكسيد الكربون المذاب في الانتشار.',mid:'يتكون راسب CaCO₃ أبيض دقيق، فيظهر التعكير تدريجيًا.',end:'اكتمل النموذج: أصبح المحلول معكرًا بسبب جسيمات كربونات الكالسيوم.'},
+  lime:{eq:'CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O',color:'#dce8ee',final:'#d4dfe3',solid:'#f1f0e8',kind:'gas-precip',ionA:'CO₂(aq)',ionB:'Ca²⁺ / OH⁻',name:'كربونات الكالسيوم',start:'ماء الجير شفاف في البداية. فقاعات CO₂ الداخلة تنقل الغاز إلى المحلول؛ ثاني أكسيد الكربون هنا متفاعل وليس ناتجًا.',mid:'يذوب CO₂ ويتفاعل مع Ca(OH)₂، فتتكون جسيمات CaCO₃ البيضاء ويظهر التعكير تدريجيًا.',end:'اكتمل العرض: التعكير ناتج عن راسب CaCO₃. عند فائض كبير من CO₂ قد يتكون Ca(HCO₃)₂ الذائب فيقل التعكير.'},
   acid:{eq:'H⁺ + OH⁻ → H₂O',color:'#e8e8e8',final:'#e8e8e8',solid:null,kind:'neutral',ionA:'H⁺',ionB:'OH⁻',name:'ماء',start:'المحلولان في البداية منفصلان. تبدأ أيونات H⁺ وOH⁻ في الانتشار عند المزج.',mid:'تتحد أيونات الهيدروجين والهيدروكسيد لتكوين الماء، ويقترب الوسط من التعادل.',end:'اكتمل نموذج التعادل: لا يتكون راسب؛ التغير الأساسي هو استهلاك H⁺ وOH⁻.'},
   carbonate:{eq:'CO₃²⁻ + 2H⁺ → CO₂↑ + H₂O',color:'#c9dbe5',final:'#d9e7eb',solid:null,kind:'gas',ionA:'CO₃²⁻',ionB:'H⁺',name:'ثاني أكسيد الكربون',start:'تبدأ الأيونات في الاختلاط. في هذا النموذج يتكون غاز ثاني أكسيد الكربون.',mid:'تظهر فقاعات CO₂ وتصعد خلال السائل، ويزداد معدل ظهورها مع استمرار التفاعل.',end:'اكتمل النموذج: تصاعدت الفقاعات ثم قلت مع استهلاك المتفاعلات.'}
  };
@@ -1172,7 +1172,7 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  function render(){
   if(!ctx||!width||!height)return;
   ctx.clearRect(0,0,width,height);
-  const solidCount=Math.floor(extent*particles.length*.72);
+  const mass=window.__rxCalcState&&window.__rxCalcState.key===$r('rxChoice').value?window.__rxCalcState.productMass:0;const amountFactor=Math.max(.08,Math.min(1.6,Math.sqrt(Math.max(0,mass)/.5)));const solidCount=Math.floor(extent*particles.length*.72*amountFactor);
   particles.forEach((p,i)=>{
    if(i<solidCount&&model.kind.includes('precip')){
     const settle=Math.max(0,extent-.28);
@@ -1241,10 +1241,10 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  $r('rxReset').addEventListener('click',reset);
  $r('rxStir').addEventListener('click',()=>{stir=!stir;$r('rxStir').setAttribute('aria-pressed',String(stir));$r('rxStir').textContent=stir?'⟳ إيقاف التقليب':'⟳ تشغيل التقليب';render()});
  if('ResizeObserver' in window)new ResizeObserver(resize).observe(canvas.parentElement);else window.addEventListener('resize',resize);
- const QM={cu:['CuSO₄','NaOH',1,2,97.5,'Cu(OH)₂',.1,50,.1,50],ag:['AgNO₃','NaCl',1,1,143.5,'AgCl',.1,50,.1,50],lime:['CO₂','Ca(OH)₂',1,1,100.09,'CaCO₃',.1,50,.1,50],acid:['HCl','NaOH',1,1,18,'H₂O',.1,50,.1,50],carbonate:['Na₂CO₃','HCl',1,2,44,'CO₂',.1,25,.1,50]};
+ const QM={cu:['CuSO₄','NaOH',1,2,97.56,'Cu(OH)₂',.1,50,.1,50],ag:['AgNO₃','NaCl',1,1,143.32,'AgCl',.1,50,.1,50],lime:['CO₂','Ca(OH)₂',1,1,100.09,'CaCO₃',.1,50,.1,50],acid:['HCl','NaOH',1,1,18,'H₂O',.1,50,.1,50],carbonate:['Na₂CO₃','HCl',1,2,44,'CO₂',.1,25,.1,50]};
 function qcalc(){const k=$r('rxChoice').value,m=QM[k],q=$r('rxq');if(!m){q.dataset.k='';q.innerHTML='<b>🧮 الحسابات:</b> أدخل التركيز والحجم لحساب المادة المحددة وكتلة الناتج النظري.';return}
 if(q.dataset.k!==k){q.dataset.k=k;const I=(id,v)=>`<input id="${id}" type="number" step="any" min="0" value="${v}" style="width:5em">`;q.innerHTML=`<b>🧮 احسب قبل ما تجرّب</b><br>${m[0]}: ${I('qc1',m[6])} M × ${I('qv1',m[7])} mL<br>${m[1]}: ${I('qc2',m[8])} M × ${I('qv2',m[9])} mL<div id="qo2" style="margin-top:6px"></div>`;q.querySelectorAll('input').forEach(i=>i.oninput=qcalc)}
-const g=id=>+$r(id).value,a=g('qc1')*g('qv1')/1e3,b=g('qc2')*g('qv2')/1e3,x=Math.min(a/m[2],b/m[3]),A=a/m[2]<=b/m[3];
+const g=id=>+$r(id).value,a=g('qc1')*g('qv1')/1e3,b=g('qc2')*g('qv2')/1e3,x=Math.min(a/m[2],b/m[3]),A=a/m[2]<=b/m[3];window.__rxCalcState={key:k,limitingMoles:x,productMass:x*m[4],limiting:A?m[0]:m[1],reactantMoles:[a,b]};
 $r('qo2').innerHTML=x>0?`المادة المحددة: <b>${A?m[0]:m[1]}</b><br>${m[5]} الناتج: <b>${(x*m[4]).toFixed(3)} g</b> (${x.toFixed(4)} mol)<br>المتبقي من ${A?m[1]:m[0]}: ${(A?b-x*m[3]:a-x*m[2]).toFixed(4)} mol`:'أدخل قيمًا موجبة.'}
 $r('rxChoice').addEventListener('change',qcalc);
 resize();choose();qcalc();
