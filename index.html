@@ -1062,55 +1062,137 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 @keyframes kc-stream-in{0%{opacity:0;stroke-dasharray:0 500}100%{opacity:1;stroke-dasharray:12 9}}
 @keyframes kc-drop-fall{0%{opacity:0;transform:translateY(-22px) scale(.5)}25%{opacity:1}100%{opacity:0;transform:translateY(75px) scale(.85)}}
 @keyframes kc-flare{0%{opacity:0;transform:scale(.55)}25%{opacity:.9}100%{opacity:0;transform:scale(1.7)}}
+
+/* True 3D laboratory intro */
+.kc-lab-intro{width:min(760px,98vw);height:min(650px,94vh);perspective:1400px}
+.kc-flask-wrap{width:340px;height:430px;top:45%;filter:drop-shadow(0 30px 38px rgba(0,0,0,.42))}
+.kc-three-scene{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.kc-three-scene canvas{display:block;width:100%;height:100%;outline:0}
+.kc-stage-floor{top:77%;width:390px;height:125px}
+.kc-orbit-a{width:390px;height:150px;top:48%}
+.kc-orbit-b{width:300px;height:220px;top:48%}
+.kc-brand-reveal{top:86%}
+@media(max-width:520px){.kc-lab-intro{height:min(590px,92vh)}.kc-flask-wrap{width:290px;height:370px}.kc-stage-floor{width:300px}.kc-orbit-a{width:300px}.kc-orbit-b{width:235px}.kc-brand-reveal{top:85%}}
+@media(prefers-reduced-motion:reduce){.kc-three-scene canvas{opacity:1}}
 </style>
 </head>
 <body>
 <div id="kc-splash" role="status" aria-label="جاري تجهيز KAREEM CHEMISTRY">
  <div class="kc-lab-intro">
   <div class="kc-stage-floor" aria-hidden="true"></div>
-  <div class="kc-orbit kc-orbit-a" aria-hidden="true"></div><div class="kc-orbit kc-orbit-b" aria-hidden="true"></div>
-  <span class="kc-depth-label one" aria-hidden="true">CHEMISTRY / 3D</span><span class="kc-depth-label two" aria-hidden="true">CLASS OF 2027</span>
+  <div class="kc-orbit kc-orbit-a" aria-hidden="true"></div>
+  <div class="kc-orbit kc-orbit-b" aria-hidden="true"></div>
+  <span class="kc-depth-label one" aria-hidden="true">CHEMISTRY / 3D</span>
+  <span class="kc-depth-label two" aria-hidden="true">CLASS OF 2027</span>
   <div class="kc-flask-wrap" aria-hidden="true">
-   <svg class="kc-flask-svg" viewBox="0 0 190 280" role="img" aria-label="دورق كيميائي">
-    <defs>
-     <linearGradient id="kcGlass" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".12"/><stop offset=".24" stop-color="#dfe5f0" stop-opacity=".04"/><stop offset=".72" stop-color="#fff" stop-opacity=".13"/><stop offset="1" stop-color="#9da8bb" stop-opacity=".08"/></linearGradient>
-     <linearGradient id="kcLiquid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#28d9d0" stop-opacity=".96"/><stop offset=".52" stop-color="#268de0" stop-opacity=".9"/><stop offset="1" stop-color="#a45cff" stop-opacity=".96"/></linearGradient>
-     <filter id="kcGlow"><feGaussianBlur stdDeviation="4"/></filter>
-    </defs>
-    <path class="kc-flask-glass" d="M72 12h46v58l48 118c13 33-5 62-40 62H64c-35 0-53-29-40-62L72 70z"/>
-    <path class="kc-liquid" d="M47 142h96l29 64c9 20-2 34-25 34H43c-23 0-34-14-25-34z"/>
-    <path class="kc-liquid-glow" d="M43 145q50-13 104 0"/>
-    <path class="kc-flask-shine" d="M79 23v42M57 94l-25 63"/>
-    <path d="M70 12h50M72 70h46" stroke="#dce1eb" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-    <circle cx="77" cy="183" r="5" fill="#f1eafa" opacity=".8"><animate attributeName="cy" values="188;155;188" dur="1.4s" repeatCount="indefinite"/></circle>
-    <circle cx="113" cy="205" r="3.5" fill="#fff" opacity=".75"><animate attributeName="cy" values="210;175;210" dur="1.8s" repeatCount="indefinite"/></circle>
-    <circle cx="91" cy="220" r="2.5" fill="#e4d9f5" opacity=".8"><animate attributeName="cy" values="224;195;224" dur="1.2s" repeatCount="indefinite"/></circle>
-   </svg>
+   <div id="kcThreeScene" class="kc-three-scene"></div>
   </div>
-  <div class="kc-pour-rig" aria-hidden="true">
-   <svg viewBox="0 0 340 270">
-    <defs>
-     <linearGradient id="kcPourGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff75d8"/><stop offset=".48" stop-color="#62f4ee"/><stop offset="1" stop-color="#35bfff"/></linearGradient>
-     <filter id="kcPourGlow"><feGaussianBlur stdDeviation="4"/></filter>
-    </defs>
-    <path class="kc-tube-glass" d="M286 18h-42q-13 0-13 14v36q0 12-12 12h-22q-12 0-12 12v14q0 12-12 12h-30q-12 0-12 12v23"/>
-    <path class="kc-tube-highlight" d="M279 23h-34q-7 0-7 9v35q0 18-18 18h-23q-7 0-7 8v13q0 18-18 18h-20q-7 0-7 8v20"/>
-    <path class="kc-pour-stream" d="M170 157q-2 17 0 37t-1 39"/>
-    <path class="kc-pour-core" d="M170 157q-2 17 0 37t-1 39"/>
-    <path class="kc-reaction-flare" d="M141 232q29-22 58 0q-29 22-58 0z"/>
-    <circle class="kc-drop" cx="170" cy="166" r="3"><animate attributeName="cy" values="160;222" dur=".7s" repeatCount="indefinite"/></circle>
-    <circle class="kc-drop" cx="174" cy="170" r="2" style="animation-delay:.35s"><animate attributeName="cy" values="160;222" dur=".85s" begin=".3s" repeatCount="indefinite"/></circle>
-    <path d="M222 18h70" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>
-   </svg>
-  </div>
-  <div class="kc-cursor" aria-hidden="true"><svg viewBox="0 0 52 64"><path d="M5 4L7 53l13-13 9 19 9-5-9-18 18-2z" fill="#e8e5ef" stroke="#777187" stroke-width="2" stroke-linejoin="round"/><path d="M5 4l24 32" stroke="#fff" stroke-width="2" opacity=".8"/></svg></div>
-  <div class="kc-ring" aria-hidden="true"></div>
   <div class="kc-sparks" aria-hidden="true">
-   <i class="kc-spark" style="--x:22%;--y:35%;--dx:-45px;--dy:-55px;--delay:1.9s"></i><i class="kc-spark" style="--x:75%;--y:36%;--dx:48px;--dy:-48px;--delay:2s"></i><i class="kc-spark" style="--x:28%;--y:64%;--dx:-58px;--dy:35px;--delay:2.05s"></i><i class="kc-spark" style="--x:72%;--y:66%;--dx:60px;--dy:38px;--delay:2.1s"></i><i class="kc-spark" style="--x:50%;--y:25%;--dx:0px;--dy:-70px;--delay:2.12s"></i><i class="kc-spark" style="--x:50%;--y:70%;--dx:0px;--dy:58px;--delay:2.16s"></i>
+   <i class="kc-spark" style="--x:22%;--y:35%;--dx:-45px;--dy:-55px;--delay:1.9s"></i>
+   <i class="kc-spark" style="--x:75%;--y:36%;--dx:48px;--dy:-48px;--delay:2s"></i>
+   <i class="kc-spark" style="--x:28%;--y:64%;--dx:-58px;--dy:35px;--delay:2.05s"></i>
+   <i class="kc-spark" style="--x:72%;--y:66%;--dx:60px;--dy:38px;--delay:2.1s"></i>
+   <i class="kc-spark" style="--x:50%;--y:25%;--dx:0px;--dy:-70px;--delay:2.12s"></i>
   </div>
   <div class="kc-brand-reveal"><strong>KAREEM <span>CHEMISTRY</span></strong><small>كل تجربة… بداية لفهم أعمق</small></div>
  </div>
 </div>
+
+<script type="module" id="kcTrue3DIntro">
+(async()=>{
+ const host=document.getElementById('kcThreeScene');
+ if(!host)return;
+ try{
+  const THREE=await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(34,1,.1,100);
+  camera.position.set(0,.55,8.6);
+  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.18;
+  renderer.setClearColor(0x000000,0);
+  host.appendChild(renderer.domElement);
+  scene.add(new THREE.HemisphereLight(0xcdeeff,0x222033,2.1));
+  const key=new THREE.DirectionalLight(0xffffff,3.2);key.position.set(-3,5,6);scene.add(key);
+  const cyanLight=new THREE.PointLight(0x37e6ed,26,8);cyanLight.position.set(-1.8,.1,2);scene.add(cyanLight);
+  const violetLight=new THREE.PointLight(0x9871ff,20,7);violetLight.position.set(2,-1,1);scene.add(violetLight);
+  const rig=new THREE.Group();scene.add(rig);
+  const metal=new THREE.MeshStandardMaterial({color:0xb8cbd8,metalness:.82,roughness:.2});
+  const glass=new THREE.MeshPhysicalMaterial({color:0xd9f3ff,metalness:.08,roughness:.08,transmission:.48,thickness:.32,transparent:true,opacity:.24,side:THREE.DoubleSide,depthWrite:false,clearcoat:1,clearcoatRoughness:.04});
+  const profile=[
+   [0,-1.22],[.48,-1.22],[.67,-1.17],[.79,-1.03],[.84,-.78],[.76,-.48],
+   [.48,.12],[.245,.72],[.225,.82],[.225,1.52],[.255,1.56],[.255,1.63],
+   [.205,1.63],[.185,1.54],[.185,.79],[.43,.13],[.69,-.5],[.74,-.78],
+   [.64,-1.04],[.47,-1.13],[0,-1.13]
+  ].map(p=>new THREE.Vector2(p[0],p[1]));
+  const flaskGeo=new THREE.LatheGeometry(profile,96);
+  const flask=new THREE.Mesh(flaskGeo,glass);rig.add(flask);
+  const edge=new THREE.LineSegments(new THREE.EdgesGeometry(flaskGeo,18),new THREE.LineBasicMaterial({color:0xc8f3ff,transparent:true,opacity:.5}));
+  rig.add(edge);
+  const rim=new THREE.Mesh(new THREE.TorusGeometry(.235,.025,12,72),new THREE.MeshPhysicalMaterial({color:0xe5f8ff,metalness:.55,roughness:.16,transparent:true,opacity:.8}));
+  rim.rotation.x=Math.PI/2;rim.position.y=1.59;rig.add(rim);
+  const liquidMat=new THREE.MeshPhysicalMaterial({color:0x18cfe1,emissive:0x073e77,emissiveIntensity:.8,metalness:.12,roughness:.19,transparent:true,opacity:.91,clearcoat:1});
+  const liquidProfile=[[0,-1.105],[.48,-1.105],[.62,-1.06],[.7,-.91],[.72,-.72],[.65,-.48],[.49,-.12],[0,-.12]].map(p=>new THREE.Vector2(p[0],p[1]));
+  const liquid=new THREE.Mesh(new THREE.LatheGeometry(liquidProfile,80),liquidMat);rig.add(liquid);
+  const surface=new THREE.Mesh(new THREE.CircleGeometry(.49,80),new THREE.MeshPhysicalMaterial({color:0x6af5ed,emissive:0x16aee8,emissiveIntensity:.9,roughness:.12,metalness:.08,transparent:true,opacity:.82,side:THREE.DoubleSide}));
+  surface.rotation.x=-Math.PI/2;surface.position.set(0,-.115,.01);rig.add(surface);
+  const tubeCurve=new THREE.CatmullRomCurve3([
+   new THREE.Vector3(1.45,2.7,0),new THREE.Vector3(.92,2.7,0),new THREE.Vector3(.78,2.58,0),
+   new THREE.Vector3(.78,2.25,0),new THREE.Vector3(.72,2.12,0),new THREE.Vector3(.25,2.12,0),
+   new THREE.Vector3(.22,1.98,0),new THREE.Vector3(.22,1.57,0)
+  ]);
+  const tube=new THREE.Mesh(new THREE.TubeGeometry(tubeCurve,100,.075,16,false),glass);rig.add(tube);
+  const tubeEdge=new THREE.Mesh(new THREE.TubeGeometry(tubeCurve,100,.012,8,false),new THREE.MeshBasicMaterial({color:0xf1ffff,transparent:true,opacity:.68}));rig.add(tubeEdge);
+  const streamCurve=new THREE.CatmullRomCurve3([new THREE.Vector3(.22,1.58,.015),new THREE.Vector3(.2,1.12,.015),new THREE.Vector3(.12,.55,.015),new THREE.Vector3(.02,-.08,.015)]);
+  const stream=new THREE.Mesh(new THREE.TubeGeometry(streamCurve,48,.027,10,false),new THREE.MeshBasicMaterial({color:0x5cf9ee,transparent:true,opacity:.86}));rig.add(stream);
+  const drops=[];
+  const dropGeo=new THREE.SphereGeometry(.035,14,12);
+  for(let i=0;i<5;i++){const d=new THREE.Mesh(dropGeo,new THREE.MeshBasicMaterial({color:i%2?0x9d7cff:0x7bfff2}));rig.add(d);drops.push(d)}
+  const bubbles=[];
+  for(let i=0;i<22;i++){
+   const b=new THREE.Mesh(new THREE.SphereGeometry(.018+Math.random()*.025,10,8),new THREE.MeshPhysicalMaterial({color:0xbaffff,transparent:true,opacity:.72,roughness:.08,metalness:.1}));
+   b.userData={phase:Math.random(),speed:.12+Math.random()*.24,x:(Math.random()-.5)*.82,z:(Math.random()-.5)*.35};
+   rig.add(b);bubbles.push(b);
+  }
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(.86,.008,8,100),new THREE.MeshBasicMaterial({color:0x8c7bff,transparent:true,opacity:.5}));
+  halo.rotation.x=Math.PI/2.3;halo.position.y=-.98;halo.position.z=-.1;rig.add(halo);
+  const resize=()=>{
+   const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);
+   renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+  };
+  if('ResizeObserver'in window)new ResizeObserver(resize).observe(host);else window.addEventListener('resize',resize);
+  resize();
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const start=performance.now();
+  let raf=0;
+  function frame(now){
+   const t=(now-start)/1000;
+   rig.rotation.y=Math.sin(t*.58)*.13;
+   rig.rotation.x=Math.sin(t*.42)*.035;
+   rig.position.y=Math.sin(t*1.1)*.035;
+   const fill=Math.min(1,Math.max(0,(t-1.45)/1.7));
+   liquid.scale.y=.25+.75*fill;
+   liquid.position.y=-.02*(1-fill);
+   surface.position.y=-.12+fill*.01;
+   stream.visible=t>1.45;
+   drops.forEach((d,i)=>{const p=(t*.62+i*.2)%1;d.position.copy(streamCurve.getPointAt(p));d.scale.setScalar(.7+Math.sin(t*8+i)*.22)});
+   bubbles.forEach((b,i)=>{const u=(b.userData.phase+t*b.userData.speed)%1;b.position.set(b.userData.x*(.5+u*.55),-.98+u*(.8+fill*.45),b.userData.z);b.visible=u<.96});
+   halo.rotation.z=t*.28;
+   if(!reduced&&t<7&&!document.hidden)raf=requestAnimationFrame(frame);
+   renderer.render(scene,camera);
+  }
+  frame(start);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf)}else if(!reduced){cancelAnimationFrame(raf);frame(performance.now())}});
+  window.addEventListener('pagehide',()=>{cancelAnimationFrame(raf);renderer.dispose();flaskGeo.dispose()},{once:true});
+ }catch(error){
+  host.innerHTML='<div class="kc-3d-fallback" role="img" aria-label="تجربة كيميائية ثلاثية الأبعاد قيد التحميل">⚗</div>';
+  const fallback=host.querySelector('.kc-3d-fallback');
+  if(fallback)Object.assign(fallback.style,{display:'grid',placeItems:'center',height:'100%',fontSize:'150px',color:'#a9f6f0',filter:'drop-shadow(0 0 30px #43cfe8)'});
+ }
+})();
+</script>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-shell">
   <span class="welcome-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
