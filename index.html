@@ -820,6 +820,38 @@ body.reduce-site-motion .hero::before{animation:none}
  box-shadow:0 0 0 14px rgba(145,169,174,.025),0 0 36px rgba(145,169,174,.06)!important
 }
 </style>
+
+<style id="lab-tabs-visibility-fix">
+/* Keep every lab tab readable, including the currently selected tab. */
+#tabs button{
+  color:var(--ink) !important;
+  background:rgba(255,255,255,.28) !important;
+  border:1px solid color-mix(in srgb,var(--ink) 18%,transparent) !important;
+  opacity:1 !important;
+  filter:none !important;
+  text-shadow:none !important;
+}
+:root[data-theme="dark"] #tabs button{
+  color:var(--ink) !important;
+  background:rgba(14,25,39,.42) !important;
+  border-color:rgba(190,210,225,.22) !important;
+}
+#tabs button[aria-pressed="true"]{
+  color:var(--ink) !important;
+  background:rgba(126,151,160,.20) !important;
+  border-color:rgba(126,151,160,.62) !important;
+  box-shadow:0 0 0 1px rgba(126,151,160,.12),0 7px 20px rgba(20,35,48,.10),inset 0 1px rgba(255,255,255,.5) !important;
+  opacity:1 !important;
+}
+:root[data-theme="dark"] #tabs button[aria-pressed="true"]{
+  color:#edf3f7 !important;
+  background:rgba(145,168,172,.20) !important;
+  border-color:rgba(145,168,172,.55) !important;
+  box-shadow:0 0 0 1px rgba(145,168,172,.12),0 7px 20px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.10) !important;
+}
+#tabs button:focus-visible{outline:2px solid var(--gold) !important;outline-offset:3px}
+</style>
+
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
@@ -1331,7 +1363,7 @@ $('#mt').innerHTML=(t=>t+t)(E.filter((_,i)=>i%3===0).map(e=>`<span>${f(e[2].spli
 const T=['الباب 2: كشف الأيونات','الباب 2: المعايرة','الباب 3: pH','الباب 3: لوشاتيليه','الباب 4: الخلية الجلفانية','المعمل الشامل','محاكي التفاعل','استوديو الجزيئات 3D'];
 $('#tabs').innerHTML=T.map((t,i)=>`<button data-i="${i}">${t}</button>`).join('');
 function setLab(i){$$('.lab,.sol').forEach((p,j)=>p.classList.toggle('on',j===i));$$('#tabs button').forEach((b,j)=>b.setAttribute('aria-pressed',j===i))}
-$('#tabs').onclick=e=>{if(e.target.dataset.i)setLab(+e.target.dataset.i)};setLab(0);
+$('#tabs').onclick=e=>{const b=e.target.closest('button[data-i]');if(b)setLab(Number(b.dataset.i))};setLab(0);
 
 /* lab 1: pH */
 const S=[['a'],['b'],['a',1.8e-5],['b',1.8e-5]];flask($('#pf'),'p');
