@@ -1982,6 +1982,18 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
 #siteHumorToast{position:fixed;top:calc(84px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:55;width:min(440px,calc(100vw - 28px));display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);box-shadow:0 12px 32px #0002;font-size:.92rem;animation:rise .3s ease}
 #siteHumorToast button{flex:none;border:0;background:transparent;color:var(--mute);font:700 1.1rem Tajawal,sans-serif;cursor:pointer;padding:0 4px}
 @media(prefers-reduced-motion:reduce){#siteHumorToast{animation:none}}
+
+.humor-achievements{margin:14px 0;padding:18px}
+.humor-achievements h3{margin-bottom:5px}
+.humor-badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:9px;margin-top:13px}
+.humor-badge{display:grid;grid-template-columns:34px 1fr;gap:2px 8px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--bg2);opacity:.66}
+.humor-badge>span{grid-row:span 3;font-size:1.45rem;filter:grayscale(1)}
+.humor-badge b{font-size:.93rem;color:var(--ink)}
+.humor-badge small{color:var(--mute);line-height:1.45}
+.humor-badge em{font-size:.75rem;font-style:normal;color:var(--mute)}
+.humor-badge.earned{opacity:1;border-color:color-mix(in srgb,var(--tq) 55%,var(--line));background:color-mix(in srgb,var(--tq) 9%,var(--card))}
+.humor-badge.earned>span{filter:none}
+
 </style>
 
 <script id="balancedHumorSystem">
@@ -2033,6 +2045,80 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
   });
   aiObserver.observe(ai,{childList:true,subtree:true});
  }
+
+ /* 2) تعليق لطيف مرتبط بالعنصر المختار في الجدول الدوري */
+ var pi=document.getElementById('pi');
+ var elementJokes={
+  H:'الهيدروجين خفيف لدرجة إنه أول واحد وصل الجدول الدوري 😄',
+  He:'الهيليوم غاز نبيل… حتى في الجدول عامل نفسه مش سامع حد.',
+  Li:'الليثيوم صغير وخفيف، بس بطارياته شايلة شغل كتير.',
+  C:'الكربون اجتماعي جدًا؛ بيكوّن روابط مع عناصر كتير.',
+  N:'النيتروجين مالي الجو حوالينا، بس هادي ومش بيحب يدخل تفاعلات بسهولة.',
+  O:'الأكسجين مهم للتنفس والاحتراق… بس مش معنى كده إنه بيولّعها لوحده!',
+  Na:'الصوديوم نشيط جدًا؛ بيحب يدخل التفاعلات بسرعة.',
+  Mg:'الماغنسيوم لما يحترق يدي ضوء أبيض قوي… نجم العرض من غير مبالغة.',
+  Al:'الألومنيوم خفيف ومفيد، عامل زي الطالب اللي شايل حاجات كتير ومش باين عليه.',
+  Si:'السيليكون أساس شرائح إلكترونية كتير؛ عنصر تقني من الدرجة الأولى.',
+  P:'الفوسفور له صور مختلفة وخواص مختلفة؛ نفس العنصر بأكتر من شخصية.',
+  S:'الكبريت معروف بلونه الأصفر… حضوره في المعمل صعب يتفوت.',
+  Cl:'الكلور نشيط، فخليك فاكر خواصه من غير تجارب منزلية.',
+  Fe:'الحديد عملي جدًا؛ داخل في الصناعة والهيموجلوبين كمان.',
+  Cu:'النحاس موصل ممتاز، وكمان ألوان مركباته بتخلي الكيمياء ملونة.',
+  Zn:'الزنك بيحمي الحديد من الصدأ… صاحب وقت الشدة.',
+  Ag:'الفضة موصل ممتاز، وراسب كلوريدها الأبيض علامة مشهورة.',
+  Au:'الذهب قليل التفاعل نسبيًا؛ مش كل اللي بيلمع بيحب يتفاعل.',
+  Hg:'الزئبق فلز سائل في درجة حرارة الغرفة، ومركباته تحتاج تعاملًا متخصصًا.',
+  Pb:'الرصاص كثيف وسام؛ معلومة للحفظ مش للتجربة.'
+ };
+ if(pi){var elementObserver=new MutationObserver(function(){
+  var symbol=pi.querySelector('b')?.textContent?.trim();if(!symbol||pi.dataset.jokeSymbol===symbol)return;
+  pi.dataset.jokeSymbol=symbol;var old=pi.querySelector('.element-humor');if(old)old.remove();
+  var note=document.createElement('div');note.className='humor-note element-humor';note.textContent='🧪 '+(elementJokes[symbol]||'عنصر جديد في الجولة! ركّز في عدده الذري وموقعه وخواصه 😄');pi.appendChild(note);
+ });elementObserver.observe(pi,{childList:true,subtree:true});}
+ /* 4) رسائل وقت المذاكرة مرتبطة بالمؤقت وبوقت اليوم */
+ var focusStatus=document.getElementById('focusStatus');
+ var studyLines={
+  morning:['صباح النشاط! خُد معلومة واحدة وابدأ بيها ☀️','التركيز الصبح لطيف… بس القهوة مش داخلة في المعادلة 😄'],
+  afternoon:['منتصف اليوم؟ لسه في وقت لإنجاز حلو.','خدها بهدوء؛ خطوة ثابتة أحسن من عشر خطوات مستعجلة.'],
+  evening:['مساء الفهم! خلّي كل سؤال يوضحلك نقطة جديدة.','المذاكرة مش سباق سرعة… المهم توصل فاهم.'],
+  night:['لو الوقت اتأخر، خليك في مراجعة هادية وخد راحتك.','الراحة جزء من الخطة؛ المخ مش مفاعل شغال 24 ساعة 😄']
+ };
+ function timeLine(){var h=new Date().getHours();return pick(h<11?studyLines.morning:h<16?studyLines.afternoon:h<21?studyLines.evening:studyLines.night)}
+ if(focusStatus){
+  var focusObserver=new MutationObserver(function(){
+   var current=focusStatus.textContent.trim();if(!current||focusStatus.dataset.humorFor===current)return;
+   focusStatus.dataset.humorFor=current;var old=focusStatus.querySelector('.humor-note');if(old)old.remove();
+   var line=/انتهت جلسة/.test(current)?'جلسة كاملة اتقفلت بنجاح! تستاهل راحة قصيرة 👏':/شغالة/.test(current)?timeLine():/متوقف/.test(current)?'خد نفس وارجع لما تكون جاهز؛ مفيش استعجال.':null;
+   if(line)addNote(focusStatus,line);
+  });
+  focusObserver.observe(focusStatus,{childList:true,characterData:true,subtree:true});
+ }
+ /* 5) إنجازات مرحة محسوبة من بيانات الطالب الموجودة بالفعل */
+ var statsNode=document.querySelector('.student-stats');
+ if(statsNode){
+  var achievements=document.createElement('section');achievements.className='humor-achievements card';achievements.id='humorAchievements';
+  achievements.innerHTML='<h3>🏅 إنجازاتك الكيميائية</h3><p class="student-muted">الشارات بتتفتح تلقائيًا مع تقدمك، من غير نقاط وهمية.</p><div class="humor-badges" id="humorBadges"></div>';
+  statsNode.insertAdjacentElement('afterend',achievements);
+  function renderAchievements(){
+   var readNum=function(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(_){return d}};
+   var st=readNum('kareemStudentStats',{}),tasks=readNum('kareemStudentTasks',{}),done=tasks.date===new Date().toLocaleDateString('sv')?Object.values(tasks.items||{}).filter(Boolean).length:0,focus=+(localStorage.getItem('kareemFocusCompleted')||0);
+   var all=[
+    ['🧠','أول خطوة','حلّيت أول سؤال',+(st.attempts||0)>=1],
+    ['⚗️','عقلية كيميائي','جمعت 10 إجابات صحيحة',+(st.correct||0)>=10],
+    ['🔥','سلسلة تركيز','وصلت إلى 5 إجابات صحيحة متتالية',+(st.bestStreak||0)>=5],
+    ['⏱️','جلسة مكتملة','أنهيت جلسة تركيز كاملة',focus>=1],
+    ['🎯','منجز اليوم','أكملت مهام المذاكرة الخمس اليوم',done===5]
+   ];
+   var host=document.getElementById('humorBadges');if(!host)return;host.textContent='';
+   all.forEach(function(a){var item=document.createElement('div');item.className='humor-badge'+(a[3]?' earned':'');var icon=document.createElement('span');icon.textContent=a[0];var title=document.createElement('b');title.textContent=a[1];var desc=document.createElement('small');desc.textContent=a[2];var state=document.createElement('em');state.textContent=a[3]?'مفتوحة':'لسه مقفولة';item.append(icon,title,desc,state);host.appendChild(item)});
+  }
+  renderAchievements();
+  var achievementObserver=new MutationObserver(renderAchievements);
+  ['stAttempts','stCorrect','stStreak','studentTaskCount'].forEach(function(id){var node=document.getElementById(id);if(node)achievementObserver.observe(node,{childList:true,characterData:true,subtree:true})});
+  window.addEventListener('storage',renderAchievements);
+  var oldFocus=localStorage.getItem('kareemFocusCompleted');window.setInterval(function(){if(localStorage.getItem('kareemFocusCompleted')!==oldFocus){oldFocus=localStorage.getItem('kareemFocusCompleted');renderAchievements()}},5000);
+ }
+
  var qf=document.getElementById('qf');
  if(qf){
   var qObserver=new MutationObserver(function(){
