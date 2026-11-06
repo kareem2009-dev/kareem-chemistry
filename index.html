@@ -883,6 +883,30 @@ body.reduce-site-motion .hero::before{animation:none}
 }
 #chips button:focus-visible{outline:2px solid #82969a !important;outline-offset:3px}
 </style>
+
+<style id="quick-review-cards-style">
+#v-flashcards{max-width:100%;min-width:0}
+.review-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:4px 0 18px}
+.review-head h2{margin:8px 0}.review-head p{margin:0}
+.review-count{padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--glass,rgba(120,140,160,.08));color:var(--mute);font-size:.85rem}
+.review-controls{display:grid;grid-template-columns:minmax(180px,2fr) repeat(2,minmax(140px,1fr));gap:12px;padding:14px;margin-bottom:18px;border:1px solid var(--line);border-radius:18px;background:var(--glass,rgba(120,140,160,.06));backdrop-filter:blur(14px)}
+.review-controls label{display:grid;gap:7px;color:var(--mute);font-size:.82rem}
+.review-controls input,.review-controls select{width:100%;min-width:0;min-height:42px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg2,var(--bg));color:var(--ink);font:inherit}
+.review-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,245px),1fr));gap:13px}
+.review-card{min-width:0;perspective:900px}
+.review-flip{width:100%;min-height:218px;padding:15px;text-align:right;border:1px solid var(--line);border-radius:19px;background:var(--glass,rgba(120,140,160,.07));color:var(--ink);box-shadow:0 8px 26px rgba(0,0,0,.045);cursor:pointer;display:flex;flex-direction:column;gap:13px;transition:border-color .2s,transform .2s,background .2s}
+.review-flip:hover{border-color:var(--mute);transform:translateY(-2px)}
+.review-flip:focus-visible{outline:2px solid var(--tq);outline-offset:3px}
+.review-card-top{display:flex;justify-content:space-between;gap:8px;color:var(--mute);font-size:.75rem}
+.review-face{display:flex;flex:1;flex-direction:column;justify-content:center;gap:10px}
+.review-face small{color:var(--mute);font-size:.76rem}
+.review-face strong{font-size:1.02rem;line-height:1.8;font-weight:700;white-space:normal;overflow-wrap:anywhere}
+.review-face em{font-size:.76rem;color:var(--mute);font-style:normal;margin-top:auto}
+.review-back strong{color:var(--ink);font-weight:600}
+.review-empty{padding:25px;text-align:center;color:var(--mute)}
+@media(max-width:650px){.review-controls{grid-template-columns:1fr 1fr}.review-search{grid-column:1/-1}.review-flip{min-height:195px}}
+@media(prefers-reduced-motion:reduce){.review-flip{transition:none}.review-flip:hover{transform:none}}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
@@ -967,7 +991,7 @@ body.reduce-site-motion .hero::before{animation:none}
 </div>
 <header>
 <a class="logo" href="#home"><img class="av" alt="صورة KAREEM IBRAHIM"><span><b>KAREEM IBRAHIM</b><small>كيمياء الثانوية العامة</small></span></a>
-<nav aria-label="الأقسام"><a href="#home">الرئيسية</a><a href="#equations">المعادلات</a><a href="#labs">المعمل التفاعلي</a><a href="#calc">🧮 حاسبة</a><a href="#bank">📝 بنك الأسئلة</a><a href="#tools">✨ أدوات ذكية</a><a href="#sheet">📄 ملخص القوانين</a><a href="#student">لوحة الطالب</a></nav>
+<nav aria-label="الأقسام"><a href="#home">الرئيسية</a><a href="#equations">المعادلات</a><a href="#flashcards">كروت المراجعة</a><a href="#labs">المعمل التفاعلي</a><a href="#calc">🧮 حاسبة</a><a href="#bank">📝 بنك الأسئلة</a><a href="#tools">✨ أدوات ذكية</a><a href="#sheet">📄 ملخص القوانين</a><a href="#student">لوحة الطالب</a></nav>
 <div class="header-actions" aria-label="أدوات سريعة">
 <button class="header-tool" id="globalSearchOpen" type="button" aria-label="البحث العام" title="البحث العام">
 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>بحث عام</span>
@@ -1260,6 +1284,17 @@ body.reduce-site-motion .hero::before{animation:none}
 <div class="card" style="grid-column:1/-1"><h3>🎯 تحدّي المعادلات</h3><p class="tag" id="qs">اختار الناتج الصح — الأسئلة مولّدة من مكتبة المعادلات.</p><div id="qq"></div><div class="btns" id="qo"></div><div id="qf"></div></div>
 </div></section>
 <section class="view" id="v-sheet"><h2>📄 ملخص القوانين</h2><p class="tag">ورقة مراجعة سريعة.</p><button class="btn p" onclick="print()">🖨️ اطبع / احفظ PDF</button><div class="grid" style="margin-top:12px"><div class="card"><h3>الباب الثاني — المعايرة</h3><div class="f">Ma·Va / na = Mb·Vb / nb</div></div><div class="card"><h3>ماء التبلر</h3><div class="f">x = (m₁−m₂)/18 ÷ (m₂/Mr)</div></div><div class="card"><h3>الأس الهيدروجيني</h3><div class="f">pH = −log[H⁺]   pH + pOH = 14   Kw = 10⁻¹⁴</div></div><div class="card"><h3>قانون استفالد</h3><div class="f">Ka = α²C   [H⁺] = √(Ka·C)   α = √(Ka/C)</div></div><div class="card"><h3>ثابت الاتزان</h3><div class="f">Kc = [C]ᶜ[D]ᵈ / ([A]ᵃ[B]ᵇ)   Kp = Kc(RT)^Δn</div></div><div class="card"><h3>حاصل الإذابة</h3><div class="f">Ksp = [A⁺]ᵐ[B⁻]ⁿ  — يترسب الملح لو Qsp > Ksp</div></div><div class="card"><h3>جهد الخلية</h3><div class="f">E°cell = E°cathode − E°anode</div></div><div class="card"><h3>فاراداي</h3><div class="f">m = (M·I·t) / (n·F)   F = 96500 C   Q = I·t</div></div><div class="card"><h3>المول</h3><div class="f">n = m / M   1 mol = 6.022×10²³ جسيم</div></div><div class="card"><h3>المردود المئوي</h3><div class="f">% = (الفعلي ÷ النظري) × 100</div></div></div></section>
+
+<section class="view" id="v-flashcards">
+ <div class="review-head"><div><span class="tag">مراجعة نشطة · اسأل نفسك الأول</span><h2>كروت المراجعة السريعة</h2><p class="tag">اختبر ذاكرتك في التعريفات والقوانين والمعادلات. اضغط على الكارت علشان تكشف الإجابة.</p></div><div class="review-count" id="reviewCount" aria-live="polite">0 كارت</div></div>
+ <div class="review-controls">
+  <label class="review-search"><span>ابحث في الكروت</span><input id="reviewSearch" type="search" placeholder="مثال: الاتزان أو فاراداي"></label>
+  <label><span>الباب</span><select id="reviewChapter"><option value="all">كل الأبواب</option><option value="c1">الباب الأول</option><option value="c2">الباب الثاني</option><option value="c3">الباب الثالث</option><option value="c4">الباب الرابع</option><option value="c5">الباب الخامس</option></select></label>
+  <label><span>نوع الكارت</span><select id="reviewType"><option value="all">الكل</option><option value="تعريف">تعريفات</option><option value="قانون">قوانين</option><option value="معادلة">معادلات</option></select></label>
+ </div>
+ <div class="review-grid" id="reviewGrid" aria-live="polite"></div>
+ <p class="review-empty" id="reviewEmpty" hidden>مفيش كروت مطابقة. جرّب تغيّر البحث أو الفلاتر.</p>
+</section>
 </main>
 <footer><img class="av" alt=""><span><b class="rk" style="letter-spacing:.1em">KAREEM IBRAHIM</b> — منصة كيمياء الثانوية العامة</span></footer>
 
@@ -1273,7 +1308,7 @@ $$('.av').forEach(i=>i.src=IMG);
 $('#tg').onclick=()=>{const d=matchMedia('(prefers-color-scheme: dark)').matches;const cur=root.dataset.theme||(d?'dark':'light');const next=cur==='dark'?'light':'dark';root.dataset.theme=next;try{localStorage.setItem('kareemTheme',next)}catch(_){}};
 
 /* routing */
-const V=['home','equations','labs','calc','bank','tools','student','sheet'];
+const V=['home','equations','flashcards','labs','calc','bank','tools','student','sheet'];
 function route(h){const k=V.includes(h||location.hash.slice(1))?(h||location.hash.slice(1)):'home';
 V.forEach(v=>$('#v-'+v).classList.toggle('on',v===k));
 $$('nav a').forEach(a=>a.toggleAttribute('aria-current',a.hash==='#'+k));const nc=$('nav a[aria-current]');nc&&nc.scrollIntoView({inline:'center',block:'nearest'});scrollTo(0,0);window.__KAREEM_ACTIVE_VIEW=k;window.dispatchEvent(new Event('kareem:route'))}
@@ -1388,7 +1423,49 @@ $('#eg').onclick=e=>{const b=e.target.closest('[data-lab]');if(b){setLab(+b.data
 $('#units').innerHTML=Object.keys(U).map((k,i)=>`<div class="card ch"><div class="no">${NO[i]}</div>${k==='c2'?'<span class="hot">بالتفصيل</span>':''}<h3>الباب ${AR[i]}: ${U[k]}</h3><p>${E.filter(e=>e[0]===k).length} معادلة</p><button class="btn" data-k="${k}">اعرض معادلات الباب</button></div>`).join('');
 $('#units').onclick=e=>{const k=e.target.dataset.k;if(k){flt=k;renderEq();location.hash='equations'}};
 renderEq();
-$('#mt').innerHTML=(t=>t+t)(E.filter((_,i)=>i%3===0).map(e=>`<span>${f(e[2].split('   ')[0])}</span>`).join(''));
+
+/* quick review flashcards */
+(function(){
+ const extra=[
+  ['c1','تعريف','ما المقصود بالعامل المختزل؟','مادة تمنح إلكترونات لمادة أخرى، وتتعرض هي للأكسدة.'],
+  ['c1','تعريف','ما وظيفة الحجر الجيري في الفرن العالي؟','يتحلل إلى CaO الذي يتحد مع SiO₂ مكوّنًا خبث CaSiO₃.'],
+  ['c2','تعريف','ما المقصود بالتحليل الكيفي؟','التعرف على نوع الأيونات أو المواد الموجودة في العينة.'],
+  ['c2','تعريف','كيف يُكشف عن أيون الكبريتات؟','بإضافة BaCl₂؛ يتكون راسب أبيض من BaSO₄ لا يذوب في HCl المخفف.'],
+  ['c3','تعريف','متى يكون التفاعل في حالة اتزان ديناميكي؟','عندما تتساوى سرعتا التفاعل الطردي والعكسي في نظام مغلق.'],
+  ['c3','قانون','ما تعبير ثابت الاتزان Kc؟','Kc = [C]^c[D]^d / ([A]^a[B]^b)، للمواد الغازية أو المذابة.'],
+  ['c3','قانون','ما العلاقة بين Kp و Kc؟','Kp = Kc(RT)^Δn، حيث Δn فرق مولات الغازات بين النواتج والمتفاعلات.'],
+  ['c4','تعريف','ما الأكسدة؟','فقد إلكترونات، ويزداد عدد التأكسد.'],
+  ['c4','تعريف','ما الاختزال؟','اكتساب إلكترونات، ويقل عدد التأكسد.'],
+  ['c4','قانون','كيف نحسب جهد الخلية القياسي؟','E°cell = E°cathode − E°anode.'],
+  ['c4','قانون','ما قانون فاراداي لحساب الكتلة؟','m = (M × I × t) / (n × F)، وF ≈ 96500 C/mol.'],
+  ['c5','تعريف','ما المقصود بالتفاعل الإضافي؟','إضافة ذرات أو مجموعات إلى ذرتي كربون الرابطة المتعددة.'],
+  ['c5','تعريف','ما البلمرة؟','اتحاد عدد كبير من جزيئات صغيرة (مونومرات) لتكوين جزيء ضخم (بوليمر).'],
+  ['c5','قانون','ما ناتج هيدرة الإيثين؟','C₂H₄ + H₂O → C₂H₅OH؛ يتكون الإيثانول.']
+ ];
+ const equationCards=E.map(e=>[e[0],'معادلة','ما معادلة: '+e[1]+'؟',e[2]+(e[3]?'\n'+e[3]:'')]);
+ const cards=[...extra,...equationCards].map((x,i)=>({id:i,chapter:x[0],type:x[1],front:x[2],back:x[3]}));
+ const grid=document.getElementById('reviewGrid'),search=document.getElementById('reviewSearch'),chapter=document.getElementById('reviewChapter'),type=document.getElementById('reviewType'),count=document.getElementById('reviewCount'),empty=document.getElementById('reviewEmpty');
+ if(!grid||!search||!chapter||!type)return;
+ const chapterNames={c1:'الباب الأول',c2:'الباب الثاني',c3:'الباب الثالث',c4:'الباب الرابع',c5:'الباب الخامس'};
+ function esc(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+ function render(){
+  const term=nz(search.value.trim());
+  const list=cards.filter(card=>(chapter.value==='all'||card.chapter===chapter.value)&&(type.value==='all'||card.type===type.value)&&(!term||nz(card.front+' '+card.back).includes(term)));
+  count.textContent=list.length+' كارت';
+  empty.hidden=list.length>0;
+  grid.innerHTML=list.map(card=>'<article class="review-card" data-card="'+card.id+'"><button class="review-flip" type="button" aria-expanded="false" aria-label="اكشف إجابة: '+esc(card.front)+'"><span class="review-card-top"><span>'+chapterNames[card.chapter]+'</span><span>'+card.type+'</span></span><span class="review-face review-front"><small>السؤال</small><strong>'+esc(card.front)+'</strong><em>اضغط لكشف الإجابة</em></span><span class="review-face review-back" hidden><small>الإجابة</small><strong>'+esc(card.back).replace(/\n/g,'<br>')+'</strong><em>اضغط للعودة للسؤال</em></span></button></article>').join('');
+ }
+ grid.addEventListener('click',e=>{
+  const btn=e.target.closest('.review-flip');if(!btn)return;
+  const open=btn.getAttribute('aria-expanded')==='true';
+  btn.setAttribute('aria-expanded',String(!open));
+  btn.querySelector('.review-front').hidden=!open;
+  btn.querySelector('.review-back').hidden=open;
+ });
+ search.addEventListener('input',render);chapter.addEventListener('change',render);type.addEventListener('change',render);
+ render();
+})(); 
+$( '#mt' ).innerHTML=(t=>t+t)(E.filter((_,i)=>i%3===0).map(e=>`<span>${f(e[2].split('   ')[0])}</span>`).join(''));
 
 /* lab tabs */
 const T=['الباب 2: كشف الأيونات','الباب 2: المعايرة','الباب 3: pH','الباب 3: لوشاتيليه','الباب 4: الخلية الجلفانية','المعمل الشامل','محاكي التفاعل','استوديو الجزيئات 3D'];
