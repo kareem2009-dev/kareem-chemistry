@@ -690,6 +690,54 @@ body.reduce-site-motion .hero::before{animation:none}
 @media(max-width:700px){header{gap:8px}.header-actions{order:2;margin-inline-start:auto}.header-actions .header-tool,.header-actions .tg{width:39px;min-width:39px;height:39px;padding:0;border-radius:12px}.header-actions .header-tool span,.header-actions .tg span{display:none}.tool-indicator{top:5px;inset-inline-start:6px}.header-actions .header-tool svg,.header-actions .tg svg{width:18px;height:18px}}
 @media(prefers-reduced-motion:reduce){.header-actions .header-tool,.header-actions .tg{transition:none}}
 </style>
+
+<style id="clear-glass-header">
+/* Neutral, genuinely translucent header controls in both themes */
+.header-actions{
+ background:rgba(255,255,255,.34)!important;
+ border:1px solid rgba(120,145,165,.22)!important;
+ box-shadow:0 8px 28px rgba(30,55,75,.07),inset 0 1px 0 rgba(255,255,255,.62)!important;
+ backdrop-filter:blur(22px) saturate(155%)!important;
+ -webkit-backdrop-filter:blur(22px) saturate(155%)!important
+}
+:root[data-theme="dark"] .header-actions{
+ background:rgba(12,22,35,.38)!important;
+ border-color:rgba(180,205,220,.14)!important;
+ box-shadow:0 8px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.08)!important
+}
+.header-actions .header-tool,.header-actions .tg{
+ background:rgba(255,255,255,.18)!important;
+ border-color:rgba(120,145,165,.12)!important;
+ color:var(--ink)!important;
+ box-shadow:none!important
+}
+:root[data-theme="dark"] .header-actions .header-tool,
+:root[data-theme="dark"] .header-actions .tg{
+ background:rgba(255,255,255,.035)!important;
+ border-color:rgba(210,225,235,.08)!important;
+ color:var(--ink)!important
+}
+.header-actions .header-tool:hover,.header-actions .tg:hover{
+ background:rgba(255,255,255,.58)!important;
+ border-color:rgba(80,155,170,.28)!important;
+ color:var(--tq)!important;
+ box-shadow:0 5px 16px rgba(35,85,100,.08)!important
+}
+:root[data-theme="dark"] .header-actions .header-tool:hover,
+:root[data-theme="dark"] .header-actions .tg:hover{
+ background:rgba(255,255,255,.10)!important
+}
+.header-actions .theme-toggle{
+ background:rgba(255,255,255,.24)!important;
+ border-color:rgba(120,145,165,.16)!important;
+ color:var(--ink)!important
+}
+:root[data-theme="dark"] .header-actions .theme-toggle{
+ background:rgba(255,255,255,.055)!important;
+ border-color:rgba(210,225,235,.12)!important
+}
+.tool-indicator{background:#56b9b2!important;box-shadow:0 0 0 3px rgba(86,185,178,.13)!important}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
