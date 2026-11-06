@@ -1999,12 +1999,6 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
 <script id="balancedHumorSystem">
 (function(){
  'use strict';
- var assistantLines=[
-  'الكيمياء بتحب التركيز… مش لازم نراضيها، بس نفهمها 😂',
-  'خدها خطوة خطوة؛ حتى الإلكترونات مش بتجري من غير سبب.',
-  'المعادلة الموزونة مبسوطة دلوقتي… كل ذرة لقت مكانها 😄',
-  'معلومة صغيرة كل يوم أحسن من سباق كبير من غير فهم.'
- ];
  var correctLines=[
   'الله عليك! الذرات متوزنة وفخورة بيك 👏',
   'إجابة مظبوطة… واضح إنك صاحي للكيمياء النهارده 😎',
@@ -2028,24 +2022,6 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
   if(!target||target.querySelector('.humor-note'))return;
   var n=document.createElement('span');n.className='humor-note';n.textContent='😄 '+line;target.appendChild(n);
  }
- function decorateAssistant(node){
-  if(!node||node.classList.contains('u')||node.querySelector('.aiTy')||node.dataset.humored)return;
-  if(!node.textContent.trim())return;
-  node.dataset.humored='1';addNote(node,pick(assistantLines));
- }
- var ai=document.getElementById('aiMsgs');
- if(ai){
-  var aiObserver=new MutationObserver(function(records){
-   records.forEach(function(rec){
-    if(rec.type==='childList')rec.addedNodes.forEach(function(n){
-     if(n.nodeType===1){if(n.matches('.aiM.b'))decorateAssistant(n);n.querySelectorAll&&n.querySelectorAll('.aiM.b').forEach(decorateAssistant)}
-    });
-    if(rec.type==='childList'&&rec.target.nodeType===1&&rec.target.matches('.aiM.b'))decorateAssistant(rec.target);
-   });
-  });
-  aiObserver.observe(ai,{childList:true,subtree:true});
- }
-
  /* 2) تعليق لطيف مرتبط بالعنصر المختار في الجدول الدوري */
  var pi=document.getElementById('pi');
  var elementJokes={
