@@ -645,13 +645,13 @@ html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){width:100%
       </div>
       <div class="rxequation" id="rxEquation">CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄</div>
       <div class="rxlog" id="rxLog" aria-live="polite"><b>البداية:</b> المحلول الأول داخل البيكر. أضف الكاشف لمشاهدة التفاعل تدريجيًا.</div>
-      <div class="rxlog" id="rxq"></div><p class="rxnote">المشهد يوضح نموذجًا بصريًا مبسطًا لسلوك الجسيمات، وليس تصويرًا حرفيًا لكل جزيء. لا تستخدم المحاكاة كتعليمات لتنفيذ تفاعلات كيميائية فعلية.</p>
+      <div class="rxlog" id="rxq"></div><p class="rxnote">الجسيمات والألوان تمثيل بصري مبسّط وليست تصويرًا حرفيًا لكل الأيونات. مؤشر التقدم يوضح مراحل العرض فقط، أما حساب كمية الناتج النظري فيظهر منفصلًا. المحاكاة ليست تعليمات لتنفيذ تفاعلات فعلية.</p>
     </div>
     <div class="rxpanel">
       <div class="rxbench">
         <div class="rxdropper" aria-hidden="true"></div>
         <div class="rxdrop" id="rxDrop" aria-hidden="true"></div>
-        <div class="rxthermo" aria-hidden="true"></div>
+        
         <div class="rxbeaker">
           <div class="rxliquid" id="rxLiquid"></div>
           <canvas id="rxParticles" aria-label="تمثيل مرئي لحركة الجسيمات داخل البيكر"></canvas>
@@ -660,14 +660,14 @@ html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){width:100%
         </div>
       </div>
       <div class="rxstatus">
-        <div class="rxstat"><small>تقدم التفاعل</small><b id="rxProgress">0%</b></div>
-        <div class="rxstat"><small>حالة النظام</small><b id="rxPhase">قبل التفاعل</b></div>
-        <div class="rxstat"><small>الراسب المتكوّن</small><b id="rxSolid">0%</b></div>
+        <div class="rxstat"><small>تقدم المحاكاة</small><b id="rxProgress">0%</b></div>
+        <div class="rxstat"><small>مرحلة العرض</small><b id="rxPhase">قبل التفاعل</b></div>
+        <div class="rxstat"><small>حالة ظهور الراسب</small><b id="rxSolid">0%</b></div>
       </div>
       <div class="rxlegend">
-        <span><i style="background:#438fca"></i>أيونات موجبة</span>
-        <span><i style="background:#e4a34b"></i>أيونات سالبة</span>
-        <span><i style="background:#e8e8e8;border:1px solid #9aa"></i>جسيمات الراسب</span>
+        <span><i id="rxIonAColor" style="background:#438fca"></i><span id="rxIonA">أيون موجب</span></span>
+        <span><i id="rxIonBColor" style="background:#e4a34b"></i><span id="rxIonB">أيون سالب</span></span>
+        <span><i style="background:#e8e8e8;border:1px solid #9aa"></i>جسيمات الراسب (تمثيل)</span>
       </div>
     </div>
   </div>
@@ -1148,11 +1148,11 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  const root=document.getElementById('rxLab'); if(!root) return;
  const $r=id=>document.getElementById(id);
  const models={
-  cu:{eq:'CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄',color:'#72a9d0',final:'#7cafd0',solid:'#b9e4f2',kind:'precip',name:'هيدروكسيد النحاس',start:'المحلول أزرق فاتح. عند إضافة أيونات الهيدروكسيد تبدأ نوى الراسب الأزرق في الظهور ثم تتجمع.',mid:'تتكون جسيمات راسب Cu(OH)₂ الأزرق وتزداد كثافتها مع استمرار الإضافة.',end:'اكتمل النموذج: راسب أزرق جيلاتيني موزع ثم يستقر تدريجيًا في قاع البيكر.'},
-  ag:{eq:'AgNO₃ + NaCl → AgCl↓ + NaNO₃',color:'#d9e4e9',final:'#d8e0e3',solid:'#f2f4f3',kind:'precip',name:'كلوريد الفضة',start:'المحلولان شفافان تقريبًا. تبدأ الأيونات في الانتشار والاختلاط.',mid:'تتحد أيونات الفضة والكلوريد لتكوين جسيمات AgCl بيضاء دقيقة.',end:'اكتمل النموذج: زادت كمية الراسب الأبيض وبدأت الجسيمات في الترسب.'},
-  lime:{eq:'CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O',color:'#dce8ee',final:'#d4dfe3',solid:'#f1f0e8',kind:'precip',name:'كربونات الكالسيوم',start:'ماء الجير شفاف في البداية. يبدأ ثاني أكسيد الكربون المذاب في الانتشار.',mid:'يتكون راسب CaCO₃ أبيض دقيق، فيظهر التعكير تدريجيًا.',end:'اكتمل النموذج: أصبح المحلول معكرًا بسبب جسيمات كربونات الكالسيوم.'},
-  acid:{eq:'H⁺ + OH⁻ → H₂O',color:'#e8b8a0',final:'#d8c8ba',solid:null,kind:'neutral',name:'ماء',start:'المحلولان في البداية منفصلان. تبدأ أيونات H⁺ وOH⁻ في الانتشار عند المزج.',mid:'تتحد أيونات الهيدروجين والهيدروكسيد لتكوين الماء، ويقترب الوسط من التعادل.',end:'اكتمل نموذج التعادل: لا يتكون راسب؛ التغير الأساسي هو استهلاك H⁺ وOH⁻.'},
-  carbonate:{eq:'CO₃²⁻ + 2H⁺ → CO₂↑ + H₂O',color:'#c9dbe5',final:'#d9e7eb',solid:null,kind:'gas',name:'ثاني أكسيد الكربون',start:'تبدأ الأيونات في الاختلاط. في هذا النموذج يتكون غاز ثاني أكسيد الكربون.',mid:'تظهر فقاعات CO₂ وتصعد خلال السائل، ويزداد معدل ظهورها مع استمرار التفاعل.',end:'اكتمل النموذج: تصاعدت الفقاعات ثم قلت مع استهلاك المتفاعلات.'}
+  cu:{eq:'CuSO₄ + 2NaOH → Cu(OH)₂↓ + Na₂SO₄',color:'#72a9d0',final:'#7cafd0',solid:'#b9e4f2',kind:'precip',ionA:'Cu²⁺',ionB:'OH⁻',name:'هيدروكسيد النحاس',start:'المحلول أزرق فاتح. عند إضافة أيونات الهيدروكسيد تبدأ نوى الراسب الأزرق في الظهور ثم تتجمع.',mid:'تتكون جسيمات راسب Cu(OH)₂ الأزرق وتزداد كثافتها مع استمرار الإضافة.',end:'اكتمل النموذج: راسب أزرق جيلاتيني موزع ثم يستقر تدريجيًا في قاع البيكر.'},
+  ag:{eq:'AgNO₃ + NaCl → AgCl↓ + NaNO₃',color:'#d9e4e9',final:'#d8e0e3',solid:'#f2f4f3',kind:'precip',ionA:'Ag⁺',ionB:'Cl⁻',name:'كلوريد الفضة',start:'المحلولان شفافان تقريبًا. تبدأ الأيونات في الانتشار والاختلاط.',mid:'تتحد أيونات الفضة والكلوريد لتكوين جسيمات AgCl بيضاء دقيقة.',end:'اكتمل النموذج: زادت كمية الراسب الأبيض وبدأت الجسيمات في الترسب.'},
+  lime:{eq:'CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O',color:'#dce8ee',final:'#d4dfe3',solid:'#f1f0e8',kind:'gas-precip',ionA:'CO₂(aq)',ionB:'Ca²⁺ / OH⁻',name:'كربونات الكالسيوم',start:'ماء الجير شفاف في البداية. يبدأ ثاني أكسيد الكربون المذاب في الانتشار.',mid:'يتكون راسب CaCO₃ أبيض دقيق، فيظهر التعكير تدريجيًا.',end:'اكتمل النموذج: أصبح المحلول معكرًا بسبب جسيمات كربونات الكالسيوم.'},
+  acid:{eq:'H⁺ + OH⁻ → H₂O',color:'#e8e8e8',final:'#e8e8e8',solid:null,kind:'neutral',ionA:'H⁺',ionB:'OH⁻',name:'ماء',start:'المحلولان في البداية منفصلان. تبدأ أيونات H⁺ وOH⁻ في الانتشار عند المزج.',mid:'تتحد أيونات الهيدروجين والهيدروكسيد لتكوين الماء، ويقترب الوسط من التعادل.',end:'اكتمل نموذج التعادل: لا يتكون راسب؛ التغير الأساسي هو استهلاك H⁺ وOH⁻.'},
+  carbonate:{eq:'CO₃²⁻ + 2H⁺ → CO₂↑ + H₂O',color:'#c9dbe5',final:'#d9e7eb',solid:null,kind:'gas',ionA:'CO₃²⁻',ionB:'H⁺',name:'ثاني أكسيد الكربون',start:'تبدأ الأيونات في الاختلاط. في هذا النموذج يتكون غاز ثاني أكسيد الكربون.',mid:'تظهر فقاعات CO₂ وتصعد خلال السائل، ويزداد معدل ظهورها مع استمرار التفاعل.',end:'اكتمل النموذج: تصاعدت الفقاعات ثم قلت مع استهلاك المتفاعلات.'}
  };
  let model=models.cu,extent=0,running=false,stir=false,last=0,raf=0,particles=[],bubbles=[],width=0,height=0;
  const canvas=$r('rxParticles'),ctx=canvas.getContext('2d');
@@ -1165,7 +1165,7 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  function seed(){
   particles=[];
   const count=70;
-  for(let i=0;i<count;i++)particles.push({x:rand(12,width-12),y:rand(height*.28,height-16),vx:rand(-.25,.25),vy:rand(-.2,.2),r:rand(2.1,4),type:i%2});
+  for(let i=0;i<count;i++)particles.push({x:rand(12,width-12),y:rand(height*.38,height-16),vx:rand(-.25,.25),vy:rand(-.2,.2),r:rand(2.1,4),type:i%2});
  }
  function addBubbles(n){for(let i=0;i<n;i++)bubbles.push({x:rand(width*.22,width*.78),y:height-rand(5,24),r:rand(2,5),v:rand(.7,1.7),a:rand(.5,1)});}
  function render(){
@@ -1173,7 +1173,7 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
   ctx.clearRect(0,0,width,height);
   const solidCount=Math.floor(extent*particles.length*.72);
   particles.forEach((p,i)=>{
-   if(i<solidCount&&model.kind==='precip'){
+   if(i<solidCount&&model.kind.includes('precip')){
     const settle=Math.max(0,extent-.28);
     p.y=Math.min(height-8,p.y+(stir?rand(-.5,.6):settle*.12));
     if(!stir)p.x+=(width/2-p.x)*.002;
@@ -1182,14 +1182,14 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
     p.x+=p.vx*(stir?2.8:1);p.y+=p.vy*(stir?2.4:1);
     if(stir){p.vx+=rand(-.12,.12);p.vy+=rand(-.12,.12)}
     if(p.x<5||p.x>width-5)p.vx*=-1;
-    if(p.y<height*.24||p.y>height-8)p.vy*=-1;
+    if(p.y<height*.36||p.y>height-8)p.vy*=-1;
     p.vx=Math.max(-.7,Math.min(.7,p.vx));p.vy=Math.max(-.55,Math.min(.55,p.vy));
     ctx.fillStyle=p.type?'#e4a34b':'#438fca';
    }
    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-   if(i<solidCount&&model.kind==='precip'){ctx.stroke();ctx.fill()}
+   if(i<solidCount&&model.kind.includes('precip')){ctx.stroke();ctx.fill()}
   });
-  if(model.kind==='gas'&&extent>.06&&running&&Math.random()<.45)addBubbles(1);
+  if(model.kind.includes('gas')&&extent>.06&&running&&Math.random()<.45)addBubbles(1);
   bubbles.forEach(b=>{
    b.y-=b.v*(stir?1.15:1);b.x+=Math.sin((b.y+b.r)*.04)*.25;
    ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.strokeStyle=`rgba(255,255,255,${b.a})`;ctx.lineWidth=1.3;ctx.stroke();
@@ -1197,17 +1197,17 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
   bubbles=bubbles.filter(b=>b.y>-8);
  }
  function status(){
-  const pct=Math.round(extent*100),phase=extent===0?'قبل التفاعل':extent<.28?'بداية التفاعل':extent<.82?'التفاعل مستمر':'اكتمل النموذج';
+  const pct=Math.round(extent*100),phase=extent===0?'قبل الإضافة':extent<.28?'بداية العرض':extent<.82?'المشهد مستمر':'اكتمل العرض';
   $r('rxProgress').textContent=pct+'%';$r('rxPhase').textContent=phase;
-  $r('rxSolid').textContent=(model.kind==='precip'?pct:0)+'%';
+  $r('rxSolid').textContent=model.kind.includes('precip')?(extent<.08?'لم يظهر':extent<.75?'يتكوّن':'ظهر'):'لا يتكوّن';
   $r('rxLiquid').style.setProperty('--rx-liquid',extent>.15?model.final:model.color);
-  $r('rxLiquid').style.height=(65+Math.min(8,extent*8))+'%';
+  $r('rxLiquid').style.height='65%';
   $r('rxEquation').textContent=model.eq;
   const log=extent===0?model.start:extent<.3?model.start:extent<.82?model.mid:model.end;
   $r('rxLog').innerHTML='<b>'+(extent===0?'قبل الإضافة:':extent<.82?'أثناء التفاعل:':'النتيجة النهائية:')+'</b> '+log;
  }
  function step(amount){
-  extent=Math.min(1,extent+amount);if(model.kind==='gas')addBubbles(Math.ceil(amount*20));
+  extent=Math.min(1,extent+amount);if(model.kind.includes('gas'))addBubbles(Math.ceil(amount*20));
   $r('rxDrop').classList.remove('fall');void $r('rxDrop').offsetWidth;$r('rxDrop').classList.add('fall');
   status();render();
   if(extent>=1)pause();
@@ -1229,7 +1229,9 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
   $r('rxDrop').classList.remove('fall');
  }
  function choose(){
-  model=models[$r('rxChoice').value];$r('rxLiquid').style.setProperty('--rx-liquid',model.color);reset();
+  model=models[$r('rxChoice').value];$r('rxLiquid').style.setProperty('--rx-liquid',model.color);
+  $r('rxIonA').textContent=model.ionA||'أيون موجب';$r('rxIonB').textContent=model.ionB||'أيون سالب';
+  $r('rxIonAColor').style.background='#438fca';$r('rxIonBColor').style.background='#e4a34b';reset();
  }
  $r('rxChoice').addEventListener('change',choose);
  $r('rxAdd').addEventListener('click',()=>{pause();step(.13)});
@@ -1238,8 +1240,8 @@ $('#pm2').onclick=()=>{$('#mi').value=s;mm();scrollTo(0,0)}};
  $r('rxReset').addEventListener('click',reset);
  $r('rxStir').addEventListener('click',()=>{stir=!stir;$r('rxStir').setAttribute('aria-pressed',String(stir));$r('rxStir').textContent=stir?'⟳ إيقاف التقليب':'⟳ تشغيل التقليب';render()});
  if('ResizeObserver' in window)new ResizeObserver(resize).observe(canvas.parentElement);else window.addEventListener('resize',resize);
- const QM={cu:['CuSO₄','NaOH',1,2,97.5,'Cu(OH)₂',.1,50,.1,50],ag:['AgNO₃','NaCl',1,1,143.5,'AgCl',.1,50,.1,50],acid:['HCl','NaOH',1,1,18,'H₂O',.1,50,.1,50],carbonate:['Na₂CO₃','HCl',1,2,44,'CO₂',.1,25,.1,50]};
-function qcalc(){const k=$r('rxChoice').value,m=QM[k],q=$r('rxq');if(!m){q.dataset.k='';q.innerHTML='<b>🧮 الحسابات:</b> متاحة لنماذج الراسب والتعادل والكربونات.';return}
+ const QM={cu:['CuSO₄','NaOH',1,2,97.5,'Cu(OH)₂',.1,50,.1,50],ag:['AgNO₃','NaCl',1,1,143.5,'AgCl',.1,50,.1,50],lime:['CO₂','Ca(OH)₂',1,1,100.09,'CaCO₃',.1,50,.1,50],acid:['HCl','NaOH',1,1,18,'H₂O',.1,50,.1,50],carbonate:['Na₂CO₃','HCl',1,2,44,'CO₂',.1,25,.1,50]};
+function qcalc(){const k=$r('rxChoice').value,m=QM[k],q=$r('rxq');if(!m){q.dataset.k='';q.innerHTML='<b>🧮 الحسابات:</b> أدخل التركيز والحجم لحساب المادة المحددة وكتلة الناتج النظري.';return}
 if(q.dataset.k!==k){q.dataset.k=k;const I=(id,v)=>`<input id="${id}" type="number" step="any" min="0" value="${v}" style="width:5em">`;q.innerHTML=`<b>🧮 احسب قبل ما تجرّب</b><br>${m[0]}: ${I('qc1',m[6])} M × ${I('qv1',m[7])} mL<br>${m[1]}: ${I('qc2',m[8])} M × ${I('qv2',m[9])} mL<div id="qo2" style="margin-top:6px"></div>`;q.querySelectorAll('input').forEach(i=>i.oninput=qcalc)}
 const g=id=>+$r(id).value,a=g('qc1')*g('qv1')/1e3,b=g('qc2')*g('qv2')/1e3,x=Math.min(a/m[2],b/m[3]),A=a/m[2]<=b/m[3];
 $r('qo2').innerHTML=x>0?`المادة المحددة: <b>${A?m[0]:m[1]}</b><br>${m[5]} الناتج: <b>${(x*m[4]).toFixed(3)} g</b> (${x.toFixed(4)} mol)<br>المتبقي من ${A?m[1]:m[0]}: ${(A?b-x*m[3]:a-x*m[2]).toFixed(4)} mol`:'أدخل قيمًا موجبة.'}
