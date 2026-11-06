@@ -1316,10 +1316,7 @@ o.innerHTML=`<b>المجهول: ${nmz[k]}</b><br>القانون: ${L('Mₐ·Vₐ
 <script>
 /* ===== Chemistry AI Assistant ===== */
 (function(){
-/* ضع مفتاح الـ API هنا (Gemini يبدأ بـ AIza، أو OpenAI يبدأ بـ sk-). اتركه فارغًا لتشغيل الردود المدمجة.
-   تنبيه: أي مفتاح داخل ملف HTML يظهر لكل من يفتح الموقع؛ استخدم مفتاحًا محدود الحصة أو وسيطًا (proxy). */
-const API_KEY = "";
-const SYSTEM_PROMPT = "أنت «مساعد كريم إبراهيم لتدريس الكيمياء لتالتة ثانوي». اشرح بأسلوب مبسط بالعامية المصرية الواضحة، واعتمد على قوانين ومفاهيم كتاب وزارة التربية والتعليم المصري. في المسائل اكتب المعطيات ثم القانون ثم خطوات الحل مرقمة ثم الناتج بالوحدة. اكتب الصيغ الكيميائية بالإنجليزية داخل `` مثل `H2O`. اختصر ولا تخرج عن نطاق الكيمياء.";
+/* مفاتيح مزودي الذكاء الاصطناعي لا توضع في HTML؛ تُضاف لاحقًا كـ Cloudflare Secrets. */
 const $=id=>document.getElementById(id);
 const fab=$('aiFab'),dr=$('aiDrawer'),box=$('aiMsgs'),inp=$('aiIn'),send=$('aiSend');
 const SUB='₀₁₂₃₄₅₆₇₈₉';
@@ -1423,21 +1420,17 @@ for(const [re,a] of KB) if(re.test(q)) return a;
 - الكيمياء العضوية
 ولو عندك مسألة اكتب معطياتها وهساعدك في خطواتها.`;
 }
-/* ---------- الاتصال بالـ API ---------- */
+/* ---------- الاتصال الآمن عبر Cloudflare ---------- */
 const hist=[];
 async function ask(q){
- const key=(API_KEY||'').trim();
- if(!key) return {t:local(q),local:true};
  try{
-  if(key.startsWith('AIza')){
-   const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:SYSTEM_PROMPT}]},contents:hist.concat([{role:'user',parts:[{text:q}]}]).slice(-12)})});
-   if(!r.ok) throw Error(r.status);const d=await r.json();
-   const t=d.candidates[0].content.parts.map(p=>p.text||'').join('');hist.push({role:'user',parts:[{text:q}]},{role:'model',parts:[{text:t}]});return {t};
-  }
-  const msgs=[{role:'system',content:SYSTEM_PROMPT}].concat(hist.slice(-10),[{role:'user',content:q}]);
-  const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'gpt-4o-mini',messages:msgs})});
-  if(!r.ok) throw Error(r.status);const d=await r.json();const t=d.choices[0].message.content;
-  hist.push({role:'user',content:q},{role:'assistant',content:t});return {t};
+  const r=await fetch('/api/ai/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history:hist.slice(-10)})});
+  const d=await r.json();
+  if(r.status===503)return {t:local(q),local:true};
+  if(!r.ok)throw Error(d.error||'تعذر الاتصال بالمساعد.');
+  const t=String(d.reply||'').trim();if(!t)throw Error('لم يصل رد من المساعد.');
+  hist.push({role:'user',content:q},{role:'assistant',content:t});
+  return {t};
  }catch(e){return {t:local(q),local:true,err:true}}
 }
 /* ---------- الواجهة ---------- */
@@ -1450,7 +1443,7 @@ async function submit(q){
  ty.innerHTML=md(r.t)+(r.err?'<p><small>تعذر الاتصال بالخدمة، فاستخدمت الردود المدمجة.</small></p>':'');box.scrollTop=box.scrollHeight;send.disabled=false;inp.focus();
 }
 ['💡 اشرح لي فكرة ماء التبلر','⚖️ كيف أوازن معادلة أكسدة الحديد؟','🧪 ما دليل المعايرة المناسب لحمض قوي وقاعدة ضعيفة؟'].forEach(t=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=()=>submit(t);$('aiChips').appendChild(b)});
-$('aiNote').textContent=API_KEY?'متصل بالذكاء الاصطناعي. راجع الإجابات مع كتاب الوزارة.':'يعمل الآن بالردود المدمجة (بدون مفتاح API). راجع الإجابات مع كتاب الوزارة.';
+$('aiNote').textContent='يعمل الآن بالردود المدمجة. عند إضافة مفتاح API كـ Cloudflare Secret سيتصل المساعد بالخدمة بأمان. راجع الإجابات مع كتاب الوزارة.';
 function toggle(o){dr.classList.toggle('on',o);fab.setAttribute('aria-expanded',o);if(o){if(!box.children.length)add('b',md(HELLO));setTimeout(()=>inp.focus(),50)}}
 fab.onclick=()=>toggle(!dr.classList.contains('on'));$('aiClose').onclick=()=>toggle(false);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false)});
@@ -1594,7 +1587,7 @@ async function loadAdminQuestions(){
   const response=await fetch('/api/questions/active',{credentials:'same-origin'});
   if(!response.ok)return;
   const data=await response.json();
-  const questions=(data.questions||[]).map(q=>['M',q.question,(q.options||[]).map(x=>String(x)),Number(q.correct_answer),q.explanation||'']);
+  const questions=(data.questions||[]).map(q=>['M',q.question,(q.options||[]).map(x=>String(x)),null,'',q.id]);
   if(questions.length)CH.push({id:99,ic:'✦',t:'أسئلة إضافية من المدرّس',q:questions});
  }catch(_){}
 }
@@ -1609,11 +1602,19 @@ function home(){
  $('bqCards').innerHTML=CH.map(c=>{const r=b[c.id];return `<button class="card bqc" data-c="${c.id}"><span class="bqi">${c.ic}</span><b>${c.t}</b><small>${c.q.length} سؤالًا${r?` · أفضل نتيجة ${r.best}%`:''}</small></button>`}).join('');
  $('bqCards').querySelectorAll('button').forEach(x=>x.onclick=()=>start(+x.dataset.c));
 }
-function start(id){
+async function start(id){
  if(quizTimer){clearInterval(quizTimer);quizTimer=null}
  const c=CH.find(x=>x.id===id),requested=$('bqCount').value,count=requested==='all'?c.q.length:Math.min(+requested,c.q.length);
  const selected=shuffle(c.q.map((q,index)=>({q,index}))).slice(0,count);
- S={c,i:0,pick:[],qs:selected.map(({q})=>{const [t,stem,o,a,e]=q,idx=shuffle(o.map((_,i)=>i));return {t,q:stem,o:idx.map(i=>o[i]),a:idx.indexOf(a),e}}),timed:$('bqTimed').checked,seconds:count*60};
+ let attemptId=null;
+ if(id===99){
+  try{
+   const response=await fetch('/api/questions/start',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({question_ids:selected.map(({q})=>q[5])})});
+   const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر بدء الاختبار.');
+   attemptId=data.attempt_id;
+  }catch(error){alert(error.message);return}
+ }
+ S={c,i:0,pick:[],attemptId,qs:selected.map(({q})=>{const [t,stem,o,a,e,serverId]=q,idx=shuffle(o.map((_,i)=>i));return {t,q:stem,o:idx.map(i=>o[i]),a:serverId?null:idx.indexOf(a),e,serverId,serverOrder:idx}}),timed:$('bqTimed').checked,seconds:count*60};
  $('bqSel').hidden=true;$('bqRun').hidden=false;$('bqRes').hidden=true;$('bqQ').hidden=false;draw();
  if(S.timed){$('bqTimer').hidden=false;const tick=()=>{if(!S)return;const m=Math.floor(S.seconds/60),sec=S.seconds%60;$('bqTimer').textContent='⏱ '+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');if(S.seconds<=0){clearInterval(quizTimer);quizTimer=null;finish(true);return}S.seconds--};tick();quizTimer=setInterval(tick,1000)}else $('bqTimer').hidden=true;
 }
@@ -1628,8 +1629,18 @@ function draw(){
  const ex=$('bqEx');ex.hidden=p==null;if(p!=null)ex.innerHTML=`<b>${p===q.a?'✅ إجابة صحيحة':'❌ إجابة خاطئة'} — تفسير وتوضيح علمي:</b><br>${R(q.e)}`;
  $('bqPrev').disabled=S.i===0;const last=S.i===n-1;$('bqNext').textContent=last?'إنهاء وعرض النتيجة':'السؤال التالي ◂';$('bqNext').disabled=p==null&&!last?true:(last&&done<n);
 }
-function answer(i){
- if(S.pick[S.i]!=null)return;S.pick[S.i]=i;const ok=i===S.qs[S.i].a;
+async function answer(i){
+ if(S.pick[S.i]!=null)return;
+ const current=S.qs[S.i];
+ if(current.serverId){
+  const buttons=$('bqOpts').querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
+  try{
+   const response=await fetch('/api/questions/answer',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({attempt_id:S.attemptId,question_id:current.serverId,answer_index:current.serverOrder[i]})});
+   const data=await response.json();if(!response.ok)throw new Error(data.error||'تعذر تصحيح الإجابة.');
+   current.a=current.serverOrder.indexOf(Number(data.correct_answer));current.e=data.explanation||'';
+  }catch(error){buttons.forEach(b=>b.disabled=false);alert(error.message);return}
+ }
+ S.pick[S.i]=i;const ok=i===current.a;
  const st=rd(SK,{attempts:0,correct:0,streak:0,bestStreak:0});
  st.attempts=(st.attempts||0)+1;if(ok){st.correct=(st.correct||0)+1;st.streak=(st.streak||0)+1}else st.streak=0;
  st.bestStreak=Math.max(st.bestStreak||0,st.streak);st.lastStudy=new Date().toLocaleDateString('sv');wr(SK,st);
