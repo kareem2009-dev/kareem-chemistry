@@ -500,6 +500,35 @@ input[type=search],select,textarea{border-radius:15px}
  .card,.btn,.tg,.chips button,.tabs button,nav a{transition:none}
  .card:hover,.btn:hover,.tg:hover,.chips button:hover,.tabs button:hover{transform:none}
 }
+
+/* Unified student tools: search, notifications, personalization */
+.header-tools{display:flex;align-items:center;gap:7px}
+.header-tool{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:700 1rem Tajawal,sans-serif;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.header-tool:hover{transform:translateY(-2px);border-color:var(--tq)}
+.site-dialog{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(3,9,20,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.site-dialog.open{display:flex;animation:dialogFade .2s ease}
+.site-dialog-panel{width:min(620px,100%);max-height:min(82vh,760px);overflow:auto;padding:22px;border:1px solid var(--line);border-radius:24px;background:var(--card);color:var(--ink);box-shadow:0 24px 90px #0005}
+.site-dialog-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.site-dialog-head h3{font-size:1.25rem}
+.site-dialog-close{width:36px;height:36px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);color:var(--ink);font-size:1.25rem;cursor:pointer}
+#globalSearchInput{width:100%;max-width:none;padding:14px 16px;border:1px solid var(--line);border-radius:15px;background:var(--bg2);color:var(--ink);font:inherit}
+.global-search-results{display:grid;gap:8px;margin-top:14px}
+.global-search-result{display:block;width:100%;padding:13px 15px;text-align:right;border:1px solid var(--line);border-radius:14px;background:var(--bg2);color:var(--ink);font:inherit;cursor:pointer}
+.global-search-result b{display:block;color:var(--tq);margin-bottom:3px}
+.global-search-result small{display:block;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notice-item{padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg2);margin:8px 0}
+.notice-item b{display:block;color:var(--tq);margin-bottom:3px}
+.notice-item p{color:var(--mute);margin:0;font-size:.92rem}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
+.setting-row:last-child{border:0}
+.setting-row select{max-width:160px}
+body.compact-mode .card,body.compact-mode .hubtile{padding:14px}
+body.compact-mode .grid{gap:10px}
+body.reduce-site-motion .view.on{animation:none}
+@keyframes dialogFade{from{opacity:0}to{opacity:1}}
+@media(max-width:700px){.header-tools{margin-inline-start:auto}.header-tool{width:38px;height:38px;border-radius:12px}.site-dialog-panel{padding:16px}}
+@media(prefers-reduced-motion:reduce){.header-tool,.site-dialog.open{animation:none;transition:none}}
+
 </style>
 </head>
 <body>
@@ -587,6 +616,11 @@ input[type=search],select,textarea{border-radius:15px}
 <a class="logo" href="#home"><img class="av" alt="صورة KAREEM IBRAHIM"><span><b>KAREEM IBRAHIM</b><small>كيمياء الثانوية العامة</small></span></a>
 <nav aria-label="الأقسام"><a href="#home">الرئيسية</a><a href="#equations">المعادلات</a><a href="#labs">المعمل التفاعلي</a><a href="#calc">🧮 حاسبة</a><a href="#bank">📝 بنك الأسئلة</a><a href="#tools">✨ أدوات ذكية</a><a href="#sheet">📄 ملخص القوانين</a><a href="#student">لوحة الطالب</a></nav>
 <button class="tg" id="tg" aria-label="تبديل الوضع الليلي والنهاري">◐</button>
+<div class="header-tools" aria-label="أدوات الموقع">
+<button class="header-tool" id="globalSearchOpen" type="button" aria-label="بحث شامل" title="بحث شامل">⌕</button>
+<button class="header-tool" id="noticeOpen" type="button" aria-label="مركز الإشعارات" title="مركز الإشعارات">♧</button>
+<button class="header-tool" id="siteSettingsOpen" type="button" aria-label="تخصيص الموقع" title="تخصيص الموقع">⚙</button>
+</div>
 </header>
 <main class="wrap">
 
@@ -2391,5 +2425,100 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
  document.addEventListener('visibilitychange',function(){if(document.hidden)cancelAnimationFrame(raf);else if(auto)raf=requestAnimationFrame(frame);});
 })();
 </script>
+
+<script id="studentExperienceTools">
+(function(){
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const safeRead=(key,fallback)=>{try{const v=localStorage.getItem(key);return v==null?fallback:JSON.parse(v)}catch(_){return fallback}};
+ const safeWrite=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));return true}catch(_){return false}};
+ function makeDialog(id,title,body){
+  let node=$(id);if(node)return node;
+  node=document.createElement('div');node.id=id;node.className='site-dialog';node.setAttribute('role','presentation');
+  const panel=document.createElement('section');panel.className='site-dialog-panel';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby',id+'Title');
+  const head=document.createElement('div');head.className='site-dialog-head';
+  const h=document.createElement('h3');h.id=id+'Title';h.textContent=title;
+  const close=document.createElement('button');close.className='site-dialog-close';close.type='button';close.textContent='×';close.setAttribute('aria-label','إغلاق');
+  head.append(h,close);panel.append(head,body);node.append(panel);document.body.append(node);
+  close.addEventListener('click',()=>node.classList.remove('open'));
+  node.addEventListener('click',e=>{if(e.target===node)node.classList.remove('open')});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')node.classList.remove('open')});
+  return node;
+ }
+ const searchBody=document.createElement('div');
+ const searchInput=document.createElement('input');searchInput.id='globalSearchInput';searchInput.type='search';searchInput.placeholder='ابحث عن درس، معادلة، عنصر، أداة أو سؤال...';searchInput.setAttribute('aria-label','بحث في كل الموقع');
+ const searchResults=document.createElement('div');searchResults.className='global-search-results';searchResults.setAttribute('aria-live','polite');
+ searchBody.append(searchInput,searchResults);
+ const searchDialog=makeDialog('globalSearchDialog','البحث الشامل في الموقع',searchBody);
+ function collectSearchItems(){
+  return Array.from(document.querySelectorAll('main.wrap .view')).flatMap(view=>{
+   const section=view.id.replace(/^v-/,'');
+   return Array.from(view.querySelectorAll('h2,h3,.card,.hubtile,.f,button')).map(el=>{
+    const text=(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
+    if(text.length<3||text.length>900)return null;
+    return {section,title:(el.matches('h2,h3')?text:(el.querySelector('h3,h2')?.textContent||text.slice(0,85))),text,element:el};
+   }).filter(Boolean);
+  });
+ }
+ let searchItems=[];
+ function renderSearch(){
+  const q=searchInput.value.trim().toLocaleLowerCase('ar');
+  searchResults.textContent='';
+  if(!q){const hint=document.createElement('p');hint.className='student-muted';hint.textContent='اكتب كلمة أو جزءًا من اسم الموضوع لعرض النتائج من أقسام الموقع.';searchResults.append(hint);return}
+  const found=searchItems.filter(x=>(x.title+' '+x.text).toLocaleLowerCase('ar').includes(q)).slice(0,10);
+  if(!found.length){const empty=document.createElement('p');empty.className='student-muted';empty.textContent='ملقيناش نتيجة مطابقة. جرّب كلمة أبسط أو صيغة مختلفة.';searchResults.append(empty);return}
+  found.forEach(item=>{
+   const b=document.createElement('button');b.type='button';b.className='global-search-result';
+   const title=document.createElement('b');title.textContent=item.title;
+   const detail=document.createElement('small');detail.textContent=item.text.slice(0,170);
+   b.append(title,detail);b.addEventListener('click',()=>{
+    const hash='#'+item.section;if(location.hash!==hash)history.pushState({view:item.section},' ',hash);
+    if(typeof window.route==='function')window.route(item.section);else{document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+item.section));}
+    searchDialog.classList.remove('open');
+    requestAnimationFrame(()=>{if(item.element&&item.element.isConnected)item.element.scrollIntoView({behavior:document.body.classList.contains('reduce-site-motion')?'auto':'smooth',block:'center'})});
+   });searchResults.append(b);
+  });
+ }
+ searchInput.addEventListener('input',renderSearch);
+ $('globalSearchOpen')?.addEventListener('click',()=>{searchItems=collectSearchItems();searchDialog.classList.add('open');searchInput.focus();renderSearch()});
+ const noticeBody=document.createElement('div');
+ const noticeDialog=makeDialog('noticeDialog','مركز إشعارات الطالب',noticeBody);
+ function renderNotices(){
+  noticeBody.textContent='';
+  const stats=safeRead('kareemStudentStats',{}),tasks=safeRead('kareemStudentTasks',{});
+  const today=new Date().toLocaleDateString('sv');
+  const done=tasks.date===today?Object.values(tasks.items||{}).filter(Boolean).length:0;
+  const notices=[];
+  if(!(stats.attempts>0))notices.push(['ابدأ أول تدريب','حل مجموعة أسئلة من بنك الأسئلة علشان يبدأ سجل تقدمك في الظهور.']);
+  else if((stats.attempts-stats.correct)>0)notices.push(['مراجعة ذكية','راجع الأسئلة اللي أخطأت فيها من نتائج آخر اختبار وثبّت المعلومة.']);
+  if(done<5)notices.push(['خطة مذاكرة اليوم','أنجزت '+done+' من 5 مهام. ارجع للوحة الطالب وكمل خطتك براحتك.']);
+  if(stats.lastStudy&&stats.lastStudy!==today)notices.push(['وقت مراجعة خفيفة','آخر نشاط مذاكرة مسجل كان في يوم سابق؛ جلسة مراجعة قصيرة هتساعدك تستعيد تركيزك.']);
+  notices.push(['تلميحة المنصة','تقدمك وملاحظاتك محفوظة محليًا على هذا الجهاز؛ استخدم النسخ الاحتياطي للاحتفاظ بنسخة منها.']);
+  notices.forEach(([title,desc])=>{const item=document.createElement('article');item.className='notice-item';const b=document.createElement('b');b.textContent=title;const p=document.createElement('p');p.textContent=desc;item.append(b,p);noticeBody.append(item)});
+ }
+ $('noticeOpen')?.addEventListener('click',()=>{renderNotices();noticeDialog.classList.add('open')});
+ const settingsBody=document.createElement('div');
+ const themeRow=document.createElement('label');themeRow.className='setting-row';const themeText=document.createElement('span');themeText.textContent='مظهر الموقع';const themeSelect=document.createElement('select');themeSelect.innerHTML='<option value="system">حسب الجهاز</option><option value="light">فاتح</option><option value="dark">داكن</option>';themeRow.append(themeText,themeSelect);
+ const compactRow=document.createElement('label');compactRow.className='setting-row';const compactText=document.createElement('span');compactText.textContent='عرض مدمج للكروت';const compactCheck=document.createElement('input');compactCheck.type='checkbox';compactRow.append(compactText,compactCheck);
+ const motionRow=document.createElement('label');motionRow.className='setting-row';const motionText=document.createElement('span');motionText.textContent='تقليل الحركات والمؤثرات';const motionCheck=document.createElement('input');motionCheck.type='checkbox';motionRow.append(motionText,motionCheck);
+ settingsBody.append(themeRow,compactRow,motionRow);
+ const settingsDialog=makeDialog('siteSettingsDialog','تخصيص تجربة الموقع',settingsBody);
+ const prefs=safeRead('kareemExperiencePrefs',{theme:'system',compact:false,reduceMotion:false});
+ themeSelect.value=prefs.theme;compactCheck.checked=!!prefs.compact;motionCheck.checked=!!prefs.reduceMotion;
+ function applyPrefs(){
+  const p={theme:themeSelect.value,compact:compactCheck.checked,reduceMotion:motionCheck.checked};
+  document.documentElement.dataset.theme=p.theme==='system'?'':p.theme;
+  document.body.classList.toggle('compact-mode',p.compact);
+  document.body.classList.toggle('reduce-site-motion',p.reduceMotion);
+  safeWrite('kareemExperiencePrefs',p);
+  if(p.theme==='system'){try{localStorage.removeItem('kareemTheme')}catch(_){}}
+  else safeWrite('kareemTheme',p.theme);
+ }
+ themeSelect.addEventListener('change',applyPrefs);compactCheck.addEventListener('change',applyPrefs);motionCheck.addEventListener('change',applyPrefs);
+ applyPrefs();
+ $('siteSettingsOpen')?.addEventListener('click',()=>settingsDialog.classList.add('open'));
+})();
+</script>
+
 </body>
 </html>
