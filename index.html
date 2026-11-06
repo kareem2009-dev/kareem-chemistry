@@ -777,6 +777,49 @@ body.reduce-site-motion .hero::before{animation:none}
  border-color:rgba(210,225,235,.12)!important
 }
 </style>
+<style id="soft-glass-palette">
+/* Quiet, desaturated accents with translucent glass surfaces */
+:root{
+ --gold:#82969a!important;
+ --signature-gold:#a9bdc0!important;
+ --signature-gold-glow:rgba(142,174,178,.10)!important;
+}
+:root[data-theme="dark"]{
+ --gold:#91a8ac!important;
+ --signature-gold:#b5c8ca!important;
+ --signature-gold-glow:rgba(145,180,184,.12)!important;
+}
+/* Replace bright solid accent surfaces with soft frosted glass */
+.btn.p,.hot,#aiSend,.welcome-shell #welcomeStart{
+ color:var(--ink)!important;
+ background:rgba(145,169,174,.15)!important;
+ border:1px solid rgba(145,169,174,.28)!important;
+ box-shadow:0 8px 24px rgba(30,55,65,.06),inset 0 1px 0 rgba(255,255,255,.34)!important;
+ backdrop-filter:blur(18px) saturate(125%)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(125%)!important
+}
+:root[data-theme="dark"] .btn.p,
+:root[data-theme="dark"] .hot,
+:root[data-theme="dark"] #aiSend,
+:root[data-theme="dark"] .welcome-shell #welcomeStart{
+ color:#e7eff0!important;
+ background:rgba(150,177,182,.10)!important;
+ border-color:rgba(170,195,199,.17)!important;
+ box-shadow:0 8px 24px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.07)!important
+}
+.btn.p:hover,#aiSend:hover,.welcome-shell #welcomeStart:hover{
+ background:rgba(145,169,174,.23)!important;
+ border-color:rgba(145,169,174,.38)!important
+}
+#welcomeIntro{
+ background:radial-gradient(ellipse at 18% 18%,rgba(145,169,174,.10),transparent 34%),radial-gradient(ellipse at 88% 82%,rgba(145,169,174,.07),transparent 30%),#080e19!important
+}
+.ad-orbit{
+ border-color:rgba(160,184,188,.28)!important;
+ color:#a9bdc0!important;
+ box-shadow:0 0 0 14px rgba(145,169,174,.025),0 0 36px rgba(145,169,174,.06)!important
+}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
