@@ -2089,7 +2089,7 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
    var current=focusStatus.textContent.trim();if(!current||focusStatus.dataset.humorFor===current)return;
    focusStatus.dataset.humorFor=current;var old=focusStatus.querySelector('.humor-note');if(old)old.remove();
    var line=/انتهت جلسة/.test(current)?'جلسة كاملة اتقفلت بنجاح! تستاهل راحة قصيرة 👏':/شغالة/.test(current)?timeLine():/متوقف/.test(current)?'خد نفس وارجع لما تكون جاهز؛ مفيش استعجال.':null;
-   if(line)addNote(focusStatus,line);
+   if(line)addNote(focusStatus,line);if(window.refreshHumorAchievements)window.refreshHumorAchievements();
   });
   focusObserver.observe(focusStatus,{childList:true,characterData:true,subtree:true});
  }
@@ -2112,11 +2112,11 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
    var host=document.getElementById('humorBadges');if(!host)return;host.textContent='';
    all.forEach(function(a){var item=document.createElement('div');item.className='humor-badge'+(a[3]?' earned':'');var icon=document.createElement('span');icon.textContent=a[0];var title=document.createElement('b');title.textContent=a[1];var desc=document.createElement('small');desc.textContent=a[2];var state=document.createElement('em');state.textContent=a[3]?'مفتوحة':'لسه مقفولة';item.append(icon,title,desc,state);host.appendChild(item)});
   }
+  window.refreshHumorAchievements=renderAchievements;
   renderAchievements();
   var achievementObserver=new MutationObserver(renderAchievements);
   ['stAttempts','stCorrect','stStreak','studentTaskCount'].forEach(function(id){var node=document.getElementById(id);if(node)achievementObserver.observe(node,{childList:true,characterData:true,subtree:true})});
   window.addEventListener('storage',renderAchievements);
-  var oldFocus=localStorage.getItem('kareemFocusCompleted');window.setInterval(function(){if(localStorage.getItem('kareemFocusCompleted')!==oldFocus){oldFocus=localStorage.getItem('kareemFocusCompleted');renderAchievements()}},5000);
  }
 
  var qf=document.getElementById('qf');
