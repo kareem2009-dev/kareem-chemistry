@@ -852,6 +852,37 @@ body.reduce-site-motion .hero::before{animation:none}
 #tabs button:focus-visible{outline:2px solid var(--gold) !important;outline-offset:3px}
 </style>
 
+<style id="equation-filter-visibility-fix">
+/* Keep the selected equation chapter filter readable in both themes */
+#chips button{
+  color:var(--ink) !important;
+  background:rgba(255,255,255,.34) !important;
+  border:1px solid rgba(105,128,140,.30) !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-shadow:none !important;
+}
+#chips button[aria-pressed="true"]{
+  color:#263b46 !important;
+  background:rgba(126,151,160,.30) !important;
+  border:1px solid rgba(91,119,132,.72) !important;
+  box-shadow:0 0 0 1px rgba(126,151,160,.16),0 6px 18px rgba(20,35,48,.12),inset 0 1px rgba(255,255,255,.62) !important;
+  opacity:1 !important;
+  filter:none !important;
+}
+:root[data-theme="dark"] #chips button{
+  color:#e8eff4 !important;
+  background:rgba(14,25,39,.48) !important;
+  border-color:rgba(190,210,225,.24) !important;
+}
+:root[data-theme="dark"] #chips button[aria-pressed="true"]{
+  color:#f4f8fb !important;
+  background:rgba(145,168,172,.28) !important;
+  border-color:rgba(145,168,172,.72) !important;
+  box-shadow:0 0 0 1px rgba(145,168,172,.16),0 7px 20px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.12) !important;
+}
+#chips button:focus-visible{outline:2px solid #82969a !important;outline-offset:3px}
+</style>
 </head>
 <body>
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
