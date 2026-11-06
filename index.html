@@ -808,9 +808,6 @@ const kind=p=>p<6.95?'محلول حمضي':p>7.05?'محلول قلوي':'محل�
 const sci=v=>{const[m,e]=v.toExponential(2).split('e');return m+'×10<sup>'+(+e)+'</sup>'};
 
 /* hero */
-flask($('#hf'),'h');
-$('#hp').oninput=e=>{const p=+e.target.value;paint($('#hf'),p);$('#ho').textContent='pH = '+p.toFixed(1)+' — '+kind(p)};
-$('#hp').oninput({target:$('#hp')});
 
 /* equations */
 const U={c1:'العناصر الانتقالية',c2:'التحليل الكيميائي',c3:'الاتزان الكيميائي',c4:'الكيمياء الكهربية',c5:'الكيمياء العضوية'};
