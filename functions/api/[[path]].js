@@ -133,7 +133,7 @@ export async function onRequest({request,env}){
    }
    if(path==="admin/questions"&&(request.method==="POST"||request.method==="PUT")){
     const b=await body(request),title=String(b.title||"").trim(),chapter=String(b.chapter||"").trim(),question=String(b.question||"").trim(),explanation=String(b.explanation||"").trim(),options=Array.isArray(b.options)?b.options.map(x=>String(x).trim()).filter(Boolean):[],correct_answer=Number(b.correct_answer);
-    if(title.length<3||title.length>160||chapter.length>80||question.length<5||question.length>3000||options.length<2||options.length>6||options.some(x=>x.length>500)||!Number.isInteger(correct_answer)||correct_answer<0||correct_answer>=options.length||explanation.length>2000)return json({error:"راجع السؤال والاختيارات وحدد إجابة صحيحة."},400);
+    if(title.length<3||title.length>160||chapter.length<3||chapter.length>80||question.length<5||question.length>3000||options.length<2||options.length>6||options.some(x=>x.length>500)||new Set(options.map(x=>x.toLocaleLowerCase())).size!==options.length||!Number.isInteger(correct_answer)||correct_answer<0||correct_answer>=options.length||explanation.length<15||explanation.length>2000)return json({error:"راجع عنوان السؤال والباب ونص السؤال والاختيارات، واكتب تفسيرًا علميًا لا يقل عن 15 حرفًا وحدد الإجابة الصحيحة."},400);
     const record={title,chapter,difficulty:["سهل","متوسط","صعب"].includes(b.difficulty)?b.difficulty:"متوسط",question,options,correct_answer,explanation,enabled:b.enabled!==false,updated_at:new Date().toISOString()};
     if(request.method==="POST"){
      const rows=await sb(c.url+"/rest/v1/admin_questions",c.service,{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify(record)});
