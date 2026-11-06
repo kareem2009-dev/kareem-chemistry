@@ -155,18 +155,18 @@ export async function onRequest({request,env}){
    const blocked=await limited(request,c,"ai-chat:"+session.user.id,20,600);if(blocked)return blocked;
    const b=await body(request),message=String(b.message||"").trim();
    if(!message||message.length>4000)return json({error:"اكتب سؤالًا لا يتجاوز 4000 حرف."},400);
-   const history=Array.isArray(b.history)?b.history.slice(-10).filter(x=>x&&["user","assistant"].includes(x.role)&&typeof x.content==="string").map(x=>({role:x.role,content:x.content.slice(0,4000)})):[];
+   const history=Array.isArray(b.history)?b.history.slice(-6).filter(x=>x&&["user","assistant"].includes(x.role)&&typeof x.content==="string").map(x=>({role:x.role,content:x.content.slice(0,2500)})):[];
    const system="أنت مساعد كريم إبراهيم لتدريس الكيمياء للصف الثالث الثانوي في مصر. اشرح بالعامية المصرية الواضحة، واذكر المعطيات والقانون وخطوات الحل والوحدة في المسائل. اكتب الصيغ الكيميائية بوضوح، ولا تخترع معلومة عند عدم التأكد. التزم بالكيمياء والمنهج الدراسي.";
    if(env.GEMINI_API_KEY){
     const contents=history.map(x=>({role:x.role==="assistant"?"model":"user",parts:[{text:x.content}]}));
     contents.push({role:"user",parts:[{text:message}]});
-    const primaryBody={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{thinkingConfig:{thinkingLevel:"low"}}};
-    let response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify(primaryBody)});
+    const primaryBody={systemInstruction:{parts:[{text:system}]},contents,generationConfig:{maxOutputTokens:1000}};
+    let response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify(primaryBody)});
     let raw=await response.text();
     let data={};try{data=raw?JSON.parse(raw):{}}catch(_){data={}};
     if(response.status===503){
-     console.warn("[ai/chat] Gemini primary model overloaded; trying Flash-Lite fallback");
-     response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents})});
+     console.warn("[ai/chat] Flash-Lite overloaded; trying Gemini Flash fallback");
+     response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":env.GEMINI_API_KEY},body:JSON.stringify({systemInstruction:{parts:[{text:system}]},contents,generationConfig:{maxOutputTokens:1000,thinkingConfig:{thinkingLevel:"low"}}})});
      raw=await response.text();
      data={};try{data=raw?JSON.parse(raw):{}}catch(_){data={}};
     }
