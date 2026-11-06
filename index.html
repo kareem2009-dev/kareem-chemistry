@@ -1991,6 +1991,27 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
 .humor-badge.earned{opacity:1;border-color:color-mix(in srgb,var(--tq) 55%,var(--line));background:color-mix(in srgb,var(--tq) 9%,var(--card))}
 .humor-badge.earned>span{filter:none}
 
+
+/* Desktop-only pointer aura */
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .desktop-cursor-aura {
+    position: fixed;
+    z-index: 9998;
+    left: 0;
+    top: 0;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0);
+    background: radial-gradient(circle, rgba(46, 220, 197, .15) 0%, rgba(46, 220, 197, .075) 32%, rgba(216, 177, 91, .035) 54%, transparent 72%);
+    filter: blur(9px);
+    transition: opacity .22s ease;
+    will-change: transform, opacity;
+  }
+  .desktop-cursor-aura.is-visible { opacity: 1; }
+}
 </style>
 
 <script id="balancedHumorSystem">
@@ -2148,5 +2169,28 @@ Object.assign(details,{znCu:['خلية دانيال الجلفانية','Zn(s)+C
 })();
 </script>
 
+
+<script id="desktopCursorAura">
+(function(){
+  var media=window.matchMedia&&window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 768px) and (prefers-reduced-motion: no-preference)');
+  if(!media||!media.matches)return;
+  var aura=document.createElement('div');
+  aura.className='desktop-cursor-aura';
+  aura.setAttribute('aria-hidden','true');
+  document.body.appendChild(aura);
+  var visible=false;
+  window.addEventListener('pointermove',function(event){
+    if(event.pointerType==='touch')return;
+    aura.style.transform='translate3d('+event.clientX+'px,'+event.clientY+'px,0) translate(-50%,-50%)';
+    if(!visible){visible=true;aura.classList.add('is-visible');}
+  },{passive:true});
+  document.addEventListener('pointerleave',function(){
+    visible=false;aura.classList.remove('is-visible');
+  });
+  window.addEventListener('blur',function(){
+    visible=false;aura.classList.remove('is-visible');
+  });
+})();
+</script>
 </body>
 </html>
