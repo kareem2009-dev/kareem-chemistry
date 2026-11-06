@@ -502,12 +502,12 @@ html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){width:100%
      <form id="adminQuestionForm">
       <input type="hidden" id="questionId">
       <label>عنوان السؤال<input id="questionTitle" required maxlength="160" placeholder="مثال: خواص عناصر الفئة s"></label>
-      <label>الباب / الفصل<input id="questionChapter" maxlength="80" placeholder="الباب الأول"></label>
+      <label>الباب / الفصل<input id="questionChapter" required minlength="3" maxlength="80" placeholder="الباب الأول"></label>
       <label>مستوى الصعوبة<select id="questionDifficulty"><option>سهل</option><option selected>متوسط</option><option>صعب</option></select></label>
       <label>نص السؤال<textarea id="questionText" required maxlength="3000" rows="3"></textarea></label>
       <label>الاختيارات (كل اختيار في سطر منفصل)<textarea id="questionOptions" required rows="4" placeholder="الاختيار الأول&#10;الاختيار الثاني&#10;الاختيار الثالث&#10;الاختيار الرابع"></textarea></label>
       <label>رقم الإجابة الصحيحة<select id="questionCorrect"><option value="0">الأول</option><option value="1">الثاني</option><option value="2">الثالث</option><option value="3">الرابع</option><option value="4">الخامس</option><option value="5">السادس</option></select></label>
-      <label>تفسير الإجابة (اختياري)<textarea id="questionExplanation" rows="2" maxlength="2000"></textarea></label>
+      <label>تفسير الإجابة (مطلوب للطالب)<textarea id="questionExplanation" required minlength="15" rows="3" maxlength="2000" placeholder="اشرح سبب صحة الإجابة باختصار..."></textarea></label>
       <div class="ad-form-actions"><button class="ad-btn primary" type="submit">حفظ السؤال</button><button class="ad-btn" type="button" id="cancelQuestion">إلغاء</button></div>
      </form>
     </div>
