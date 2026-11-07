@@ -1,5 +1,5 @@
-const CACHE='kareem-chemistry-v3';
-const CORE=['./','./index.html','./KAREEM_chemistry_lab_complete.html','./manifest.webmanifest','./chemistry-icon.svg'];
+const CACHE='kareem-chemistry-v4';
+const CORE=['./','./index.html','./manifest.webmanifest','./chemistry-icon.svg'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(
