@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d13">
+<meta name="description" content="تجربة KAREEM CHEMISTRY المخصصة للموبايل">
+<link rel="manifest" href="./mobile.webmanifest">
+<link rel="icon" href="./chemistry-icon.svg" type="image/svg+xml">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>KAREEM CHEMISTRY — Mobile</title>
+<style>
+:root{color-scheme:dark;--bg:#090b11;--panel:#121620;--panel2:#171c28;--line:rgba(207,211,229,.11);--ink:#f1f2f8;--muted:#9ba2b5;--violet:#aaa0bd;--teal:#75c9bd;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg);scroll-behavior:smooth}body{margin:0;min-height:100vh;padding:calc(16px + var(--safe-top)) 17px calc(92px + var(--safe-bottom));font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:var(--ink);background:radial-gradient(ellipse at 88% 0%,rgba(119,105,148,.17),transparent 38%),radial-gradient(ellipse at 0% 40%,rgba(64,130,128,.08),transparent 35%),var(--bg)}
+button,a{font:inherit}a{color:inherit;text-decoration:none}.shell{max-width:620px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:11px;direction:ltr}.brand img{width:43px;height:43px;border-radius:14px;border:1px solid var(--line);background:#101722}.brand b{display:block;font-size:13px;letter-spacing:.13em}.brand small{display:block;color:var(--muted);font-size:11px;direction:rtl;letter-spacing:0}.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.035);color:var(--ink);display:grid;place-items:center}
+.eyebrow{color:var(--teal);font-size:11px;letter-spacing:.16em;font-weight:700}.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:27px;padding:25px 22px 23px;background:linear-gradient(135deg,rgba(137,128,158,.17),rgba(24,31,43,.75) 55%,rgba(29,70,69,.17));box-shadow:0 18px 50px rgba(0,0,0,.18)}.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(190,183,209,.12);border-radius:50%;left:-66px;top:-95px;box-shadow:0 0 0 22px rgba(190,183,209,.025),0 0 0 46px rgba(190,183,209,.02);pointer-events:none}.hero h1{font-size:clamp(25px,7vw,34px);line-height:1.35;margin:10px 0 8px;max-width:13em}.hero p{margin:0;color:#b4bac9;font-size:13px;line-height:1.9;max-width:30em}.hero-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.primary,.secondary{border-radius:13px;padding:11px 15px;font-size:12px;font-weight:700;border:1px solid var(--line)}.primary{background:var(--ink);color:#10131b}.secondary{background:rgba(255,255,255,.045);color:var(--ink)}
+.section-head{display:flex;align-items:end;justify-content:space-between;margin:27px 2px 13px}.section-head h2{font-size:17px;margin:0}.section-head span{font-size:11px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.tile{min-height:130px;border:1px solid var(--line);border-radius:20px;padding:16px;background:linear-gradient(155deg,rgba(255,255,255,.055),rgba(255,255,255,.018));display:flex;flex-direction:column;justify-content:space-between;transition:transform .18s ease,border-color .18s ease}.tile:active{transform:scale(.98)}.tile .glyph{width:37px;height:37px;border-radius:13px;display:grid;place-items:center;background:rgba(170,160,189,.13);color:#d0c8df}.tile:nth-child(2n) .glyph{background:rgba(117,201,189,.12);color:#9be0d5}.tile b{font-size:14px}.tile small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.tile.wide{grid-column:1/-1;min-height:94px;flex-direction:row;align-items:center}.tile.wide .glyph{flex:none}.tile.wide .tile-copy{flex:1;margin-right:13px}.arrow{color:var(--muted);font-size:18px}
+.install-note{margin-top:18px;padding:15px 16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025);display:flex;align-items:center;gap:12px}.install-note p{margin:0;flex:1;color:var(--muted);font-size:11px;line-height:1.8}.install-note b{display:block;color:var(--ink);font-size:12px}.install-note button{border:0;background:rgba(117,201,189,.15);color:#a9e5dc;border-radius:11px;padding:9px 11px;font-size:11px;font-weight:700;white-space:nowrap}
+.bottom{position:fixed;z-index:5;bottom:0;left:0;right:0;padding:10px 15px calc(10px + var(--safe-bottom));background:rgba(10,12,18,.88);border-top:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.bottom-inner{max-width:620px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.bottom a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:10px;padding:5px 2px}.bottom svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.bottom a.active{color:#b9afca}
+footer{text-align:center;color:#71798b;font-size:10px;margin:22px 0 0}
+@media(min-width:700px){body{padding-top:28px}.hero{padding:34px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tile.wide{grid-column:span 2}.bottom{border:1px solid var(--line);border-radius:20px;left:50%;right:auto;transform:translateX(-50%);bottom:16px;width:min(620px,calc(100% - 30px));padding-bottom:10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+<a class="brand" href="./mobile.html" aria-label="الرئيسية"><img src="./chemistry-icon.svg" alt=""><span><b>KAREEM CHEMISTRY</b><small>تجربة الموبايل</small></span></a>
+<button class="icon-btn" id="themeButton" type="button" aria-label="تغيير المظهر" title="تغيير المظهر">◐</button>
+</header>
+<main>
+<section class="hero">
+<div class="eyebrow">YOUR CHEMISTRY SPACE</div>
+<h1>الكيمياء أقرب…<br>وتجربتها أسهل.</h1>
+<p>مساحة مذاكرة تفاعلية مصممة للموبايل، تجمع أدوات الكيمياء والمعمل والمراجعة في مكان واحد.</p>
+<div class="hero-actions">
+<a class="primary" href="./index.html#labs">ابدأ التجربة <span aria-hidden="true">↗</span></a>
+<a class="secondary" href="./index.html#equations">مكتبة المعادلات</a>
+</div>
+</section>
+<div class="section-head"><h2>مساحتك الدراسية</h2><span>اختار وابدأ</span></div>
+<section class="grid" aria-label="أقسام المنصة">
+<a class="tile" href="./index.html#labs"><span class="glyph">⚗</span><span><b>المعمل التفاعلي</b><small>جرّب وشاهد التفاعلات</small></span></a>
+<a class="tile" href="./index.html#equations"><span class="glyph">⌘</span><span><b>المعادلات</b><small>ابحث وراجع المعادلات</small></span></a>
+<a class="tile" href="./index.html#flashcards"><span class="glyph">▤</span><span><b>كروت المراجعة</b><small>اختبر ذاكرتك</small></span></a>
+<a class="tile" href="./index.html#bank"><span class="glyph">✎</span><span><b>بنك الأسئلة</b><small>تدرب على أسئلة المنهج</small></span></a>
+<a class="tile" href="./index.html#calc"><span class="glyph">∑</span><span><b>الحاسبات</b><small>أدوات الحساب الكيميائي</small></span></a>
+<a class="tile" href="./index.html#sheet"><span class="glyph">▧</span><span><b>ملخص القوانين</b><small>القوانين في مكان واحد</small></span></a>
+<a class="tile wide" href="./index.html#student"><span class="glyph">◎</span><span class="tile-copy"><b>مساحة الطالب</b><small>افتح حسابك وتابع أدواتك الدراسية</small></span><span class="arrow">←</span></a>
+</section>
+<section class="install-note" id="installCard">
+<p><b>ثبّت التطبيق على موبايلك</b><span id="installHelp">افتح قائمة المتصفح واختر «إضافة إلى الشاشة الرئيسية» لو خيار التثبيت مش ظاهر.</span></p>
+<button id="installButton" type="button" hidden>تثبيت</button>
+</section>
+</main>
+<footer>KAREEM CHEMISTRY · GRAPHITE TITANIUM</footer>
+</div>
+<nav class="bottom" aria-label="التنقل السريع"><div class="bottom-inner">
+<a class="active" href="./mobile.html"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>الرئيسية</span></a>
+<a href="./index.html#labs"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/></svg><span>المعمل</span></a>
+<a href="./index.html#flashcards"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>المراجعة</span></a>
+<a href="./index.html#student"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>حسابي</span></a>
+</div></nav>
+<script>
+let installPrompt=null;
+const installButton=document.getElementById('installButton');
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;installButton.hidden=false});
+installButton.addEventListener('click',async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;installButton.hidden=true});
+window.addEventListener('appinstalled',()=>{installButton.hidden=true;document.getElementById('installHelp').textContent='تم تثبيت التطبيق على جهازك.'});
+document.getElementById('themeButton').addEventListener('click',()=>{document.body.classList.toggle('light');const light=document.body.classList.contains('light');document.documentElement.style.colorScheme=light?'light':'dark';document.body.style.setProperty('--bg',light?'#eef0f5':'#090b11');document.body.style.setProperty('--ink',light?'#151923':'#f1f2f8');document.body.style.setProperty('--panel',light?'#fff':'#121620');document.body.style.setProperty('--muted',light?'#5d6575':'#9ba2b5');});
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+</script>
+</body>
+</html>
