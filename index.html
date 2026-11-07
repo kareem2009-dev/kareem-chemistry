@@ -1004,14 +1004,25 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 
 
 <style id="review-flashcards-visibility-fix">
-/* Keep the answer genuinely hidden until the learner flips the card. */
-#v-flashcards .review-face[hidden]{display:none!important}
-#v-flashcards .review-flip{transform-style:preserve-3d;transition:transform .58s cubic-bezier(.2,.72,.2,1),border-color .2s,background .2s}
-#v-flashcards .review-flip>*{backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .58s cubic-bezier(.2,.72,.2,1)}
-#v-flashcards .review-flip.is-flipped{transform:rotateY(180deg)}
-#v-flashcards .review-flip.is-flipped>*{transform:rotateY(180deg)}
+/* Two real faces on one 3D stage: the answer is behind the question, not removed from layout. */
+#v-flashcards .review-flip{
+ position:relative;display:flex;flex-direction:column;align-items:stretch;gap:13px;
+ min-height:218px;box-sizing:border-box;transform-style:preserve-3d;
+ transition:transform .62s cubic-bezier(.2,.72,.2,1),border-color .2s,background .2s;
+}
+#v-flashcards .review-flip:hover:not(.is-flipped){transform:translateY(-2px)}
+#v-flashcards .review-card-top{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+#v-flashcards .review-stage{position:relative;display:block;flex:1;min-height:142px;transform-style:preserve-3d}
+#v-flashcards .review-stage .review-face{
+ position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:10px;
+ backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+#v-flashcards .review-stage .review-front{transform:rotateY(0deg)}
+#v-flashcards .review-stage .review-back{transform:rotateY(180deg)}
+#v-flashcards .review-flip.is-flipped{transform:rotateY(180deg);border-color:color-mix(in srgb,var(--gold) 58%,var(--line))}
 #v-flashcards .review-flip:focus-visible{outline-offset:4px}
-@media(prefers-reduced-motion:reduce){#v-flashcards .review-flip,#v-flashcards .review-flip>*{transition:none!important}}
+@media(max-width:650px){#v-flashcards .review-flip{min-height:195px}#v-flashcards .review-stage{min-height:120px}}
+@media(prefers-reduced-motion:reduce){#v-flashcards .review-flip{transition:none!important}#v-flashcards .review-flip:hover:not(.is-flipped){transform:none}}
 </style>
 </head>
 <body>
@@ -1561,15 +1572,15 @@ renderEq();
   const list=cards.filter(card=>(chapter.value==='all'||card.chapter===chapter.value)&&(type.value==='all'||card.type===type.value)&&(!term||nz(card.front+' '+card.back).includes(term)));
   count.textContent=list.length+' كارت';
   empty.hidden=list.length>0;
-  grid.innerHTML=list.map(card=>'<article class="review-card" data-card="'+card.id+'"><button class="review-flip" type="button" aria-expanded="false" aria-label="اكشف إجابة: '+esc(card.front)+'"><span class="review-card-top"><span>'+chapterNames[card.chapter]+'</span><span>'+card.type+'</span></span><span class="review-face review-front"><small>السؤال</small><strong>'+esc(card.front)+'</strong><em>اضغط لكشف الإجابة</em></span><span class="review-face review-back" hidden><small>الإجابة</small><strong>'+esc(card.back).replace(/\n/g,'<br>')+'</strong><em>اضغط للعودة للسؤال</em></span></button></article>').join('');
+  grid.innerHTML=list.map(card=>'<article class="review-card" data-card="'+card.id+'"><button class="review-flip" type="button" aria-expanded="false" aria-label="اكشف إجابة: '+esc(card.front)+'"><span class="review-card-top"><span>'+chapterNames[card.chapter]+'</span><span>'+card.type+'</span></span><span class="review-stage"><span class="review-face review-front" aria-hidden="false"><small>السؤال</small><strong>'+esc(card.front)+'</strong><em>اضغط لكشف الإجابة</em></span><span class="review-face review-back" aria-hidden="true"><small>الإجابة</small><strong>'+esc(card.back).replace(/\n/g,'<br>')+'</strong><em>اضغط للعودة للسؤال</em></span></span></button></article>').join('');
  }
  grid.addEventListener('click',e=>{
   const btn=e.target.closest('.review-flip');if(!btn)return;
   const open=btn.getAttribute('aria-expanded')==='true';
   btn.setAttribute('aria-expanded',String(!open));
   btn.classList.toggle('is-flipped',!open);
-  btn.querySelector('.review-front').hidden=!open;
-  btn.querySelector('.review-back').hidden=open;
+  btn.querySelector('.review-front').setAttribute('aria-hidden',String(!open));
+  btn.querySelector('.review-back').setAttribute('aria-hidden',String(open));
   btn.setAttribute('aria-label',open?'اكشف إجابة: '+btn.querySelector('.review-front strong').textContent:'اعرض السؤال مرة أخرى');
  });
  search.addEventListener('input',render);chapter.addEventListener('change',render);type.addEventListener('change',render);
