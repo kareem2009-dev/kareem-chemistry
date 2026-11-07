@@ -1,4 +1,4 @@
-const CACHE='kareem-chemistry-mobile-v5';
+const CACHE='kareem-chemistry-mobile-v6';
 const CORE=['./','./index.html','./mobile.html','./mobile.webmanifest','./manifest.webmanifest','./chemistry-icon.svg'];
 
 self.addEventListener('install',event=>{
