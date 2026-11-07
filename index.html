@@ -673,6 +673,7 @@ nav a[aria-current]{
 }
 body.reduce-site-motion .hero::before{animation:none}
 
+.mobile-entry{display:inline-flex;align-items:center;white-space:nowrap;padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:var(--mute);text-decoration:none;font-size:12px;font-weight:700}
 </style>
 
 <style id="premium-header-tools">
@@ -1067,6 +1068,18 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 }
 </style>
 
+<script>
+/* Device-aware entry: keep desktop as-is and route phones to the dedicated mobile PWA. */
+(function(){
+  try {
+    var params=new URLSearchParams(location.search);
+    var isMobile=window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+    if(isMobile && !params.has('desktop') && !params.has('stay')){
+      location.replace('./mobile.html'+(location.hash||''));
+    }
+  } catch (_) {}
+})();
+</script>
 </head>
 <body>
 
@@ -1159,6 +1172,7 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 <header>
 <a class="logo" href="#home"><img class="av" alt="صورة KAREEM IBRAHIM"><span><b>KAREEM IBRAHIM</b><small>كيمياء الثانوية العامة</small></span></a>
 <nav aria-label="الأقسام"><a href="#home">الرئيسية</a><a href="#equations">المعادلات</a><a href="#flashcards">كروت المراجعة</a><a href="#labs">المعمل التفاعلي</a><a href="#calc">🧮 حاسبة</a><a href="#bank">📝 بنك الأسئلة</a><a href="#tools">✨ أدوات ذكية</a><a href="#sheet">📄 ملخص القوانين</a><a href="#student">لوحة الطالب</a></nav>
+<a class="mobile-entry" href="./mobile.html" aria-label="افتح نسخة الموبايل">نسخة الموبايل ↗</a>
 <div class="header-actions" aria-label="أدوات سريعة">
 <button class="header-tool" id="globalSearchOpen" type="button" aria-label="البحث العام" title="البحث العام">
 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg><span>بحث عام</span>
