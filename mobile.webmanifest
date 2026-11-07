@@ -1,0 +1,22 @@
+{
+  "id": "./mobile.html",
+  "name": "KAREEM CHEMISTRY — Mobile",
+  "short_name": "Kareem Chem",
+  "description": "تجربة كيمياء تفاعلية مخصصة للموبايل",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./mobile.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090b11",
+  "theme_color": "#090b11",
+  "icons": [
+    {
+      "src": "./chemistry-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
