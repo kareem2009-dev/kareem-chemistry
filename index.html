@@ -1003,6 +1003,16 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 </style>
 
 
+<style id="review-flashcards-visibility-fix">
+/* Keep the answer genuinely hidden until the learner flips the card. */
+#v-flashcards .review-face[hidden]{display:none!important}
+#v-flashcards .review-flip{transform-style:preserve-3d;transition:transform .58s cubic-bezier(.2,.72,.2,1),border-color .2s,background .2s}
+#v-flashcards .review-flip>*{backface-visibility:hidden;-webkit-backface-visibility:hidden;transition:transform .58s cubic-bezier(.2,.72,.2,1)}
+#v-flashcards .review-flip.is-flipped{transform:rotateY(180deg)}
+#v-flashcards .review-flip.is-flipped>*{transform:rotateY(180deg)}
+#v-flashcards .review-flip:focus-visible{outline-offset:4px}
+@media(prefers-reduced-motion:reduce){#v-flashcards .review-flip,#v-flashcards .review-flip>*{transition:none!important}}
+</style>
 </head>
 <body>
 
@@ -1557,8 +1567,10 @@ renderEq();
   const btn=e.target.closest('.review-flip');if(!btn)return;
   const open=btn.getAttribute('aria-expanded')==='true';
   btn.setAttribute('aria-expanded',String(!open));
+  btn.classList.toggle('is-flipped',!open);
   btn.querySelector('.review-front').hidden=!open;
   btn.querySelector('.review-back').hidden=open;
+  btn.setAttribute('aria-label',open?'اكشف إجابة: '+btn.querySelector('.review-front strong').textContent:'اعرض السؤال مرة أخرى');
  });
  search.addEventListener('input',render);chapter.addEventListener('change',render);type.addEventListener('change',render);
  render();
