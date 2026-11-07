@@ -674,7 +674,7 @@ nav a[aria-current]{
 body.reduce-site-motion .hero::before{animation:none}
 
 .mobile-entry{display:inline-flex;align-items:center;white-space:nowrap;padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:var(--mute);text-decoration:none;font-size:12px;font-weight:700}
-</style>
+.mobile-return{display:none;align-items:center;justify-content:center;padding:8px 11px;border:1px solid var(--line);border-radius:12px;color:var(--mute);text-decoration:none;font-size:12px;font-weight:700;white-space:nowrap}\n</style>
 
 <style id="premium-header-tools">
 .header-actions{display:flex;align-items:center;gap:9px;padding:5px;border:1px solid color-mix(in srgb,var(--line) 75%,transparent);border-radius:19px;background:color-mix(in srgb,var(--card) 76%,transparent);box-shadow:0 8px 24px #0715250c,inset 0 1px 0 #ffffff30;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
@@ -1073,6 +1073,7 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 (function(){
   try {
     var params=new URLSearchParams(location.search);
+    if(params.has('mobile'))document.documentElement.classList.add('mobile-native');
     var isMobile=window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
     if(isMobile && !params.has('desktop') && !params.has('stay')){
       location.replace('./mobile.html'+(location.hash||''));
@@ -1080,6 +1081,48 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
   } catch (_) {}
 })();
 </script>
+<style id="native-mobile-lab-css">
+/* Native mobile treatment for the existing chemistry engines. */
+html.mobile-native{color-scheme:dark;scroll-behavior:auto}
+html.mobile-native body{overflow-x:hidden;background:var(--bg);overscroll-behavior-y:contain}
+html.mobile-native header{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;margin:0;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 5px 18px #0002}
+html.mobile-native header .logo{min-width:0}
+html.mobile-native header nav,html.mobile-native .header-actions{display:none!important}
+html.mobile-native .mobile-return{display:inline-flex}
+html.mobile-native .wrap{width:100%;max-width:760px;padding:14px 13px 38px;margin:0 auto}
+html.mobile-native .view.on{animation:none;filter:none}
+html.mobile-native #v-equations h2,html.mobile-native #v-labs>h2{font-size:1.45rem;margin:8px 2px 14px}
+html.mobile-native #q{display:block;width:100%;max-width:none;min-height:48px;border-radius:14px}
+html.mobile-native #v-equations .chips{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding:3px 1px 10px;margin:12px 0;scrollbar-width:thin}
+html.mobile-native #v-equations .chips button{flex:0 0 auto;min-height:42px;padding:9px 14px}
+html.mobile-native #v-equations .grid{grid-template-columns:minmax(0,1fr);gap:10px}
+html.mobile-native #v-equations .card{padding:15px;border-radius:16px;min-width:0}
+html.mobile-native #v-equations .f{font-size:1.05rem;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+html.mobile-native #v-labs .tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding:3px 1px 10px;margin:10px 0 16px;scrollbar-width:thin}
+html.mobile-native #v-labs .tabs button{flex:0 0 auto;min-height:43px;padding:9px 14px}
+html.mobile-native #v-labs .lab.on{display:grid;grid-template-columns:minmax(0,1fr);gap:11px;animation:none}
+html.mobile-native #v-labs .card{padding:15px;border-radius:16px;min-width:0}
+html.mobile-native #v-labs .btns,html.mobile-native #v-labs .rxbuttons,html.mobile-native #v-labs .organic-actions{display:flex;flex-wrap:wrap;gap:8px}
+html.mobile-native #v-labs .btn{min-height:43px;padding:10px 13px;margin:0;font-size:.92rem}
+html.mobile-native #v-labs select,html.mobile-native #v-labs input[type=range]{min-height:43px}
+html.mobile-native #v-labs .rxgrid{grid-template-columns:minmax(0,1fr);gap:10px}
+html.mobile-native #v-labs .rxpanel{padding:13px;border-radius:15px}
+html.mobile-native #v-labs .rxbench{min-height:285px}
+html.mobile-native #v-labs .rxbeaker{height:238px;width:min(270px,78%);margin-top:28px}
+html.mobile-native #v-labs .rxstatus{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+html.mobile-native #v-labs .rxstat{padding:9px 6px;min-width:0}
+html.mobile-native #v-labs .rxstat small{font-size:.68rem}
+html.mobile-native #v-labs .organic-controls{grid-template-columns:minmax(0,1fr);gap:10px}
+html.mobile-native #v-labs .organic-stage{height:290px;min-height:250px;max-height:360px;border-radius:16px;box-shadow:none}
+html.mobile-native #v-labs .organic-info{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+html.mobile-native #v-labs .organic-info>div{padding:11px;box-shadow:none}
+html.mobile-native #v-labs .organic-hint{backdrop-filter:none;-webkit-backdrop-filter:none}
+html.mobile-native .hero::before,html.mobile-native #bg,html.mobile-native #homeParticles{display:none!important}
+html.mobile-native .card,html.mobile-native .rxpanel{box-shadow:none}
+html.mobile-native button,html.mobile-native a,input,html.mobile-native select{touch-action:manipulation}
+@media(max-width:380px){html.mobile-native .wrap{padding-inline:10px}html.mobile-native #v-labs .rxstatus{grid-template-columns:1fr}html.mobile-native #v-labs .rxstat{display:flex;justify-content:space-between;align-items:center}}
+@media(prefers-reduced-motion:reduce){html.mobile-native *,html.mobile-native *:before,html.mobile-native *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
 <body>
 
@@ -1171,6 +1214,7 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 </div>
 <header>
 <a class="logo" href="#home"><img class="av" alt="صورة KAREEM IBRAHIM"><span><b>KAREEM IBRAHIM</b><small>كيمياء الثانوية العامة</small></span></a>
+<a class="mobile-return" href="./mobile.html" aria-label="العودة لواجهة الموبايل">← الرئيسية</a>
 <nav aria-label="الأقسام"><a href="#home">الرئيسية</a><a href="#equations">المعادلات</a><a href="#flashcards">كروت المراجعة</a><a href="#labs">المعمل التفاعلي</a><a href="#calc">🧮 حاسبة</a><a href="#bank">📝 بنك الأسئلة</a><a href="#tools">✨ أدوات ذكية</a><a href="#sheet">📄 ملخص القوانين</a><a href="#student">لوحة الطالب</a></nav>
 <a class="mobile-entry" href="./mobile.html" aria-label="افتح نسخة الموبايل">نسخة الموبايل ↗</a>
 <div class="header-actions" aria-label="أدوات سريعة">
@@ -1921,7 +1965,7 @@ Object.assign(models,{
  const rand=(a,b)=>a+Math.random()*(b-a);
  function blendHex(a,b,t){const h=x=>[parseInt(x.slice(1,3),16),parseInt(x.slice(3,5),16),parseInt(x.slice(5,7),16)],A=h(a),B=h(b),v=A.map((n,i)=>Math.round(n+(B[i]-n)*Math.max(0,Math.min(1,t))));return '#'+v.map(n=>n.toString(16).padStart(2,'0')).join('')}
  function resize(){
-  const box=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+  const box=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,document.documentElement.classList.contains('mobile-native')?1.25:2);
   width=box.width;height=box.height;canvas.width=Math.max(1,Math.round(width*dpr));canvas.height=Math.max(1,Math.round(height*dpr));
   ctx.setTransform(dpr,0,0,dpr,0,0);seed();
  }
@@ -3109,8 +3153,8 @@ body.reduce-site-motion #homeParticles{display:none}
  benzene:{name:'البنزين',formula:'C₆H₆',bond:'روابط متبادلة/إلكترونات π غير متمركزة',shape:'حلقة سداسية مستوية',atoms:[],bonds:[]}
  };
  for(var k=0;k<6;k++){var a=k*Math.PI/3;models.benzene.atoms.push(['C',Math.cos(a),Math.sin(a),0]);models.benzene.atoms.push(['H',1.65*Math.cos(a),1.65*Math.sin(a),0]);models.benzene.bonds.push([2*k,2*((k+1)%6),1],[2*k,2*k+1,1]);}
- var selected='methane',style='ball',rx=-.35,ry=.65,zoom=1,auto=true,drag=null,raf=0,last=0,w=0,h=0,dpr=1;
- function resize(){var r=canvas.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);w=Math.max(1,r.width);h=Math.max(1,r.height);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw();}
+ var selected='methane',style='ball',rx=-.35,ry=.65,zoom=1,auto=!document.documentElement.classList.contains('mobile-native'),drag=null,raf=0,last=0,w=0,h=0,dpr=1;
+ function resize(){var r=canvas.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,document.documentElement.classList.contains('mobile-native')?1.25:2);w=Math.max(1,r.width);h=Math.max(1,r.height);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw();}
  function rotate(p){var x=p[0],y=p[1],z=p[2],c=Math.cos(ry),s=Math.sin(ry),x1=x*c-z*s,z1=x*s+z*c,cy=Math.cos(rx),sy=Math.sin(rx);return [x1,y*cy-z1*sy,y*sy+z1*cy];}
  function draw(){
   if(!w||!h)return;ctx.clearRect(0,0,w,h);
@@ -3175,7 +3219,7 @@ body.reduce-site-motion #homeParticles{display:none}
  ['pointerup','pointercancel','lostpointercapture'].forEach(function(n){canvas.addEventListener(n,function(){drag=null;});});
  canvas.addEventListener('wheel',function(e){e.preventDefault();zoom=Math.max(.55,Math.min(2.2,zoom*(e.deltaY<0?1.08:.92)));draw();},{passive:false});
  if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);
- setModel();resize();if(auto)raf=requestAnimationFrame(frame);
+ setModel();resize();if(auto)raf=requestAnimationFrame(frame);else $('organicRotate').textContent='▶ تشغيل الدوران';
  document.addEventListener('visibilitychange',function(){if(document.hidden)cancelAnimationFrame(raf);else if(auto)raf=requestAnimationFrame(frame);});
 })();
 </script>
