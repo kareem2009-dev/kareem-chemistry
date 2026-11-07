@@ -1067,6 +1067,18 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 }
 </style>
 
+<script>
+/* Device-aware entry: keep desktop as-is and route phones to the dedicated mobile PWA. */
+(function(){
+  try {
+    var params=new URLSearchParams(location.search);
+    var isMobile=window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+    if(isMobile && !params.has('desktop') && !params.has('stay')){
+      location.replace('./mobile.html'+(location.hash||''));
+    }
+  } catch (_) {}
+})();
+</script>
 </head>
 <body>
 
