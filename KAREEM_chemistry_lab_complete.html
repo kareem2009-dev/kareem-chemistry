@@ -809,7 +809,7 @@ a.x=(a.x+a.vx+w)%w;a.y=(a.y+a.vy+h)%h;x.fillStyle=x.strokeStyle=C[a.k];x.globalA
 if(a.k===1){x.globalAlpha=.35;x.beginPath();x.arc(a.x,a.y,a.r+4,0,7);x.stroke()}
 for(let j=i+1;j<A.length;j++){const e=Math.hypot(a.x-A[j].x,a.y-A[j].y);if(e<115){x.globalAlpha=(1-e/115)*.5;x.strokeStyle=C[0];x.beginPath();x.moveTo(a.x,a.y);x.lineTo(A[j].x,A[j].y);x.stroke()}}
 if(d<170){x.globalAlpha=(1-d/170)*.7;x.strokeStyle=C[1];x.beginPath();x.moveTo(a.x,a.y);x.lineTo(mx,my);x.stroke()}})}
-addEventListener('resize',()=>{rs();draw()});rs();
+addEventListener('resize',()=>{rs();draw()});addEventListener('kareem:performance',()=>{rs();draw()});rs();
 let heroRAF=0;
 function stopHero(){if(heroRAF){cancelAnimationFrame(heroRAF);heroRAF=0}}
 function startHero(){if(rm||document.hidden||!$('#v-home').classList.contains('on')||heroRAF)return;let lastDraw=0;const loop=now=>{if(document.hidden||!$('#v-home').classList.contains('on')){heroRAF=0;return}const limit=window.__KAREEM_PERF?.fpsLimit||60;if(!lastDraw||now-lastDraw>=1000/limit){draw();lastDraw=now}heroRAF=requestAnimationFrame(loop)};heroRAF=requestAnimationFrame(loop)}
