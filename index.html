@@ -673,6 +673,44 @@ nav a[aria-current]{
 }
 body.reduce-site-motion .hero::before{animation:none}
 
+/* Mobile auth viewport correction */
+@media(max-width:800px){
+ html:has(#loginGate:not([hidden])),body:has(#loginGate:not([hidden])){
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  overflow:hidden!important;margin:0!important;
+ }
+ #loginGate:not([hidden]){
+  position:fixed!important;inset:0!important;inset-inline:0!important;
+  width:100%!important;max-width:none!important;height:100vh!important;height:100dvh!important;
+  margin:0!important;padding:0!important;box-sizing:border-box!important;
+  overflow:hidden!important;transform:none!important;
+ }
+ #loginGate:not([hidden]) .gate-card{
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  align-items:stretch!important;gap:0!important;
+  width:100%!important;max-width:none!important;min-width:0!important;
+  height:100%!important;min-height:100%!important;max-height:none!important;
+  margin:0!important;padding:clamp(16px,4vw,24px)!important;
+  border:0!important;border-radius:0!important;box-sizing:border-box!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+ }
+ #loginGate:not([hidden]) #gateForms,
+ #loginGate:not([hidden]) #gateAuthHeader,
+ #loginGate:not([hidden]) #authForms,
+ #loginGate:not([hidden]) #registerForm,
+ #loginGate:not([hidden]) #loginForm,
+ #loginGate:not([hidden]) #authMessage{
+  width:100%!important;max-width:560px!important;min-width:0!important;
+  margin-inline:auto!important;box-sizing:border-box!important;
+ }
+ #loginGate:not([hidden]) #registerForm input:not([type=checkbox]),
+ #loginGate:not([hidden]) #loginForm input:not([type=checkbox]){
+  width:100%!important;min-width:0!important;max-width:100%!important;
+ }
+ #loginGate:not([hidden]) .gate-foot{margin-top:14px!important}
+}
+
+
 </style>
 
 <style id="premium-header-tools">
@@ -2678,7 +2716,7 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  });
  $id('logoutButton').addEventListener('click',async()=>{
   try{await api('auth/logout',{});}catch(_){}
-  signedOut();msg('تم تسجيل الخروج.');
+  signedOut();msg('');
  });
  const dashboard=$id('adminDashboard');
  let adminUser=null,questionCache=[];
