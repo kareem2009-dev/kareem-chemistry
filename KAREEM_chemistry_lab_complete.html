@@ -239,7 +239,50 @@ nav::-webkit-scrollbar{display:none}nav a{white-space:nowrap;padding:8px 12px;fo
 .fxw{fill:rgba(130,160,185,.45);animation:fxw 2.2s ease-out forwards}@keyframes fxw{to{transform:translateY(-46px) scale(2);opacity:0}}
 #fxF path{transform-box:fill-box;transform-origin:50% 100%;animation:fl .25s infinite alternate}@keyframes fl{to{transform:scale(.9,1.12)}}
 #fxDp.go{animation:fd 1s ease-in forwards}@keyframes fd{0%{transform:translateY(0);opacity:1}88%{transform:translateY(104px);opacity:1}100%{transform:translateY(110px);opacity:0}}
+/* Adaptive performance: preserve layout, content, colors and interactions */
+html.perf-low .fm,html.perf-low .mt{animation-play-state:paused}
+html.perf-medium .mt{animation-duration:105s}
 </style>
+<script>
+/* Device-aware visual workload; no layout or feature changes. */
+(function(){
+  const nav=navigator,cores=Number(nav.hardwareConcurrency)||4,memory=Number(nav.deviceMemory)||0;
+  let level=(cores<=4||(memory>0&&memory<=4))?'low':(cores>=8&&memory>=8?'high':'medium');
+  const rank={low:0,medium:1,high:2};
+  function apply(next){
+    if(rank[next]>=rank[level]&&document.documentElement.dataset.perfLevel)return;
+    level=next;
+    const root=document.documentElement;
+    root.classList.remove('perf-low','perf-medium','perf-high');
+    root.classList.add('perf-'+level);
+    root.dataset.perfLevel=level;
+    window.__KAREEM_PERF={level,fpsLimit:level==='low'?24:level==='medium'?40:60};
+    window.dispatchEvent(new Event('kareem:performance'));
+  }
+  apply(level);
+  let active=false;
+  function sample(){
+    if(active||document.hidden)return;
+    active=true;
+    let start=0,last=0,frames=0;
+    function frame(now){
+      if(document.hidden){active=false;return}
+      if(!start)start=now;
+      if(last&&now-last>0)frames++;
+      last=now;
+      if(frames<45){requestAnimationFrame(frame);return}
+      const fps=frames*1000/Math.max(1,now-start);
+      if(fps<27&&rank[level]>0)apply('low');
+      else if(fps<42&&level==='high')apply('medium');
+      active=false;
+      setTimeout(sample,8000);
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('load',sample,{once:true});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)sample()});
+})();
+</script>
 </head>
 <body>
 <header>
@@ -759,7 +802,7 @@ if(rm)$('.orb').pauseAnimations();
 hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;
 hero.style.setProperty('--gx',mx/r.width*100+'%');hero.style.setProperty('--gy',my/r.height*100+'%');pt.style.setProperty('--rx',(mx/r.width-.5)*2);pt.style.setProperty('--ry',(my/r.height-.5)*2)});
 hero.addEventListener('pointerleave',()=>{mx=my=-999});
-function rs(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;A=Array.from({length:Math.max(14,Math.round(w*h/14000))},(_,i)=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:2+Math.random()*3,k:i%3}))}
+function rs(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;A=Array.from({length:Math.max(14,Math.round(w*h/(window.__KAREEM_PERF?.level==='low'?24000:window.__KAREEM_PERF?.level==='medium'?18000:14000)))},(_,i)=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:2+Math.random()*3,k:i%3}))}
 function draw(){if(!w||!$('#v-home').classList.contains('on'))return;x.clearRect(0,0,w,h);const cs=getComputedStyle(root),C=['--tq','--gold','--mute'].map(k=>cs.getPropertyValue(k).trim());
 A.forEach((a,i)=>{const dx=a.x-mx,dy=a.y-my,d=Math.hypot(dx,dy);if(d>0&&d<150){a.x+=dx/d*(1-d/150)*1.2;a.y+=dy/d*(1-d/150)*1.2}
 a.x=(a.x+a.vx+w)%w;a.y=(a.y+a.vy+h)%h;x.fillStyle=x.strokeStyle=C[a.k];x.globalAlpha=.85;x.beginPath();x.arc(a.x,a.y,a.r,0,7);x.fill();
@@ -769,7 +812,7 @@ if(d<170){x.globalAlpha=(1-d/170)*.7;x.strokeStyle=C[1];x.beginPath();x.moveTo(a
 addEventListener('resize',()=>{rs();draw()});rs();
 let heroRAF=0;
 function stopHero(){if(heroRAF){cancelAnimationFrame(heroRAF);heroRAF=0}}
-function startHero(){if(rm||document.hidden||!$('#v-home').classList.contains('on')||heroRAF)return;const loop=()=>{if(document.hidden||!$('#v-home').classList.contains('on')){heroRAF=0;return}draw();heroRAF=requestAnimationFrame(loop)};heroRAF=requestAnimationFrame(loop)}
+function startHero(){if(rm||document.hidden||!$('#v-home').classList.contains('on')||heroRAF)return;let lastDraw=0;const loop=now=>{if(document.hidden||!$('#v-home').classList.contains('on')){heroRAF=0;return}const limit=window.__KAREEM_PERF?.fpsLimit||60;if(!lastDraw||now-lastDraw>=1000/limit){draw();lastDraw=now}heroRAF=requestAnimationFrame(loop)};heroRAF=requestAnimationFrame(loop)}
 if(rm){draw()}else{startHero();addEventListener('kareem:route',()=>{if($('#v-home').classList.contains('on'))startHero();else stopHero()});document.addEventListener('visibilitychange',()=>{if(document.hidden)stopHero();else startHero()})}
 })();
 $$('.pt').forEach(i=>i.src=IMG);
