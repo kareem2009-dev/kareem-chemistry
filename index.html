@@ -1128,23 +1128,7 @@ input::placeholder,textarea::placeholder{color:var(--mute)}
 @media(max-width:650px){#v-flashcards .review-flip{min-height:195px}#v-flashcards .review-stage{min-height:120px}}
 @media(prefers-reduced-motion:reduce){#v-flashcards .review-stage .review-face,#v-flashcards .review-flip.is-flipped .review-back{animation:none!important;transition:none!important}}
 </style>
-<style id="living-logo-intro-style">
-#livingIntro[hidden]{display:none!important}
-#livingIntro{position:fixed;inset:0;z-index:100001;display:grid;place-items:center;overflow:hidden;isolation:isolate;direction:ltr;color:#e8eaf0;background:radial-gradient(ellipse at 50% 46%,rgba(105,103,124,.20),transparent 48%),linear-gradient(145deg,#0d1015,#1b1e26 55%,#101318)}
-#livingIntro:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(112deg,transparent 20%,rgba(255,255,255,.025) 49%,transparent 76%);mix-blend-mode:screen}
-#livingIntro canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#livingIntroBrand{position:absolute;z-index:2;left:50%;top:78%;transform:translate(-50%,-50%);width:max-content;max-width:90vw;text-align:center;pointer-events:none;opacity:0;filter:blur(12px);animation:livingBrandReveal 1.05s cubic-bezier(.16,.82,.18,1) 2s forwards}
-#livingIntroBrand strong{display:block;color:#edf0f5;font:500 clamp(27px,4.2vw,46px)/1.1 Cinzel,Georgia,serif;letter-spacing:.22em;text-shadow:0 0 18px rgba(181,170,204,.34),0 0 48px rgba(146,126,190,.22)}
-#livingIntroBrand span{display:block;margin-top:12px;color:rgba(214,218,231,.9);text-shadow:0 0 22px rgba(158,174,218,.24);font:500 11px/1.4 Tajawal,sans-serif;letter-spacing:.48em}
-#livingIntroBrand i{display:block;width:0;height:1px;margin:15px auto 0;background:linear-gradient(90deg,transparent,rgba(191,184,207,.95),rgba(144,190,218,.9),transparent);box-shadow:0 0 12px rgba(170,160,210,.55);animation:livingBrandLine .85s ease 2.85s forwards}
-@keyframes livingBrandReveal{0%{opacity:0;filter:blur(14px);transform:translate(-50%,38vh) scale(.96)}55%{opacity:.72;filter:blur(5px);transform:translate(-50%,-54%) scale(1.015)}100%{opacity:1;filter:blur(0);transform:translate(-50%,-50%) scale(1)}}
-@keyframes livingBrandLine{to{width:min(190px,40vw)}}
-#livingIntroSkip{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:3;min-height:42px;padding:9px 17px;border:1px solid rgba(190,199,211,.22);border-radius:999px;background:rgba(38,44,54,.48);color:#dce1e9;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);font:700 14px Tajawal,'Segoe UI',sans-serif;cursor:pointer;transition:background .2s,border-color .2s}
-#livingIntroSkip:hover{background:rgba(70,77,91,.68);border-color:rgba(205,213,225,.42)}
-#livingIntroSkip:focus-visible{outline:2px solid #b5c8ca;outline-offset:4px}
-@media(max-width:600px){#livingIntroBrand{top:75%}#livingIntroSkip{right:14px;bottom:max(14px,env(safe-area-inset-bottom));min-height:40px}}
-@media(prefers-reduced-motion:reduce){#livingIntroBrand{animation-duration:.25s;animation-delay:0s}#livingIntroBrand i{animation:none;width:min(190px,40vw)}}
-</style>
+
 
 <style id="mobile-performance-tuning">
 /* Keep the graphite/titanium glass language while reducing costly mobile compositing. */
@@ -1339,11 +1323,7 @@ pre,code{max-width:100%;overflow-x:auto}
 <body>
 
 
-<div id="livingIntro" hidden role="dialog" aria-modal="true" aria-label="مقدمة KAREEM CHEMISTRY">
- <canvas id="livingIntroCanvas" aria-hidden="true"></canvas>
- <div id="livingIntroBrand" aria-hidden="true"><strong>KAREEM</strong><span>C H E M I S T R Y</span><i></i></div>
- <button id="livingIntroSkip" type="button">تخطي المقدمة</button>
-</div>
+
 <div id="welcomeIntro" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
  <div class="welcome-shell">
   <span class="welcome-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
@@ -3607,42 +3587,7 @@ body.reduce-site-motion #homeParticles{display:none}
  if(!reduce&&!pref){resize();start()}else{canvas.style.display='none'}
 })();
 </script>
-<script id="living-logo-intro">
-(function(){
- 'use strict';
- const overlay=document.getElementById('livingIntro'),canvas=document.getElementById('livingIntroCanvas'),skip=document.getElementById('livingIntroSkip');
- const welcomeStart=document.getElementById('welcomeStart');
- if(!overlay||!canvas||!skip||!welcomeStart)return;
- const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- let gl=null,program=null,buffer=null,raf=0,timer=0,done=false,start=0,last=0;
- const duration=reduce?900:3600;
- const isolated=[];
- function isolate(){Array.from(document.body.children).forEach(el=>{if(el===overlay||el.tagName==='SCRIPT')return;isolated.push({el,inert:el.inert,had:el.hasAttribute('aria-hidden'),aria:el.getAttribute('aria-hidden')});el.inert=true;el.setAttribute('aria-hidden','true')})}
- function restore(){isolated.forEach(x=>{x.el.inert=x.inert;if(x.had)x.el.setAttribute('aria-hidden',x.aria);else elRemove(x.el)});isolated.length=0}
- function elRemove(el){el.removeAttribute('aria-hidden')}
- function cleanup(){if(raf)cancelAnimationFrame(raf);if(timer)clearTimeout(timer);raf=timer=0;skip.removeEventListener('click',finish);document.removeEventListener('keydown',key);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('resize',resize);if(gl&&buffer)gl.deleteBuffer(buffer);if(gl&&program)gl.deleteProgram(program)}
- function finish(){if(done)return;done=true;cleanup();restore();overlay.hidden=true;if(!document.hidden)welcomeStart.focus({preventScroll:true})}
- function key(e){if(e.key==='Escape'){e.preventDefault();finish()}else if(e.key==='Tab'){e.preventDefault();skip.focus()}}
- function visibility(){if(document.hidden){if(gl)draw(performance.now(),true);finish()}}
- function resize(){if(!gl)return;const d=Math.min(window.devicePixelRatio||1,(innerWidth<=760?0.9:1.15)),w=Math.max(1,innerWidth),h=Math.max(1,innerHeight);canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(gl.getUniformLocation(program,'uResolution'),canvas.width,canvas.height)}
- const vs='attribute vec2 aPosition;void main(){gl_Position=vec4(aPosition,0.0,1.0);}';
- const fs='precision highp float;uniform vec2 uResolution;uniform float uTime;uniform float uReduced;\n'+
- 'float sdTorus(vec3 p,vec2 t){return length(vec2(length(p.xz)-t.x,p.y))-t.y;}\n'+
- 'float smin(float a,float b,float k){float h=clamp(.5+.5*(b-a)/k,0.0,1.0);return mix(b,a,h)-k*h*(1.0-h);}\n'+
- 'float scene(vec3 p){float t=uTime; float pulse=1.0+.055*sin(t*1.35)+.018*sin(t*2.7); vec3 a=p/pulse; a.yz=mat2(cos(.42*sin(t*.34)),-sin(.42*sin(t*.34)),sin(.42*sin(t*.34)),cos(.42*sin(t*.34)))*a.yz; a.xz=mat2(cos(t*.28),-sin(t*.28),sin(t*.28),cos(t*.28))*a.xz; a.x+=.17*sin(a.y*2.6+t*1.12)+.035*sin(a.z*5.0-t);a.y+=.13*sin(a.z*3.0-t*.92)+.025*cos(a.x*4.0+t*.8); float loopA=sdTorus(a,vec2(.91,.145)); vec3 b=p/pulse; b.xy=mat2(cos(.82),-sin(.82),sin(.82),cos(.82))*b.xy; b.yz=mat2(cos(-.58),-sin(-.58),sin(-.58),cos(-.58))*b.yz; b.xz=mat2(cos(-t*.22),-sin(-t*.22),sin(-t*.22),cos(-t*.22))*b.xz; b.x+=.11*sin(b.y*2.2-t*.86)+.025*cos(b.z*4.0+t); float loopB=sdTorus(b-vec3(.02,.03,-.04),vec2(.82,.105)); return smin(loopA,loopB,.115);}\n'+
- 'vec3 normalAt(vec3 p){vec2 e=vec2(.0015,0.0);return normalize(vec3(scene(p+e.xyy)-scene(p-e.xyy),scene(p+e.yxy)-scene(p-e.yxy),scene(p+e.yyx)-scene(p-e.yyx)));}\n'+
- 'vec3 env(vec3 d){float h=clamp(d.y*.5+.5,0.0,1.0);vec3 c=mix(vec3(.012,.016,.026),vec3(.20,.22,.29),pow(h,1.35));float k1=pow(max(dot(normalize(d),normalize(vec3(-.55,.68,.48))),0.0),42.0);float k2=pow(max(dot(normalize(d),normalize(vec3(.72,.18,-.62))),0.0),58.0);float k3=pow(max(dot(normalize(d),normalize(vec3(.05,.92,-.2))),0.0),90.0);float k4=pow(max(dot(normalize(d),normalize(vec3(-.82,.12,-.35))),0.0),36.0);c+=vec3(.74,.88,1.0)*k1*.9+vec3(.72,.48,.82)*k2*.78+vec3(.38,.82,.84)*k3*.48+vec3(.96,.66,.52)*k4*.30;return c;}\n'+
- 'void main(){vec2 uv=(gl_FragCoord.xy-.5*uResolution)/uResolution.y;float t=uTime;vec3 ro=vec3(.10*sin(t*.28),.075*cos(t*.34),3.65-.10*sin(t*.42));vec3 rd=normalize(vec3(uv*1.48,-1.85));float vign=1.0-smoothstep(.12,1.45,length(uv));vec3 bg=mix(vec3(.012,.015,.023),vec3(.105,.105,.132),exp(-length(uv-vec2(-.12,.18))*2.2)*.75);bg+=vec3(.16,.075,.30)*exp(-length(uv-vec2(.34,-.05))*2.5);bg+=vec3(.025,.16,.22)*exp(-length(uv-vec2(-.48,-.20))*2.8);bg+=vec3(.22,.075,.12)*exp(-length(uv-vec2(.42,.42))*3.0);float halo=pow(max(0.0,1.0-length(uv*vec2(.78,1.1))),3.0);bg+=vec3(.035,.032,.055)*halo;\n'+
- 'float travel=0.0;float hit=0.0;vec3 pos=ro;for(int i=0;i<56;i++){pos=ro+rd*travel;float d=scene(pos);if(d<.0018){hit=1.0;break;}travel+=max(d*.72,.008);if(travel>8.0)break;}\n'+
- 'vec3 col=bg;if(hit>.5){vec3 n=normalAt(pos);vec3 v=normalize(ro-pos);float ndv=max(dot(n,v),0.0);float fres=pow(1.0-ndv,5.0);vec3 rr=reflect(-v,n);vec3 refr=refract(-v,n,1.0/1.48);vec3 reflected=env(rr);vec3 transmitted=env(refr+ n*.065);float rim=pow(1.0-ndv,2.1);float edgeLight=pow(1.0-ndv,5.0);float stripe=pow(max(0.0,1.0-abs(dot(n,normalize(vec3(sin(t*.82),.42+.12*sin(t*.4),cos(t*.66)))))),34.0);float spec=pow(max(dot(reflect(-normalize(vec3(-.5,.8,.5)),n),v),0.0),110.0);float film=dot(n,v);float sweep=pos.x*.72+pos.y*.34+t*.22;vec3 prism=.5+.5*cos(6.28318*(sweep+vec3(0.02,.34,.68)));vec3 saturated=mix(vec3(.28,.78,1.0),vec3(.94,.38,.96),.5+.5*sin(sweep*3.0));saturated=mix(saturated,vec3(.30,.86,1.0),.5+.5*cos(sweep*4.0+1.2));vec3 glassTint=mix(vec3(.40,.48,.72),prism,.72);col=mix(transmitted,reflected,.20+fres*.62);col=mix(bg,col,.62+fres*.35);col+=glassTint*rim*.78+prism*rim*.58+saturated*edgeLight*.92+vec3(.58,.82,1.0)*stripe*.72+vec3(.94,.97,1.0)*spec*.92;col+=saturated*(.16+.24*pow(1.0-ndv,2.0));col+=vec3(.055,.06,.095)*(.5+.5*sin(t*.72+pos.y*4.0));}\n'+
- 'float grain=fract(sin(dot(gl_FragCoord.xy+uTime,vec2(12.9898,78.233)))*43758.5453);col+=(grain-.5)*.008;col*=.72+.28*vign;gl_FragColor=vec4(col,1.0);}';
- function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){const message=gl.getShaderInfoLog(s);gl.deleteShader(s);throw new Error(message||'Shader compile failed')}return s}
- function boot(){try{gl=canvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'})||canvas.getContext('experimental-webgl',{alpha:false,antialias:false});if(!gl)throw new Error('WebGL unavailable');const v=shader(gl.VERTEX_SHADER,vs),f=shader(gl.FRAGMENT_SHADER,fs);program=gl.createProgram();gl.attachShader(program,v);gl.attachShader(program,f);gl.linkProgram(program);gl.deleteShader(v);gl.deleteShader(f);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program)||'Program link failed');gl.useProgram(program);buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);const loc=gl.getAttribLocation(program,'aPosition');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);gl.uniform1f(gl.getUniformLocation(program,'uReduced'),reduce?1:0);resize();start=performance.now();draw(start); }catch(err){overlay.classList.add('intro-css-fallback');canvas.style.display='none';start=performance.now();fallbackFrame(start)}}
- function draw(now,oneFrame){if(done||!gl)return;if(!oneFrame&&now-last<30){raf=requestAnimationFrame(draw);return}last=now;gl.useProgram(program);gl.uniform1f(gl.getUniformLocation(program,'uTime'),reduce?0:(now-start)/1000);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);if(!oneFrame&&now-start>=duration){finish();return}if(!oneFrame)raf=requestAnimationFrame(draw)}
- function fallbackFrame(now){if(done)return;const elapsed=now-start;overlay.style.background='radial-gradient(ellipse at 50% 43%,rgba(112,105,130,.34),transparent 42%),radial-gradient(ellipse at 50% 50%,#292a34,#0d1015 72%)';if(elapsed<duration)raf=requestAnimationFrame(fallbackFrame);else finish()}
- try{overlay.hidden=false;isolate();skip.addEventListener('click',finish);document.addEventListener('keydown',key);document.addEventListener('visibilitychange',visibility);window.addEventListener('resize',resize,{passive:true});skip.focus({preventScroll:true});timer=setTimeout(finish,duration+900);boot()}catch(e){finish()}
-})();
-</script>
+
 <script id="mobile-quick-settings">
 (function(){
  const root=document.getElementById('mobileQuickSettings'),toggle=document.getElementById('mobileSettingsToggle'),menu=document.getElementById('mobileSettingsMenu');
