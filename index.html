@@ -16,6 +16,8 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070B14;--bg2:#0E1626;--card:#111B2F;--ink:#EAF0FA;--mute:#98A6C2;--line:#22304D;--gold:#D9B35F;--tq:#3EE0C5;--on:#04130F}}
 :root[data-theme="dark"]{--bg:#070B14;--bg2:#0E1626;--card:#111B2F;--ink:#EAF0FA;--mute:#98A6C2;--line:#22304D;--gold:#D9B35F;--tq:#3EE0C5;--on:#04130F}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
+/* Returning visitors skip the welcome overlay before the first paint. */
+html.kc-returning-home #welcomeIntro{display:none!important}
 *{box-sizing:border-box;margin:0}
 body{font:400 16px/1.75 Tajawal,'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
@@ -1408,7 +1410,7 @@ pre,code{max-width:100%;overflow-x:auto}
   <small class="welcome-note">مساحتك التعليمية — KAREEM IBRAHIM</small>
  </div>
 </div>
-<div id="loginGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+<div id="loginGate" hidden role="dialog" aria-modal="true" aria-labelledby="gateTitle">
  <div class="gate-card">
   <section class="gate-brand" aria-label="عن المنصة">
    <span class="brand-kicker">KAREEM CHEMISTRY · CLASS OF 2027</span>
