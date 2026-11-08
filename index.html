@@ -2810,7 +2810,16 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
  setGateMode('register');
 
    const welcomeIntro=$id('welcomeIntro');
+ const welcomeSeenKey='kareemWelcomeSeenV1';
+ // لا نعرض شاشة الترحيب مرة أخرى بعد أن يبدأ الزائر رحلته.
+ try{
+  if(localStorage.getItem(welcomeSeenKey)==='1'){
+   welcomeIntro.hidden=true;
+   welcomeIntro.classList.remove('is-leaving');
+  }
+ }catch(_){}
  $id('welcomeStart').addEventListener('click',()=>{
+  try{localStorage.setItem(welcomeSeenKey,'1')}catch(_){}
   welcomeIntro.classList.add('is-leaving');
   window.setTimeout(()=>{welcomeIntro.hidden=true;},460);
  });
