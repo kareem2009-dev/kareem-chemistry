@@ -1219,6 +1219,18 @@ pre,code{max-width:100%;overflow-x:auto}
  .wrap{padding-inline:clamp(18px,3vw,32px)}
 }
 @media(max-width:760px){
+ header:not(.ad-top)>.header-actions{display:none!important}
+ #mobileQuickSettings{display:block;position:fixed;left:16px;bottom:calc(140px + env(safe-area-inset-bottom,0px));z-index:90}
+ #mobileSettingsToggle{width:48px;height:48px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:var(--card);color:var(--ink);box-shadow:0 8px 24px #0006;cursor:pointer}
+ #mobileSettingsToggle svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+ #mobileSettingsToggle[aria-expanded="true"]{background:var(--tq);color:var(--on)}
+ #mobileSettingsMenu{position:absolute;left:0;bottom:58px;width:min(245px,calc(100vw - 32px));padding:8px;display:grid;gap:6px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 14px 38px #0008}
+ #mobileSettingsMenu[hidden]{display:none!important}
+ #mobileSettingsMenu button{width:100%;min-height:43px;padding:9px 12px;text-align:right;border:1px solid var(--line);border-radius:11px;background:var(--bg2);color:var(--ink);font:700 .9rem Tajawal,sans-serif;cursor:pointer}
+ #mobileSettingsMenu button:focus-visible,#mobileSettingsToggle:focus-visible{outline:3px solid var(--tq);outline-offset:3px}
+}
+@media(min-width:761px){#mobileQuickSettings{display:none!important}}
+@media(max-width:760px){
  html{scroll-padding-top:12px}
  body{background-attachment:scroll}
  header:not(.ad-top){
@@ -1310,6 +1322,19 @@ pre,code{max-width:100%;overflow-x:auto}
 }
 </style>
 
+
+<style id="mobile-gear-polish">
+@media(max-width:760px){
+ #mobileSettingsToggle{width:52px;height:52px;border:1px solid color-mix(in srgb,var(--tq) 38%,var(--line));border-radius:50%;background:linear-gradient(145deg,var(--card),var(--bg2));color:var(--tq);box-shadow:0 7px 18px #0003, inset 0 1px 0 #ffffff55;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+ #mobileSettingsToggle:before{content:"";position:absolute;inset:4px;border:1px solid color-mix(in srgb,var(--tq) 20%,transparent);border-radius:50%;pointer-events:none}
+ #mobileSettingsToggle svg{width:25px;height:25px;stroke-width:1.65}
+ #mobileSettingsToggle:active{transform:scale(.94)}
+ #mobileSettingsToggle:hover{box-shadow:0 9px 22px #0004,inset 0 1px 0 #ffffff66}
+ #mobileSettingsToggle[aria-expanded="true"]{background:var(--tq);color:var(--on);box-shadow:0 8px 22px color-mix(in srgb,var(--tq) 35%,transparent)}
+ #mobileSettingsToggle[aria-expanded="true"]:before{border-color:#ffffff55}
+}
+@media(prefers-reduced-motion:reduce){#mobileSettingsToggle{transition:none}}
+</style>
 </head>
 <body>
 
@@ -2299,6 +2324,15 @@ const sh=i=>i===k?`<b>${nmz[i]}</b>`:f(w[i],4);
 o.innerHTML=`<b>المجهول: ${nmz[k]}</b><br>القانون: ${L('Mₐ·Vₐ / nₐ = M_b·V_b / n_b')}<br>بالتعويض: ${L(`(${sh(0)} × ${sh(1)}) / ${sh(2)} = (${sh(3)} × ${sh(4)}) / ${sh(5)}`)}<br><b>${nmz[k]} = ${L(f(r,4)+' '+un[k])}</b>`};
 })();
 </script>
+<div id="mobileQuickSettings" class="mobile-quick-settings" aria-label="إعدادات سريعة">
+ <button id="mobileSettingsToggle" type="button" aria-label="فتح الإعدادات" aria-expanded="false" aria-controls="mobileSettingsMenu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 7h14M5 12h14M5 17h14"/></svg></button>
+ <div id="mobileSettingsMenu" class="mobile-settings-menu" hidden>
+  <button type="button" data-action="siteSettingsOpen">⚙️ تخصيص المظهر</button>
+  <button type="button" data-action="tg">🌙 الوضع الليلي / النهاري</button>
+  <button type="button" data-action="noticeOpen">🔔 الإشعارات</button>
+  <button type="button" data-action="globalSearchOpen">🔎 البحث العام</button>
+ </div>
+</div>
 <button id="aiFab" aria-label="مساعد الكيمياء الذكي" aria-expanded="false">🤖<span>مساعد الكيمياء</span></button>
 <aside id="aiDrawer" role="dialog" aria-label="مساعد الكيمياء الذكي">
 <div class="aiH"><span class="ic">🤖</span><div><b>مساعد كريم إبراهيم</b><small>كيمياء تالتة ثانوي – المنهج المصري</small></div><button id="aiClose" aria-label="إغلاق">✕</button></div>
@@ -3607,6 +3641,17 @@ body.reduce-site-motion #homeParticles{display:none}
  function draw(now,oneFrame){if(done||!gl)return;if(!oneFrame&&now-last<30){raf=requestAnimationFrame(draw);return}last=now;gl.useProgram(program);gl.uniform1f(gl.getUniformLocation(program,'uTime'),reduce?0:(now-start)/1000);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);if(!oneFrame&&now-start>=duration){finish();return}if(!oneFrame)raf=requestAnimationFrame(draw)}
  function fallbackFrame(now){if(done)return;const elapsed=now-start;overlay.style.background='radial-gradient(ellipse at 50% 43%,rgba(112,105,130,.34),transparent 42%),radial-gradient(ellipse at 50% 50%,#292a34,#0d1015 72%)';if(elapsed<duration)raf=requestAnimationFrame(fallbackFrame);else finish()}
  try{overlay.hidden=false;isolate();skip.addEventListener('click',finish);document.addEventListener('keydown',key);document.addEventListener('visibilitychange',visibility);window.addEventListener('resize',resize,{passive:true});skip.focus({preventScroll:true});timer=setTimeout(finish,duration+900);boot()}catch(e){finish()}
+})();
+</script>
+<script id="mobile-quick-settings">
+(function(){
+ const root=document.getElementById('mobileQuickSettings'),toggle=document.getElementById('mobileSettingsToggle'),menu=document.getElementById('mobileSettingsMenu');
+ if(!root||!toggle||!menu)return;
+ function close(){menu.hidden=true;toggle.setAttribute('aria-expanded','false')}
+ toggle.addEventListener('click',function(){const opening=menu.hidden;menu.hidden=!opening;toggle.setAttribute('aria-expanded',String(opening))});
+ menu.addEventListener('click',function(e){const b=e.target.closest('button[data-action]');if(!b)return;const target=document.getElementById(b.dataset.action);if(target)target.click();close()});
+ document.addEventListener('click',function(e){if(!root.contains(e.target))close()});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!menu.hidden){close();toggle.focus()}});
 })();
 </script>
 </body>
