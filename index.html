@@ -711,6 +711,71 @@ body.reduce-site-motion .hero::before{animation:none}
 }
 
 
+
+/* Balanced graphite palette: restrained teal + soft champagne */
+:root{
+ --bg:#F2F4F5;
+ --bg2:#E7ECEE;
+ --card:#FFFFFF;
+ --ink:#182126;
+ --mute:#647278;
+ --line:#D5DEE0;
+ --gold:#927B55;
+ --tq:#247F73;
+ --on:#F7FBFA;
+ color-scheme:light;
+}
+@media(prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --bg:#111518;
+  --bg2:#191F23;
+  --card:#20282D;
+  --ink:#EEF3F2;
+  --mute:#A4B0B1;
+  --line:#344047;
+  --gold:#BCA77F;
+  --tq:#78CDBD;
+  --on:#10201D;
+  color-scheme:dark;
+ }
+}
+:root[data-theme="dark]{
+ --bg:#111518;--bg2:#191F23;--card:#20282D;--ink:#EEF3F2;
+ --mute:#A4B0B1;--line:#344047;--gold:#BCA77F;--tq:#78CDBD;--on:#10201D;
+ color-scheme:dark;
+}
+body{background:var(--bg);color:var(--ink)}
+header{
+ background:color-mix(in srgb,var(--bg) 88%,transparent);
+ -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+ border-bottom-color:color-mix(in srgb,var(--line) 78%,transparent)
+}
+.card,.hubtile,.student-stat,.rxpanel{
+ box-shadow:0 10px 28px rgba(8,18,22,.045)
+}
+@media(prefers-color-scheme:dark){
+ :root:not([data-theme="light"]) .card,
+ :root:not([data-theme="light"]) .hubtile,
+ :root:not([data-theme="light"]) .student-stat,
+ :root:not([data-theme="light"]) .rxpanel{
+  box-shadow:0 14px 34px rgba(0,0,0,.14),inset 0 1px rgba(255,255,255,.025)
+ }
+}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] .hubtile,
+:root[data-theme="dark"] .student-stat,:root[data-theme="dark"] .rxpanel{
+ box-shadow:0 14px 34px rgba(0,0,0,.14),inset 0 1px rgba(255,255,255,.025)
+}
+.btn.p{background:var(--gold);border-color:var(--gold);color:#17150F}
+nav a[aria-current],.bar i,#aiFab{background:var(--tq);color:var(--on)}
+.big,.student-stat b,.focus-clock,.rxstat b{color:var(--tq)}
+.tag,.bqt{color:var(--gold)}
+.tg{background:color-mix(in srgb,var(--card) 84%,transparent);backdrop-filter:blur(12px)}
+.fm{background:color-mix(in srgb,var(--card) 76%,transparent);backdrop-filter:blur(12px)}
+.aiH{background:linear-gradient(135deg,#202B30,#243A3B);border-bottom-color:var(--gold)}
+#aiSend{background:var(--gold);color:#17150F}
+#aiChips button{border-color:color-mix(in srgb,var(--gold) 70%,var(--line))}
+#aiChips button:hover{background:var(--gold);color:#17150F}
+
 </style>
 
 <style id="premium-header-tools">
