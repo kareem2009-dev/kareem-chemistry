@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
+<script>try{if(localStorage.getItem("kareemWelcomeSeenV1")==="1")document.documentElement.classList.add("kc-returning-home")}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#171A20">
 <meta name="description" content="معمل كيمياء تفاعلي ومكتبة معادلات وحاسبات وبنك أسئلة للصف الثالث الثانوي.">
@@ -72,6 +73,7 @@ footer .av{width:40px;height:40px}
 
 .hero::before{content:"";position:absolute;inset:-40px;z-index:0;pointer-events:none;background:radial-gradient(420px circle at var(--gx,70%) var(--gy,40%),color-mix(in srgb,var(--tq) 20%,transparent),transparent 70%)}
 .w{display:inline-block;opacity:0;transform:translateY(.6em);filter:blur(6px);animation:wd .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--d)*90ms + .15s)}
+html.kc-returning-home #v-home.view.on{animation:none!important}html.kc-returning-home #v-home .w{animation:none!important;opacity:1;transform:none;filter:none}
 @keyframes wd{to{opacity:1;transform:none;filter:none}}
 .port{position:relative;width:min(340px,82%);aspect-ratio:3/4;margin:auto;perspective:900px}
 .arch{position:absolute;inset:6% 9%;border-radius:999px 999px 26px 26px;overflow:hidden;border:2px solid var(--gold);box-shadow:0 30px 80px -20px color-mix(in srgb,var(--tq) 45%,transparent),0 0 0 8px color-mix(in srgb,var(--gold) 14%,transparent);transform:rotateY(calc(var(--rx,0)*8deg)) rotateX(calc(var(--ry,0)*-6deg));transition:transform .2s}
