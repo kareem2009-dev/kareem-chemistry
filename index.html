@@ -2963,7 +2963,9 @@ g('lout').innerHTML=a===b?'المادتان متكافئتان تمامًا.':'�
    if(onAdminPath)history.replaceState(null,'','/');
   }
  };
- gate.hidden=false;
+ // Keep the authentication gate hidden while the existing session is being checked.
+ // A signed-in student should never see the login screen flash during refresh.
+ gate.hidden=true;
  const initialPath=location.pathname.replace(/\/$/,'');
  // Finish the first session check before allowing login/register requests.
  // This prevents an older unauthenticated check from racing a fresh login.
