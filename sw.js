@@ -1,5 +1,5 @@
-const CACHE='kareem-chemistry-v4';
-const CORE=['./','./index.html','./manifest.webmanifest','./chemistry-icon.svg'];
+const CACHE='kareem-chemistry-mobile-v5';
+const CORE=['./','./index.html','./mobile.html','./mobile.webmanifest','./manifest.webmanifest','./chemistry-icon.svg'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(
@@ -23,14 +23,10 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
   const req=event.request;
   if(req.method!=='GET')return;
-
   const url=new URL(req.url);
   if(url.origin!==self.location.origin)return;
-
-  // Never cache authentication, student, admin, or any API response.
-  // These endpoints can contain private, user-specific information.
+  // Never cache authentication, student, admin, or API responses.
   if(url.pathname==='/api'||url.pathname.startsWith('/api/'))return;
-
   if(req.mode==='navigate'){
     event.respondWith(
       fetch(req).then(response=>{
@@ -39,11 +35,10 @@ self.addEventListener('fetch',event=>{
           caches.open(CACHE).then(cache=>cache.put(req,copy));
         }
         return response;
-      }).catch(()=>caches.match(req).then(cached=>cached||caches.match('./index.html')))
+      }).catch(()=>caches.match(req).then(cached=>cached||caches.match('./mobile.html')||caches.match('./index.html')))
     );
     return;
   }
-
   event.respondWith(
     caches.match(req).then(cached=>cached||fetch(req).then(response=>{
       if(response.ok)caches.open(CACHE).then(cache=>cache.put(req,response.clone()));
