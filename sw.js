@@ -1,4 +1,4 @@
-const CACHE='kareem-chemistry-v4';
+const CACHE='kareem-chemistry-v5';
 const CORE=['./','./index.html','./manifest.webmanifest','./chemistry-icon.svg'];
 
 self.addEventListener('install',event=>{
